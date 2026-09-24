@@ -10,13 +10,27 @@ const BackArrow = () => (
 );
 
 function App() {
-  const [currentModule, setCurrentModule] = useState('home'); // 'home', 'valorant', 'lol'
-  
+  const getHash = () => window.location.hash.replace('#', '') || 'home';
+  const [currentModule, setCurrentModule] = useState(getHash());
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setCurrentModule(getHash());
+    };
+    
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const navigateTo = (module) => {
+    window.location.hash = module;
+  };
+
   return (
     <>
-      {currentModule === 'home' && <HomeScreen onSelect={setCurrentModule} />}
-      {currentModule === 'valorant' && <ValorantModule onBack={() => setCurrentModule('home')} />}
-      {currentModule === 'lol' && <LolModule onBack={() => setCurrentModule('home')} />}
+      {currentModule === 'home' && <HomeScreen onSelect={navigateTo} />}
+      {currentModule === 'valorant' && <ValorantModule onBack={() => navigateTo('home')} />}
+      {currentModule === 'lol' && <LolModule onBack={() => navigateTo('home')} />}
     </>
   );
 }
