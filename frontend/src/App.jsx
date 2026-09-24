@@ -24,7 +24,7 @@ function App() {
 function HomeScreen({ onSelect }) {
   return (
     <div className="home-container">
-      <h1 className="home-title">Riot Hub</h1>
+      <h1 className="home-title">Rito 327</h1>
       <p className="home-subtitle">Lütfen işlem yapmak istediğiniz modülü seçin</p>
       
       <div className="cards-container">
