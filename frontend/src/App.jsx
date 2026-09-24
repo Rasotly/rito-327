@@ -56,10 +56,13 @@ function HomeScreen({ onSelect }) {
   );
 }
 
+import Sidebar from './Sidebar';
+
 function ValorantModule({ onBack }) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('home');
 
   useEffect(() => {
     // Fetch data from PHP backend
@@ -79,13 +82,15 @@ function ValorantModule({ onBack }) {
   }, []);
 
   return (
-    <div className="module-container val-theme">
-      <button className="back-btn" onClick={onBack}>
-        <BackArrow /> Geri Dön
+    <div className="module-container val-theme" style={{ paddingLeft: '260px' }}>
+      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      
+      <button className="back-btn" onClick={onBack} style={{ position: 'absolute', right: '2rem', top: '2rem' }}>
+        <BackArrow /> Merkeze Dön
       </button>
       
-      <div className="content-panel">
-        <h1 className="header-title">Valorant Protokolü</h1>
+      <div className="content-panel" style={{ marginTop: '2rem' }}>
+        <h1 className="header-title">Valorant Protokolü - {activeTab.toUpperCase()}</h1>
         <p style={{ color: 'var(--text-secondary)' }}>Ajan veritabanına bağlanılıyor...</p>
         
         <div className="data-card">
