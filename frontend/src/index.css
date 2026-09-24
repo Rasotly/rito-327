@@ -1,111 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Cinzel:wght@700&family=Teko:wght@500;700&display=swap');
+
 :root {
-  --text: #6b6375;
-  --text-h: #08060d;
-  --bg: #fff;
-  --border: #e5e4e7;
-  --code-bg: #f4f3ec;
-  --accent: #aa3bff;
-  --accent-bg: rgba(170, 59, 255, 0.1);
-  --accent-border: rgba(170, 59, 255, 0.5);
-  --social-bg: rgba(244, 243, 236, 0.5);
-  --shadow:
-    rgba(0, 0, 0, 0.1) 0 10px 15px -3px, rgba(0, 0, 0, 0.05) 0 4px 6px -2px;
-
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
-  --mono: ui-monospace, Consolas, monospace;
-
-  font: 18px/145% var(--sans);
-  letter-spacing: 0.18px;
-  color-scheme: light dark;
-  color: var(--text);
-  background: var(--bg);
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  @media (max-width: 1024px) {
-    font-size: 16px;
-  }
+  --valorant-red: #ff4655;
+  --valorant-dark: #111111;
+  --lol-gold: #c8aa6e;
+  --lol-blue: #0a1428;
+  --lol-blue-light: #0ac8b9;
+  
+  --bg-color: #050505;
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  
+  --glass-bg: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --text: #9ca3af;
-    --text-h: #f3f4f6;
-    --bg: #16171d;
-    --border: #2e303a;
-    --code-bg: #1f2028;
-    --accent: #c084fc;
-    --accent-bg: rgba(192, 132, 252, 0.15);
-    --accent-border: rgba(192, 132, 252, 0.5);
-    --social-bg: rgba(47, 48, 58, 0.5);
-    --shadow:
-      rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
-  }
-
-  #social .button-icon {
-    filter: invert(1) brightness(2);
-  }
-}
-
-body {
+* {
   margin: 0;
-}
-
-#root {
-  width: 1126px;
-  max-width: 100%;
-  margin: 0 auto;
-  text-align: center;
-  border-inline: 1px solid var(--border);
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
+  padding: 0;
   box-sizing: border-box;
 }
 
-h1,
-h2 {
-  font-family: var(--heading);
-  font-weight: 500;
-  color: var(--text-h);
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
 }
 
-h1 {
-  font-size: 56px;
-  letter-spacing: -1.68px;
-  margin: 32px 0;
-  @media (max-width: 1024px) {
-    font-size: 36px;
-    margin: 20px 0;
-  }
-}
-h2 {
-  font-size: 24px;
-  line-height: 118%;
-  letter-spacing: -0.24px;
-  margin: 0 0 8px;
-  @media (max-width: 1024px) {
-    font-size: 20px;
-  }
-}
-p {
-  margin: 0;
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
-code,
-.counter {
-  font-family: var(--mono);
-  display: inline-flex;
-  border-radius: 4px;
-  color: var(--text-h);
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-code {
-  font-size: 15px;
-  line-height: 135%;
-  padding: 4px 8px;
-  background: var(--code-bg);
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 20px rgba(255, 70, 85, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(255, 70, 85, 0.6); }
+  100% { box-shadow: 0 0 20px rgba(255, 70, 85, 0.2); }
+}
+
+@keyframes pulseGlowLol {
+  0% { box-shadow: 0 0 20px rgba(200, 170, 110, 0.2); }
+  50% { box-shadow: 0 0 40px rgba(200, 170, 110, 0.6); }
+  100% { box-shadow: 0 0 20px rgba(200, 170, 110, 0.2); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Home Screen */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+  background: radial-gradient(circle at center, #1a1a24 0%, #050505 100%);
+}
+
+.home-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(to right, #fff, #888);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeIn 0.8s ease-out;
+}
+
+.home-subtitle {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  margin-bottom: 4rem;
+  animation: fadeIn 1s ease-out;
+}
+
+.cards-container {
+  display: flex;
+  gap: 3rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeIn 1.2s ease-out;
+}
+
+/* Game Cards */
+.game-card {
+  width: 340px;
+  height: 480px;
+  border-radius: 20px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 2rem;
+}
+
+.game-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.4;
+  transition: opacity 0.5s ease, transform 0.8s ease;
+  z-index: -1;
+}
+
+.game-card:hover {
+  transform: translateY(-15px) scale(1.02);
+}
+
+.game-card:hover::before {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.game-card h2 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.game-card p {
+  font-size: 1rem;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.game-card:hover p {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Valorant Specific */
+.card-val {
+  border-bottom: 4px solid var(--valorant-red);
+}
+
+.card-val:hover {
+  box-shadow: 0 15px 35px rgba(255, 70, 85, 0.4);
+  border-color: var(--valorant-red);
+}
+
+.card-val::before {
+  background-image: linear-gradient(to bottom, rgba(17, 17, 17, 0.1), rgba(17, 17, 17, 0.9)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');
+  /* Using generic game image representing shooter */
+}
+
+.card-val h2 {
+  font-family: 'Teko', sans-serif;
+  color: var(--valorant-red);
+  letter-spacing: 2px;
+}
+
+/* LoL Specific */
+.card-lol {
+  border-bottom: 4px solid var(--lol-gold);
+}
+
+.card-lol:hover {
+  box-shadow: 0 15px 35px rgba(200, 170, 110, 0.4);
+  border-color: var(--lol-gold);
+}
+
+.card-lol::before {
+  background-image: linear-gradient(to bottom, rgba(10, 20, 40, 0.1), rgba(10, 20, 40, 0.9)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=2070&auto=format&fit=crop');
+  filter: hue-rotate(200deg); /* Make it look bluish/magic */
+}
+
+.card-lol h2 {
+  font-family: 'Cinzel', serif;
+  color: var(--lol-gold);
+}
+
+/* Module Views */
+.module-container {
+  min-height: 100vh;
+  padding: 2rem;
+  animation: fadeIn 0.5s ease-out;
+  position: relative;
+}
+
+.val-theme {
+  background: radial-gradient(circle at top right, rgba(255,70,85,0.15) 0%, var(--valorant-dark) 60%);
+}
+
+.val-theme .header-title {
+  font-family: 'Teko', sans-serif;
+  color: var(--valorant-red);
+  font-size: 4rem;
+  text-transform: uppercase;
+}
+
+.lol-theme {
+  background: radial-gradient(circle at top right, rgba(10,200,185,0.15) 0%, var(--lol-blue) 60%);
+}
+
+.lol-theme .header-title {
+  font-family: 'Cinzel', serif;
+  color: var(--lol-gold);
+  font-size: 3rem;
+}
+
+.back-btn {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateX(-5px);
+}
+
+.content-panel {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(16px);
+  border-radius: 16px;
+  padding: 2.5rem;
+  box-shadow: var(--glass-shadow);
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.data-card {
+  background: rgba(0, 0, 0, 0.4);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 1.5rem;
+  border-left: 4px solid #fff;
+}
+
+.val-theme .data-card { border-left-color: var(--valorant-red); }
+.lol-theme .data-card { border-left-color: var(--lol-gold); }
+
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.status-online {
+  background-color: #0ac8b9;
+  box-shadow: 0 0 10px #0ac8b9;
+}
+
+.status-offline {
+  background-color: #ff4655;
+  box-shadow: 0 0 10px #ff4655;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.stat-item {
+  background: rgba(255,255,255,0.03);
+  padding: 1.5rem;
+  border-radius: 12px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.stat-item:hover {
+  transform: translateY(-5px);
+  background: rgba(255,255,255,0.06);
+}
+
+.stat-value {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+.val-theme .stat-value { color: var(--valorant-red); font-family: 'Teko', sans-serif;}
+.lol-theme .stat-value { color: var(--lol-gold); font-family: 'Cinzel', serif;}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }

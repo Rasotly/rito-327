@@ -1,122 +1,181 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react';
+import './index.css';
+
+// SVG Icons for generic back arrow
+const BackArrow = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="19" y1="12" x2="5" y2="12"></line>
+    <polyline points="12 19 5 12 12 5"></polyline>
+  </svg>
+);
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [currentModule, setCurrentModule] = useState('home'); // 'home', 'valorant', 'lol'
+  
   return (
     <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
+      {currentModule === 'home' && <HomeScreen onSelect={setCurrentModule} />}
+      {currentModule === 'valorant' && <ValorantModule onBack={() => setCurrentModule('home')} />}
+      {currentModule === 'lol' && <LolModule onBack={() => setCurrentModule('home')} />}
     </>
-  )
+  );
 }
 
-export default App
+function HomeScreen({ onSelect }) {
+  return (
+    <div className="home-container">
+      <h1 className="home-title">Riot Hub</h1>
+      <p className="home-subtitle">Lütfen işlem yapmak istediğiniz modülü seçin</p>
+      
+      <div className="cards-container">
+        <div className="game-card card-val" onClick={() => onSelect('valorant')}>
+          <h2>Valorant</h2>
+          <p>Taktiksel Nişancı Modülü • Ajanlar, Haritalar ve İstatistikler</p>
+        </div>
+        
+        <div className="game-card card-lol" onClick={() => onSelect('lol')}>
+          <h2>League of Legends</h2>
+          <p>MOBA Modülü • Şampiyonlar, Rünler ve Meta Analizi</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ValorantModule({ onBack }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch data from PHP backend
+    fetch('http://localhost:8081?game=valorant')
+      .then(res => {
+        if (!res.ok) throw new Error('Sunucu yanıt vermedi');
+        return res.json();
+      })
+      .then(json => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <div className="module-container val-theme">
+      <button className="back-btn" onClick={onBack}>
+        <BackArrow /> Geri Dön
+      </button>
+      
+      <div className="content-panel">
+        <h1 className="header-title">Valorant Protokolü</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Ajan veritabanına bağlanılıyor...</p>
+        
+        <div className="data-card">
+          <div style={{ marginBottom: '1rem' }}>
+            <span className={`status-indicator ${error ? 'status-offline' : 'status-online'}`}></span>
+            <span>Sistem Durumu: {error ? 'Çevrimdışı' : 'Çevrimiçi'}</span>
+          </div>
+          
+          {loading && <p>Veriler yükleniyor...</p>}
+          {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
+          
+          {data && (
+            <div>
+              <h3>Sunucu Mesajı</h3>
+              <p>{data.message}</p>
+              
+              <div className="stat-grid">
+                <div className="stat-item">
+                  <div className="stat-value">{data.stats.activePlayers}</div>
+                  <div className="stat-label">Aktif Oyuncu</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-value">{data.stats.serverStatus}</div>
+                  <div className="stat-label">Sunucu</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-value">{data.stats.currentAct}</div>
+                  <div className="stat-label">Bölüm</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LolModule({ onBack }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    // Fetch data from PHP backend
+    fetch('http://localhost:8081?game=lol')
+      .then(res => {
+        if (!res.ok) throw new Error('Sunucu yanıt vermedi');
+        return res.json();
+      })
+      .then(json => {
+        setData(json);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  return (
+    <div className="module-container lol-theme">
+      <button className="back-btn" onClick={onBack}>
+        <BackArrow /> Geri Dön
+      </button>
+      
+      <div className="content-panel">
+        <h1 className="header-title">Sihirdar Vadisi</h1>
+        <p style={{ color: 'var(--text-secondary)' }}>Runeterra arşivi yükleniyor...</p>
+        
+        <div className="data-card">
+          <div style={{ marginBottom: '1rem' }}>
+            <span className={`status-indicator ${error ? 'status-offline' : 'status-online'}`}></span>
+            <span>Bağlantı Durumu: {error ? 'Kesildi' : 'Aktif'}</span>
+          </div>
+          
+          {loading && <p>Veriler yükleniyor...</p>}
+          {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
+          
+          {data && (
+            <div>
+              <h3 style={{ color: 'var(--lol-gold)', fontFamily: 'Cinzel, serif' }}>Sistem Mesajı</h3>
+              <p>{data.message}</p>
+              
+              <div className="stat-grid">
+                <div className="stat-item">
+                  <div className="stat-value">{data.stats.activeMatches}</div>
+                  <div className="stat-label">Aktif Maç</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-value">{data.stats.currentPatch}</div>
+                  <div className="stat-label">Yama Versiyonu</div>
+                </div>
+                <div className="stat-item">
+                  <div className="stat-value">{data.stats.featuredMode}</div>
+                  <div className="stat-label">Öne Çıkan Mod</div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default App;
