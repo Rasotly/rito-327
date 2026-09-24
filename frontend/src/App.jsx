@@ -38,7 +38,7 @@ function App() {
 function HomeScreen({ onSelect }) {
   return (
     <div className="home-container">
-      <h1 className="home-title">Rito 330</h1>
+      <h1 className="home-title">Rito 331</h1>
       <p className="home-subtitle">Lütfen işlem yapmak istediğiniz modülü seçin</p>
       
       <div className="cards-container">
