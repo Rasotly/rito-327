@@ -17,7 +17,7 @@ function App() {
     const handleHashChange = () => {
       setCurrentModule(getHash());
     };
-    
+
     window.addEventListener('hashchange', handleHashChange);
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
@@ -38,15 +38,15 @@ function App() {
 function HomeScreen({ onSelect }) {
   return (
     <div className="home-container">
-      <h1 className="home-title">Rito 331</h1>
+      <h1 className="home-title">Rito 327</h1>
       <p className="home-subtitle">Lütfen işlem yapmak istediğiniz modülü seçin</p>
-      
+
       <div className="cards-container">
         <div className="game-card card-val" onClick={() => onSelect('valorant')}>
           <h2>Valorant</h2>
           <p>Taktiksel Nişancı Modülü • Ajanlar, Haritalar ve İstatistikler</p>
         </div>
-        
+
         <div className="game-card card-lol" onClick={() => onSelect('lol')}>
           <h2>League of Legends</h2>
           <p>MOBA Modülü • Şampiyonlar, Rünler ve Meta Analizi</p>
@@ -84,29 +84,29 @@ function ValorantModule({ onBack }) {
   return (
     <div className="module-container val-theme" style={{ paddingLeft: '260px' }}>
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
-      
+
       <button className="back-btn" onClick={onBack} style={{ position: 'absolute', right: '2rem', top: '2rem' }}>
         <BackArrow /> Merkeze Dön
       </button>
-      
+
       <div className="content-panel" style={{ marginTop: '2rem' }}>
         <h1 className="header-title">Valorant Protokolü - {activeTab.toUpperCase()}</h1>
         <p style={{ color: 'var(--text-secondary)' }}>Ajan veritabanına bağlanılıyor...</p>
-        
+
         <div className="data-card">
           <div style={{ marginBottom: '1rem' }}>
             <span className={`status-indicator ${error ? 'status-offline' : 'status-online'}`}></span>
             <span>Sistem Durumu: {error ? 'Çevrimdışı' : 'Çevrimiçi'}</span>
           </div>
-          
+
           {loading && <p>Veriler yükleniyor...</p>}
           {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
-          
+
           {data && (
             <div>
               <h3>Sunucu Mesajı</h3>
               <p>{data.message}</p>
-              
+
               <div className="stat-grid">
                 <div className="stat-item">
                   <div className="stat-value">{data.stats.activePlayers}</div>
@@ -156,25 +156,25 @@ function LolModule({ onBack }) {
       <button className="back-btn" onClick={onBack}>
         <BackArrow /> Geri Dön
       </button>
-      
+
       <div className="content-panel">
         <h1 className="header-title">Sihirdar Vadisi</h1>
         <p style={{ color: 'var(--text-secondary)' }}>Runeterra arşivi yükleniyor...</p>
-        
+
         <div className="data-card">
           <div style={{ marginBottom: '1rem' }}>
             <span className={`status-indicator ${error ? 'status-offline' : 'status-online'}`}></span>
             <span>Bağlantı Durumu: {error ? 'Kesildi' : 'Aktif'}</span>
           </div>
-          
+
           {loading && <p>Veriler yükleniyor...</p>}
           {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
-          
+
           {data && (
             <div>
               <h3 style={{ color: 'var(--lol-gold)', fontFamily: 'Cinzel, serif' }}>Sistem Mesajı</h3>
               <p>{data.message}</p>
-              
+
               <div className="stat-grid">
                 <div className="stat-item">
                   <div className="stat-value">{data.stats.activeMatches}</div>
