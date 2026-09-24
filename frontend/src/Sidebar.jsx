@@ -92,7 +92,9 @@ export default function Sidebar({ activeTab, setActiveTab }) {
 
       <aside className={`val-sidebar ${isOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
-          <div className="sidebar-logo">V</div>
+          <div className="sidebar-logo">
+            <img src="https://cdn.simpleicons.org/valorant/000000" alt="Valorant Logo" className="sidebar-logo-img" />
+          </div>
           <h2>VALORANT</h2>
         </div>
 
