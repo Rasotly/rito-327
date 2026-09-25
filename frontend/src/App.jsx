@@ -1797,9 +1797,9 @@ function ValorantGame() {
 
   return (
       <div className="game-container">
-          <div className="game-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem'}}>
+          <div className="game-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem'}}>
               <h3 style={{fontFamily: "'Teko', sans-serif", fontSize: '3rem', margin: 0}}>HANGİ YETENEK DAHA PAHALI?</h3>
-              <div className="game-score" style={{fontSize: '1.5rem', background: 'rgba(255,255,255,0.1)', padding: '0.5rem 1.5rem', borderRadius: '50px'}}>Skor: {score} | Yüksek: {highScore}</div>
+              <div className="game-score" style={{fontSize: '1.5rem', background: 'rgba(255,255,255,0.1)', padding: '0.5rem 1.5rem', borderRadius: '50px', whiteSpace: 'nowrap'}}>Skor: {score} | Yüksek: {highScore}</div>
           </div>
           
           <div className="game-arena">
