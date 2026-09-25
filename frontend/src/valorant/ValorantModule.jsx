@@ -32,55 +32,77 @@ function ValorantModule({ onBack }) {
   }, []);
 
   return (
-    <div className="module-container val-theme" style={{ paddingLeft: '260px' }}>
+    <div className="module-container val-theme" style={{ paddingLeft: '260px', width: '100%', boxSizing: 'border-box' }}>
       <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      <button className="back-btn" onClick={onBack} style={{ position: 'absolute', right: '2rem', top: '2rem' }}>
+      <button className="back-btn" onClick={onBack} style={{ position: 'absolute', right: '2rem', top: '2rem', zIndex: 100 }}>
         <BackArrow /> Merkeze Dön
       </button>
 
-      <div className="content-panel" style={{ marginTop: '2rem' }}>
-        <h1 className="header-title">Valorant Protokolü - {activeTab.toUpperCase()}</h1>
-        <p style={{ color: 'var(--text-secondary)' }}>Ajan veritabanına bağlanılıyor...</p>
+      {activeTab === 'home' && (
+        <div className="content-panel" style={{ marginTop: '2rem', margin: '2rem auto', maxWidth: '800px' }}>
+          <h1 className="header-title">Valorant Protokolü - HOME</h1>
+          <p style={{ color: 'var(--text-secondary)' }}>Ajan veritabanına bağlanılıyor...</p>
 
-        <div className="data-card">
-          <div style={{ marginBottom: '1rem' }}>
-            <span className={`status-indicator ${error ? 'status-offline' : 'status-online'}`}></span>
-            <span>Sistem Durumu: {error ? 'Çevrimdışı' : 'Çevrimiçi'}</span>
-          </div>
+          <div className="data-card">
+            <div style={{ marginBottom: '1rem' }}>
+              <span className={`status-indicator ${error ? 'status-offline' : 'status-online'}`}></span>
+              <span>Sistem Durumu: {error ? 'Çevrimdışı' : 'Çevrimiçi'}</span>
+            </div>
 
-          {loading && <p>Veriler yükleniyor...</p>}
-          {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
+            {loading && <p>Veriler yükleniyor...</p>}
+            {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
 
-          {data && activeTab === 'home' && (
-            <div>
-              <h3>Sunucu Mesajı</h3>
-              <p>{data.message}</p>
+            {data && (
+              <div>
+                <h3>Sunucu Mesajı</h3>
+                <p>{data.message}</p>
 
-              <div className="stat-grid">
-                <div className="stat-item">
-                  <div className="stat-value">{data.stats.activePlayers}</div>
-                  <div className="stat-label">Aktif Oyuncu</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-value">{data.stats.serverStatus}</div>
-                  <div className="stat-label">Sunucu</div>
-                </div>
-                <div className="stat-item">
-                  <div className="stat-value">{data.stats.currentAct}</div>
-                  <div className="stat-label">Bölüm</div>
+                <div className="stat-grid">
+                  <div className="stat-item">
+                    <div className="stat-value">{data.stats.activePlayers}</div>
+                    <div className="stat-label">Aktif Oyuncu</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-value">{data.stats.serverStatus}</div>
+                    <div className="stat-label">Sunucu</div>
+                  </div>
+                  <div className="stat-item">
+                    <div className="stat-value">{data.stats.currentAct}</div>
+                    <div className="stat-label">Bölüm</div>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-
-          {activeTab === 'maps' && <ValorantMaps />}
-          {activeTab === 'agents' && <ValorantAgents />}
-          {activeTab === 'weapons' && <ValorantWeapons />}
-          {activeTab === 'game' && <ValorantGame />}
-          {activeTab === 'heardle' && <ValorantHeardle />}
+            )}
+          </div>
         </div>
-      </div>
+      )}
+
+      {activeTab === 'maps' && (
+        <div style={{ padding: '2rem' }}>
+            <ValorantMaps />
+        </div>
+      )}
+      {activeTab === 'agents' && (
+        <div style={{ padding: '2rem' }}>
+            <ValorantAgents />
+        </div>
+      )}
+      {activeTab === 'weapons' && (
+        <div style={{ padding: '2rem' }}>
+            <ValorantWeapons />
+        </div>
+      )}
+      {activeTab === 'game' && (
+        <div style={{ padding: '2rem' }}>
+            <ValorantGame />
+        </div>
+      )}
+      {activeTab === 'heardle' && (
+        <div style={{ width: '100%', padding: '2rem', boxSizing: 'border-box' }}>
+            <ValorantHeardle onBack={() => setActiveTab('home')} />
+        </div>
+      )}
     </div>
   );
 }
@@ -1746,157 +1768,268 @@ const HEARDLE_DATA = [
 
 function ValorantHeardle({ onBack }) {
     const [currentSound, setCurrentSound] = useState(HEARDLE_DATA[Math.floor(Math.random() * HEARDLE_DATA.length)]);
-    const [guesses, setGuesses] = useState(['', '', '', '', '']);
-    const [currentGuessIndex, setCurrentGuessIndex] = useState(0);
-    const [inputValue, setInputValue] = useState('');
-    const [gameStatus, setGameStatus] = useState('playing'); // playing, won, lost
+    const [lives, setLives] = useState(3);
+    const [wrongGuesses, setWrongGuesses] = useState([]);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [gameStatus, setGameStatus] = useState('playing');
     const audioRef = React.useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [playProgress, setPlayProgress] = useState(0);
-
-    const durations = [1, 2, 4, 7, 10]; // seconds allowed per guess
-    const maxDuration = durations[Math.min(currentGuessIndex, 4)];
+    const [volume, setVolume] = useState(0.5);
 
     useEffect(() => {
         if (audioRef.current) {
             audioRef.current.src = currentSound.url;
+            audioRef.current.volume = volume;
             audioRef.current.load();
         }
     }, [currentSound]);
 
-    const playSegment = () => {
-        if (isPlaying || !audioRef.current) return;
+    useEffect(() => {
+        if (audioRef.current) {
+            audioRef.current.volume = volume;
+        }
+    }, [volume]);
+
+    const playAudio = () => {
+        if (isPlaying || !audioRef.current) {
+            if (audioRef.current && isPlaying) {
+                audioRef.current.pause();
+                setIsPlaying(false);
+            }
+            return;
+        }
+        audioRef.current.play();
+        setIsPlaying(true);
+    };
+
+    const replayAudio = () => {
+        if (!audioRef.current) return;
         audioRef.current.currentTime = 0;
         audioRef.current.play();
         setIsPlaying(true);
-
-        const checkTime = setInterval(() => {
-            if (audioRef.current && audioRef.current.currentTime >= maxDuration) {
-                audioRef.current.pause();
-                setIsPlaying(false);
-                clearInterval(checkTime);
-            }
-            if (audioRef.current) {
-                setPlayProgress((audioRef.current.currentTime / 10) * 100);
-            }
-        }, 50);
-
-        audioRef.current.onended = () => {
-            setIsPlaying(false);
-            clearInterval(checkTime);
-            setPlayProgress(0);
-        };
     };
 
-    const handleGuess = () => {
-        if (gameStatus !== 'playing' || !inputValue.trim()) return;
+    useEffect(() => {
+        const audio = audioRef.current;
+        if (!audio) return;
+        const handleEnded = () => setIsPlaying(false);
+        audio.addEventListener('ended', handleEnded);
+        return () => audio.removeEventListener('ended', handleEnded);
+    }, []);
 
-        const newGuesses = [...guesses];
-        const isCorrect = inputValue.toLowerCase().includes(currentSound.answer.toLowerCase());
-        newGuesses[currentGuessIndex] = { text: inputValue, correct: isCorrect };
-        setGuesses(newGuesses);
-        setInputValue('');
+    const handleGuess = (agentName, abilityName) => {
+        if (gameStatus !== 'playing') return;
+
+        // Mock check logic based on agent name or answer
+        const isCorrect = currentSound.answer.toLowerCase() === agentName.toLowerCase() || 
+                          currentSound.title.toLowerCase().includes(agentName.toLowerCase());
 
         if (isCorrect) {
             setGameStatus('won');
-        } else if (currentGuessIndex >= 4) {
-            setGameStatus('lost');
         } else {
-            setCurrentGuessIndex(currentGuessIndex + 1);
-        }
-    };
-
-    const handlePass = () => {
-        if (gameStatus !== 'playing') return;
-        
-        const newGuesses = [...guesses];
-        newGuesses[currentGuessIndex] = { text: 'PAS GEÇİLDİ', correct: false };
-        setGuesses(newGuesses);
-        
-        if (currentGuessIndex >= 4) {
-            setGameStatus('lost');
-        } else {
-            setCurrentGuessIndex(currentGuessIndex + 1);
+            if (!wrongGuesses.includes(abilityName)) {
+                setWrongGuesses([...wrongGuesses, abilityName]);
+            }
+            const newLives = lives - 1;
+            setLives(newLives);
+            if (newLives <= 0) {
+                setGameStatus('lost');
+            }
         }
     };
 
     const restartGame = () => {
         setCurrentSound(HEARDLE_DATA[Math.floor(Math.random() * HEARDLE_DATA.length)]);
-        setGuesses(['', '', '', '', '']);
-        setCurrentGuessIndex(0);
+        setLives(3);
+        setWrongGuesses([]);
         setGameStatus('playing');
-        setPlayProgress(0);
+        setSearchQuery('');
     };
 
+    const filteredAgents = OFFICIAL_AGENTS.filter(agent => 
+        agent.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        agent.abilities.some(ab => ab.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    );
+
     return (
-        <div className="game-container heardle-container" style={{maxWidth: '800px', margin: '0 auto', width: '100%'}}>
-            <div className="game-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem'}}>
-                <h3 style={{fontFamily: "'Teko', sans-serif", fontSize: '3rem', margin: 0}}>V-SENSE</h3>
-                <div style={{width: '100px'}}></div>
+        <div className="game-container heardle-container" style={{maxWidth: '1200px', margin: '0 auto', width: '100%', padding: '2rem'}}>
+            <style>{`
+                @keyframes wave-animation {
+                    0%, 100% { height: 15px; }
+                    50% { height: 45px; }
+                }
+                .wave-bar {
+                    width: 3px;
+                    background-color: rgba(255,255,255,0.3);
+                    border-radius: 2px;
+                    transition: background-color 0.3s ease;
+                }
+                .wave-bar.playing {
+                    background-color: #fff;
+                    animation: wave-animation 1s ease-in-out infinite;
+                }
+                .agents-grid {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+                    gap: 2rem;
+                    margin-top: 3rem;
+                }
+                .ability-icon {
+                    width: 32px;
+                    height: 32px;
+                    background: transparent;
+                    border: none;
+                    cursor: pointer;
+                    padding: 4px;
+                    transition: all 0.2s ease;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .ability-icon:hover {
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 4px;
+                    transform: translateY(-2px);
+                }
+                .agent-img-cont {
+                    position: relative;
+                    width: 140px;
+                    height: 50px;
+                    overflow: hidden;
+                    border-radius: 4px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background: linear-gradient(90deg, rgba(255,255,255,0.05), rgba(255,255,255,0.01));
+                }
+                .agent-bg-text {
+                    position: absolute;
+                    width: 120%;
+                    top: -10px;
+                    opacity: 0.15;
+                    filter: grayscale(100%);
+                }
+                .agent-face {
+                    position: absolute;
+                    height: 140%;
+                    top: -10px;
+                    z-index: 1;
+                }
+            `}</style>
+
+            <button className="back-btn" onClick={onBack} style={{ position: 'absolute', right: '2rem', top: '2rem' }}>
+                <BackArrow /> Geri Dön
+            </button>
+
+            <div style={{textAlign: 'center', marginBottom: '3rem'}}>
+                <h1 style={{fontFamily: "'Teko', sans-serif", fontSize: '4rem', marginBottom: '1rem', letterSpacing: '1px'}}>What's The Ability?</h1>
+                <p style={{color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6'}}>
+                    Each agent in the game has 4 unique abilities that produce distinct sounds. You have 3 attempts to find the ability that matches the sound.
+                </p>
+                
+                <div style={{marginTop: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem'}}>
+                    <span style={{color: '#fff', fontWeight: 'bold'}}>Difficulty:</span>
+                    <select style={{background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.5rem 1rem', borderRadius: '4px', outline: 'none'}}>
+                        <option>Normal</option>
+                        <option>Hard</option>
+                    </select>
+                </div>
             </div>
 
-            <div style={{background: 'rgba(17,17,17,0.8)', padding: '3rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.1)'}}>
-                
-                <div className="music-player" style={{display: 'flex', alignItems: 'center', gap: '2rem', marginBottom: '3rem'}}>
-                    <button 
-                        onClick={playSegment} 
-                        disabled={isPlaying}
-                        style={{
-                            width: '80px', height: '80px', borderRadius: '50%', 
-                            background: isPlaying ? 'var(--text-secondary)' : 'var(--valorant-red)',
-                            color: '#fff', border: 'none', cursor: isPlaying ? 'default' : 'pointer',
-                            display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '2rem'
-                        }}>
-                        {isPlaying ? '⏸' : '▶'}
-                    </button>
+            {gameStatus === 'playing' ? (
+                <div style={{background: 'rgba(17,17,17,0.5)', padding: '2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '3rem'}}>
                     
-                    <div style={{flex: 1, background: '#333', height: '10px', borderRadius: '5px', overflow: 'hidden'}}>
-                        <div style={{width: `${playProgress}%`, height: '100%', background: 'var(--valorant-red)', transition: 'width 0.1s linear'}}></div>
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', height: '60px', margin: '0 auto 2rem'}}>
+                        {Array.from({length: 40}).map((_, i) => (
+                            <div key={i} className={`wave-bar ${isPlaying ? 'playing' : ''}`} style={{animationDelay: `${Math.random() * 0.5}s`}}></div>
+                        ))}
                     </div>
-                    <span style={{fontFamily: "'Teko', sans-serif", fontSize: '1.5rem'}}>{maxDuration}sn Dinle</span>
-                </div>
 
-                <div className="guesses-list" style={{display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '2rem'}}>
-                    {guesses.map((guess, idx) => (
-                        <div key={idx} style={{
-                            height: '50px', background: 'rgba(255,255,255,0.05)', borderRadius: '8px',
-                            display: 'flex', alignItems: 'center', padding: '0 1rem', fontSize: '1.2rem',
-                            border: guess.correct === true ? '2px solid #2ecc71' : guess.correct === false ? '2px solid #e74c3c' : '2px solid transparent',
-                            color: guess.correct === true ? '#2ecc71' : guess.correct === false ? '#e74c3c' : '#fff'
-                        }}>
-                            {guess.text || ''}
+                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem'}}>
+                        <span style={{color: 'var(--text-secondary)', fontFamily: "'Teko', sans-serif", fontSize: '1.5rem'}}>0.0s</span>
+                        
+                        <button onClick={playAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d={isPlaying ? "M6 19h4V5H6v14zm8-14v14h4V5h-4z" : "M8 5v14l11-7z"}/></svg>
+                        </button>
+                        
+                        <button onClick={replayAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                        </button>
+                        
+                        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem'}}>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                            <input type="range" min="0" max="1" step="0.01" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))} style={{width: '100px'}} />
                         </div>
-                    ))}
-                </div>
+                    </div>
 
-                {gameStatus === 'playing' ? (
-                    <div className="guess-input-area" style={{display: 'flex', gap: '1rem'}}>
-                        <input 
-                            type="text" 
-                            value={inputValue}
-                            onChange={e => setInputValue(e.target.value)}
-                            onKeyPress={e => e.key === 'Enter' && handleGuess()}
-                            placeholder="Ajan, Silah veya Harita tahmini yap..."
-                            style={{flex: 1, padding: '1rem', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.2)', background: 'rgba(0,0,0,0.5)', color: '#fff', fontSize: '1.2rem'}}
-                        />
-                        <button onClick={handleGuess} className="category-btn active" style={{padding: '0 2rem'}}>Tahmin Et</button>
-                        <button onClick={handlePass} className="category-btn" style={{padding: '0 2rem', background: 'transparent', border: '1px solid var(--text-secondary)'}}>Pas</button>
+                    {wrongGuesses.length > 0 && (
+                        <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2.5rem', flexWrap: 'wrap'}}>
+                            {wrongGuesses.map(guess => (
+                                <div key={guess} style={{
+                                    background: '#e8e6df', 
+                                    color: '#a13333', 
+                                    padding: '0.4rem 1rem', 
+                                    borderRadius: '6px', 
+                                    display: 'flex', 
+                                    alignItems: 'center', 
+                                    gap: '0.5rem',
+                                    fontWeight: 'bold',
+                                    fontSize: '0.95rem'
+                                }}>
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                      <path d="m12 13-1-3 2-2-2-3"></path>
+                                    </svg>
+                                    {guess}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            ) : (
+                <div style={{textAlign: 'center', padding: '3rem', background: 'rgba(17,17,17,0.8)', borderRadius: '12px', marginBottom: '3rem', border: '1px solid rgba(255,255,255,0.1)'}}>
+                    <h2 style={{fontFamily: "'Teko', sans-serif", fontSize: '4rem', color: gameStatus === 'won' ? '#2ecc71' : '#e74c3c', margin: 0}}>
+                        {gameStatus === 'won' ? 'CORRECT!' : 'GAME OVER'}
+                    </h2>
+                    <p style={{fontSize: '1.5rem', marginBottom: '2rem', color: '#fff'}}>
+                        The answer was: <strong style={{color: 'var(--valorant-red)'}}>{currentSound.answer}</strong>
+                    </p>
+                    <button onClick={restartGame} className="category-btn active" style={{padding: '1rem 3rem', fontSize: '1.2rem'}}>Play Again</button>
+                </div>
+            )}
+
+            <div style={{display: 'flex', justifyContent: 'center', position: 'sticky', top: '20px', zIndex: 10}}>
+                <div style={{display: 'flex', alignItems: 'center', background: 'rgba(20,20,20,0.9)', padding: '0.5rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.1)', width: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)'}}>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '1rem'}}><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." style={{flex: 1, background: 'transparent', border: 'none', color: '#fff', outline: 'none', fontSize: '1.1rem'}} />
+                    <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontWeight: 'bold'}}>
+                        {lives} <span style={{color: 'var(--valorant-red)'}}>❤️</span>
                     </div>
-                ) : (
-                    <div style={{textAlign: 'center'}}>
-                        <h2 style={{fontFamily: "'Teko', sans-serif", fontSize: '3rem', color: gameStatus === 'won' ? '#2ecc71' : '#e74c3c'}}>
-                            {gameStatus === 'won' ? 'KAZANDIN!' : 'KAYBETTİN!'}
-                        </h2>
-                        <p style={{fontSize: '1.5rem', marginBottom: '2rem'}}>Doğru Cevap: <strong style={{color: 'var(--valorant-red)'}}>{currentSound.answer} ({currentSound.title})</strong></p>
-                        <button onClick={restartGame} className="category-btn active" style={{padding: '1rem 3rem'}}>Tekrar Oyna</button>
+                </div>
+            </div>
+
+            <div className="agents-grid">
+                {filteredAgents.map(agent => (
+                    <div key={agent.name} style={{display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.8rem'}}>
+                        <div className="agent-img-cont">
+                            <img src={agent.background} className="agent-bg-text" alt="bg" />
+                            <img src={agent.image.replace('fullportrait.png', 'displayicon.png')} className="agent-face" alt={agent.name} onError={(e) => e.target.src = agent.image} />
+                        </div>
+                        <span style={{fontSize: '1rem', color: '#fff', fontWeight: 'bold'}}>{agent.name}</span>
+                        <div style={{display: 'flex', gap: '0.5rem'}}>
+                            {agent.abilities.map(ab => (
+                                <button key={ab.name} className="ability-icon" onClick={() => handleGuess(agent.name, ab.name)} title={ab.name}>
+                                    <img src={ab.icon} alt={ab.name} style={{width: '100%', height: '100%', objectFit: 'contain'}} />
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                )}
+                ))}
             </div>
             <audio ref={audioRef} style={{display: 'none'}} />
         </div>
     );
 }
-
 function VufufuModule() {
     const [selectedGame, setSelectedGame] = useState(null);
 
