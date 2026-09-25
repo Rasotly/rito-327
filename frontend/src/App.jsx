@@ -1237,7 +1237,7 @@ function ValorantAgents() {
         
         <div className="agent-details-layout">
           <div className="agent-details-header">
-            <h1 className="agent-details-name" style={{ backgroundImage: `url(${selectedAgent.background})` }}>{selectedAgent.name}</h1>
+            <h1 className="agent-details-name">{selectedAgent.name}</h1>
             <p className="agent-details-role">{selectedAgent.role}</p>
             <p className="agent-details-desc">{selectedAgent.description}</p>
           </div>

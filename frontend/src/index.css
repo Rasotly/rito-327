@@ -436,12 +436,7 @@ body {
   text-transform: uppercase;
   margin-bottom: 0.5rem;
   line-height: 1;
-  background-size: cover;
-  background-position: center;
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
+  letter-spacing: 2px;
 }
 
 .agent-details-role {
