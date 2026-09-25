@@ -85,7 +85,7 @@ const NAV_ITEMS = [
   { id: 'agents', label: 'Ajanlar', icon: <AgentIcon /> },
   { id: 'weapons', label: 'Silahlar', icon: <WeaponIcon /> },
   { id: 'maps', label: 'Haritalar', icon: <MapIcon /> },
-  { id: 'game', label: 'Mini Oyun', icon: <GameIcon /> },
+  { id: 'game', label: 'Vufufu', icon: <GameIcon /> },
   { id: 'guides', label: 'Rehberler', icon: <GuideIcon /> },
   { id: 'cosmetics', label: 'Kozmetikler', icon: <CosmeticIcon /> },
   { id: 'patch-notes', label: 'Yama Notları', icon: <PatchIcon /> },
