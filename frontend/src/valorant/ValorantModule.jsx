@@ -1798,6 +1798,45 @@ function ValorantHeardle({ onBack }) {
     const audioRef = React.useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(0.5);
+    
+    const waveContainerRef = useRef(null);
+    const audioContextRef = useRef(null);
+    const analyserRef = useRef(null);
+    const sourceRef = useRef(null);
+    const animationRef = useRef(null);
+
+    const initAudioContext = () => {
+        if (!audioContextRef.current && audioRef.current) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            audioContextRef.current = new AudioContext();
+            analyserRef.current = audioContextRef.current.createAnalyser();
+            analyserRef.current.fftSize = 128; 
+            
+            sourceRef.current = audioContextRef.current.createMediaElementSource(audioRef.current);
+            sourceRef.current.connect(analyserRef.current);
+            analyserRef.current.connect(audioContextRef.current.destination);
+        }
+        if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+            audioContextRef.current.resume();
+        }
+    };
+
+    const updateVisualizer = () => {
+        if (!analyserRef.current || !waveContainerRef.current) return;
+        
+        const dataArray = new Uint8Array(analyserRef.current.frequencyBinCount);
+        analyserRef.current.getByteFrequencyData(dataArray);
+        
+        const bars = waveContainerRef.current.children;
+        for (let i = 0; i < bars.length; i++) {
+            const val = dataArray[i + 1] || 0; 
+            const height = Math.max(15, (val / 255) * 60);
+            bars[i].style.height = `${height}px`;
+            bars[i].style.backgroundColor = val > 150 ? '#2ecc71' : (val > 0 ? '#fff' : 'rgba(255,255,255,0.3)');
+        }
+        
+        animationRef.current = requestAnimationFrame(updateVisualizer);
+    };
 
     useEffect(() => {
         if (audioRef.current) {
@@ -1818,26 +1857,45 @@ function ValorantHeardle({ onBack }) {
             if (audioRef.current && isPlaying) {
                 audioRef.current.pause();
                 setIsPlaying(false);
+                if (animationRef.current) cancelAnimationFrame(animationRef.current);
             }
             return;
         }
+        initAudioContext();
         audioRef.current.play();
         setIsPlaying(true);
+        updateVisualizer();
     };
 
     const replayAudio = () => {
         if (!audioRef.current) return;
+        initAudioContext();
         audioRef.current.currentTime = 0;
         audioRef.current.play();
         setIsPlaying(true);
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
+        updateVisualizer();
     };
 
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
-        const handleEnded = () => setIsPlaying(false);
+        const handleEnded = () => {
+            setIsPlaying(false);
+            if (animationRef.current) cancelAnimationFrame(animationRef.current);
+            if (waveContainerRef.current) {
+                const bars = waveContainerRef.current.children;
+                for (let i = 0; i < bars.length; i++) {
+                    bars[i].style.height = '15px';
+                    bars[i].style.backgroundColor = 'rgba(255,255,255,0.3)';
+                }
+            }
+        };
         audio.addEventListener('ended', handleEnded);
-        return () => audio.removeEventListener('ended', handleEnded);
+        return () => {
+            audio.removeEventListener('ended', handleEnded);
+            if (animationRef.current) cancelAnimationFrame(animationRef.current);
+        };
     }, []);
 
     const handleGuess = (agentName, abilityName) => {
@@ -1895,11 +1953,7 @@ function ValorantHeardle({ onBack }) {
                     width: 3px;
                     background-color: rgba(255,255,255,0.3);
                     border-radius: 2px;
-                    transition: background-color 0.3s ease;
-                }
-                .wave-bar.playing {
-                    background-color: #fff;
-                    animation: wave-animation 1s ease-in-out infinite;
+                    transition: height 0.05s ease, background-color 0.1s ease;
                 }
                 .agents-grid {
                     display: grid;
@@ -1970,9 +2024,9 @@ function ValorantHeardle({ onBack }) {
             </div>
 
             <div style={{background: 'rgba(17,17,17,0.5)', padding: '2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '3rem'}}>
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', height: '60px', margin: '0 auto 2rem'}}>
+                <div ref={waveContainerRef} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', height: '60px', margin: '0 auto 2rem'}}>
                     {Array.from({length: 40}).map((_, i) => (
-                        <div key={i} className={`wave-bar ${isPlaying ? 'playing' : ''}`} style={{animationDelay: `${Math.random() * 0.5}s`}}></div>
+                        <div key={i} className="wave-bar" style={{height: '15px'}}></div>
                     ))}
                 </div>
 
