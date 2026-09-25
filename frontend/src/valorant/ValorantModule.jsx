@@ -1800,6 +1800,7 @@ function ValorantHeardle({ onBack }) {
     const audioRef = React.useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [volume, setVolume] = useState(0.5);
+    const [difficulty, setDifficulty] = useState('Normal');
     
     const waveContainerRef = useRef(null);
     const audioContextRef = useRef(null);
@@ -1879,26 +1880,41 @@ function ValorantHeardle({ onBack }) {
         updateVisualizer();
     };
 
+    const stopPlayback = () => {
+        setIsPlaying(false);
+        if (animationRef.current) cancelAnimationFrame(animationRef.current);
+        if (waveContainerRef.current) {
+            const bars = waveContainerRef.current.children;
+            for (let i = 0; i < bars.length; i++) {
+                bars[i].style.height = '15px';
+                bars[i].style.backgroundColor = 'rgba(255,255,255,0.3)';
+            }
+        }
+    };
+
     useEffect(() => {
         const audio = audioRef.current;
         if (!audio) return;
-        const handleEnded = () => {
-            setIsPlaying(false);
-            if (animationRef.current) cancelAnimationFrame(animationRef.current);
-            if (waveContainerRef.current) {
-                const bars = waveContainerRef.current.children;
-                for (let i = 0; i < bars.length; i++) {
-                    bars[i].style.height = '15px';
-                    bars[i].style.backgroundColor = 'rgba(255,255,255,0.3)';
-                }
+        
+        const handleEnded = () => stopPlayback();
+        
+        const handleTimeUpdate = () => {
+            if (difficulty === 'Hard' && audio.currentTime >= 0.75) {
+                audio.pause();
+                audio.currentTime = 0;
+                stopPlayback();
             }
         };
+
         audio.addEventListener('ended', handleEnded);
+        audio.addEventListener('timeupdate', handleTimeUpdate);
+        
         return () => {
             audio.removeEventListener('ended', handleEnded);
+            audio.removeEventListener('timeupdate', handleTimeUpdate);
             if (animationRef.current) cancelAnimationFrame(animationRef.current);
         };
-    }, []);
+    }, [difficulty]);
 
     const handleGuess = (agentName, abilityName) => {
         if (gameStatus !== 'playing') return;
@@ -2018,9 +2034,9 @@ function ValorantHeardle({ onBack }) {
                 
                 <div style={{marginTop: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem'}}>
                     <span style={{color: '#fff', fontWeight: 'bold'}}>Difficulty:</span>
-                    <select style={{background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.5rem 1rem', borderRadius: '4px', outline: 'none'}}>
-                        <option>Normal</option>
-                        <option>Hard</option>
+                    <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} style={{background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.5rem 1rem', borderRadius: '4px', outline: 'none'}}>
+                        <option value="Normal">Normal</option>
+                        <option value="Hard">Hard</option>
                     </select>
                 </div>
             </div>
