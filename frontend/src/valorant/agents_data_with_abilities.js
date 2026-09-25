@@ -1,4 +1,4 @@
-const OFFICIAL_AGENTS = [
+export const OFFICIAL_AGENTS = [
   {
     "name": "GEKKO",
     "role": "Öncü",

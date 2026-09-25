@@ -1759,12 +1759,35 @@ function ValorantGame({ onBack }) {
 }
 
 
-const HEARDLE_DATA = [
-    { id: 1, title: "Jett (Rüzgâr Gibi)", url: "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg", answer: "Jett" },
-    { id: 2, title: "Vandal (Şarjör)", url: "https://actions.google.com/sounds/v1/weapons/laser_gun.ogg", answer: "Vandal" },
-    { id: 3, title: "Omen (Paranoya)", url: "https://actions.google.com/sounds/v1/horror/creepy_wind.ogg", answer: "Omen" },
-    { id: 4, title: "Ahşap Zemin (Ayak Sesi)", url: "https://actions.google.com/sounds/v1/foley/footsteps_wood_floor.ogg", answer: "Ahşap" }
-];
+let HEARDLE_DATA = [];
+if (typeof OFFICIAL_AGENTS !== 'undefined') {
+    let _hId = 1;
+    OFFICIAL_AGENTS.forEach(agent => {
+        if (agent.abilities) {
+            agent.abilities.forEach(ab => {
+                // KAY/O is special, otherwise format as Title Case (Gekko, Fade, etc.)
+                let folderName = agent.name;
+                if (agent.name.toUpperCase() === 'KAY/O') {
+                    folderName = 'KAY/O';
+                } else {
+                    folderName = agent.name.charAt(0).toUpperCase() + agent.name.slice(1).toLowerCase();
+                }
+                
+                HEARDLE_DATA.push({
+                    id: _hId++,
+                    title: `${agent.name} (${ab.name})`,
+                    url: `/valorant/abilities/${folderName}/${ab.slot.toLowerCase()}.wav`,
+                    answer: agent.name, // To match agent name check
+                    abilityName: ab.name // Additional field if needed later
+                });
+            });
+        }
+    });
+} else {
+    HEARDLE_DATA = [
+        { id: 1, title: "Jett (Rüzgâr Gibi)", url: "https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg", answer: "Jett" }
+    ];
+}
 
 function ValorantHeardle({ onBack }) {
     const [currentSound, setCurrentSound] = useState(HEARDLE_DATA[Math.floor(Math.random() * HEARDLE_DATA.length)]);
@@ -1820,15 +1843,17 @@ function ValorantHeardle({ onBack }) {
     const handleGuess = (agentName, abilityName) => {
         if (gameStatus !== 'playing') return;
 
-        // Mock check logic based on agent name or answer
-        const isCorrect = currentSound.answer.toLowerCase() === agentName.toLowerCase() || 
-                          currentSound.title.toLowerCase().includes(agentName.toLowerCase());
+        // Strict check: both agent name and ability name must match if abilityName is provided in data
+        const isCorrect = currentSound.abilityName 
+            ? (currentSound.abilityName.toLowerCase() === abilityName.toLowerCase() && currentSound.answer.toLowerCase() === agentName.toLowerCase())
+            : (currentSound.answer.toLowerCase() === agentName.toLowerCase() || currentSound.title.toLowerCase().includes(agentName.toLowerCase()));
 
         if (isCorrect) {
             setGameStatus('won');
         } else {
-            if (!wrongGuesses.includes(abilityName)) {
-                setWrongGuesses([...wrongGuesses, abilityName]);
+            const guessLabel = `${agentName} - ${abilityName}`;
+            if (!wrongGuesses.includes(guessLabel)) {
+                setWrongGuesses([...wrongGuesses, guessLabel]);
             }
             const newLives = lives - 1;
             setLives(newLives);
@@ -1992,7 +2017,7 @@ function ValorantHeardle({ onBack }) {
                         {gameStatus === 'won' ? 'CORRECT!' : 'GAME OVER'}
                     </h2>
                     <p style={{fontSize: '1.5rem', marginBottom: '2rem', color: '#fff'}}>
-                        The answer was: <strong style={{color: 'var(--valorant-red)'}}>{currentSound.answer}</strong>
+                        The answer was: <strong style={{color: 'var(--valorant-red)'}}>{currentSound.title}</strong>
                     </p>
                     <button onClick={restartGame} className="category-btn active" style={{padding: '1rem 3rem', fontSize: '1.2rem'}}>Play Again</button>
                 </div>
