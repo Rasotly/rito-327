@@ -127,6 +127,7 @@ function ValorantModule({ onBack }) {
           {activeTab === 'maps' && <ValorantMaps />}
           {activeTab === 'agents' && <ValorantAgents />}
           {activeTab === 'weapons' && <ValorantWeapons />}
+          {activeTab === 'game' && <ValorantGame />}
         </div>
       </div>
     </div>
@@ -1603,6 +1604,234 @@ function ValorantWeapons() {
         ))}
       </div>
     </div>
+  );
+}
+
+
+const GAME_SKILLS = [
+  {
+    "name": "PATLAYICI ÇANTA",
+    "agentName": "RAZE",
+    "image": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/abilities/ability1/displayicon.png",
+    "cost": 300
+  },
+  {
+    "name": "RENK TESİRLİ BOMBA",
+    "agentName": "RAZE",
+    "image": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/abilities/ability2/displayicon.png",
+    "cost": 200
+  },
+  {
+    "name": "SİBER KAFES",
+    "agentName": "CYPHER",
+    "image": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/ability1/displayicon.png",
+    "cost": 200
+  },
+  {
+    "name": "GİZLİ KAMERA",
+    "agentName": "CYPHER",
+    "image": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/ability2/displayicon.png",
+    "cost": 100
+  },
+  {
+    "name": "ŞOK OKU",
+    "agentName": "SOVA",
+    "image": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/ability1/displayicon.png",
+    "cost": 400
+  },
+  {
+    "name": "KEŞİF OKU",
+    "agentName": "SOVA",
+    "image": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/ability2/displayicon.png",
+    "cost": 150
+  },
+  {
+    "name": "NANOSÜRÜ",
+    "agentName": "KILLJOY",
+    "image": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/abilities/grenade/displayicon.png",
+    "cost": 250
+  },
+  {
+    "name": "ALARM BOTU",
+    "agentName": "KILLJOY",
+    "image": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/abilities/ability1/displayicon.png",
+    "cost": 200
+  },
+  {
+    "name": "ZEHİR BULUTU",
+    "agentName": "VIPER",
+    "image": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/abilities/ability1/displayicon.png",
+    "cost": 300
+  },
+  {
+    "name": "ZEHİR PERDESİ",
+    "agentName": "VIPER",
+    "image": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/abilities/ability2/displayicon.png",
+    "cost": 200
+  },
+  {
+    "name": "YAKAR TOP",
+    "agentName": "PHOENIX",
+    "image": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/ability1/displayicon.png",
+    "cost": 250
+  },
+  {
+    "name": "FALSO",
+    "agentName": "PHOENIX",
+    "image": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/ability2/displayicon.png",
+    "cost": 200
+  },
+  {
+    "name": "YAVAŞLATAN KÜRE",
+    "agentName": "SAGE",
+    "image": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/ability1/displayicon.png",
+    "cost": 400
+  },
+  {
+    "name": "CAN KÜRESİ",
+    "agentName": "SAGE",
+    "image": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/ability2/displayicon.png",
+    "cost": 200
+  },
+  {
+    "name": "SÖMÜR",
+    "agentName": "REYNA",
+    "image": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/abilities/ability1/displayicon.png",
+    "cost": 200
+  },
+  {
+    "name": "AZLET",
+    "agentName": "REYNA",
+    "image": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/abilities/ability2/displayicon.png",
+    "cost": 250
+  },
+  {
+    "name": "PARANOYA",
+    "agentName": "OMEN",
+    "image": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/ability1/displayicon.png",
+    "cost": 250
+  },
+  {
+    "name": "KARANLIK ÖRTÜ",
+    "agentName": "OMEN",
+    "image": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/ability2/displayicon.png",
+    "cost": 100
+  },
+  {
+    "name": "HAFİFLE",
+    "agentName": "JETT",
+    "image": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/ability1/displayicon.png",
+    "cost": 150
+  },
+  {
+    "name": "DUMAN BULUTU",
+    "agentName": "JETT",
+    "image": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/grenade/displayicon.png",
+    "cost": 200
+  }
+];
+
+
+function ValorantGame() {
+  const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(parseInt(localStorage.getItem('valHighScore') || '0'));
+  
+  const playableSkills = GAME_SKILLS;
+  
+  const getRandomSkill = (excludeSkill) => {
+      let s;
+      do {
+          s = playableSkills[Math.floor(Math.random() * playableSkills.length)];
+      } while (excludeSkill && (s.name === excludeSkill.name || s.cost === excludeSkill.cost));
+      return s;
+  };
+
+  const [skillA, setSkillA] = useState(getRandomSkill(null));
+  const [skillB, setSkillB] = useState(getRandomSkill(skillA));
+  const [gameOver, setGameOver] = useState(false);
+  const [feedback, setFeedback] = useState(null);
+
+  const handleGuess = (guessHigher) => {
+      const isHigher = skillB.cost > skillA.cost;
+      const correct = (guessHigher && isHigher) || (!guessHigher && !isHigher);
+      
+      if (correct) {
+          setFeedback('correct');
+          setScore(s => s + 1);
+          setTimeout(() => {
+              setSkillA(skillB);
+              setSkillB(getRandomSkill(skillB));
+              setFeedback(null);
+          }, 1500);
+      } else {
+          setFeedback('wrong');
+          if (score > highScore) {
+              setHighScore(score);
+              localStorage.setItem('valHighScore', score);
+          }
+          setTimeout(() => {
+              setGameOver(true);
+          }, 2000);
+      }
+  };
+
+  const restartGame = () => {
+      setScore(0);
+      setGameOver(false);
+      setFeedback(null);
+      const sA = getRandomSkill(null);
+      setSkillA(sA);
+      setSkillB(getRandomSkill(sA));
+  };
+
+  if (gameOver) {
+      return (
+          <div className="game-container game-over-container">
+              <h2 style={{fontSize: '5rem', color: 'var(--valorant-red)', fontFamily: "'Teko', sans-serif"}}>OYUN BİTTİ</h2>
+              <p style={{fontSize: '2rem'}}>Skorun: {score}</p>
+              <p style={{fontSize: '1.5rem', color: 'var(--text-secondary)'}}>En Yüksek Skor: {highScore}</p>
+              <button onClick={restartGame} className="category-btn active" style={{marginTop: '2rem', padding: '1rem 3rem', fontSize: '1.5rem'}}>Tekrar Oyna</button>
+          </div>
+      );
+  }
+
+  return (
+      <div className="game-container">
+          <div className="game-header" style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem'}}>
+              <h3 style={{fontFamily: "'Teko', sans-serif", fontSize: '3rem', margin: 0}}>HANGİ YETENEK DAHA PAHALI?</h3>
+              <div className="game-score" style={{fontSize: '1.5rem', background: 'rgba(255,255,255,0.1)', padding: '0.5rem 1.5rem', borderRadius: '50px'}}>Skor: {score} | Yüksek: {highScore}</div>
+          </div>
+          
+          <div className="game-arena">
+              <div className="game-card-half">
+                  <div className="game-card-content">
+                      <img src={skillA.image} alt={skillA.name} className="game-img" style={{filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'}} />
+                      <h2>{skillA.name}</h2>
+                      <p style={{color: 'var(--text-secondary)', margin: '0 0 1rem 0'}}>{skillA.agentName}</p>
+                      <p className="price">¤ {skillA.cost}</p>
+                  </div>
+              </div>
+              
+              <div className="vs-circle">VS</div>
+              
+              <div className={`game-card-half ${feedback === 'correct' ? 'correct-bg' : feedback === 'wrong' ? 'wrong-bg' : ''}`}>
+                  <div className="game-card-content">
+                      <img src={skillB.image} alt={skillB.name} className="game-img" style={{filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'}} />
+                      <h2>{skillB.name}</h2>
+                      <p style={{color: 'var(--text-secondary)', margin: '0 0 1rem 0'}}>{skillB.agentName}</p>
+                      
+                      {feedback ? (
+                          <p className={`price ${feedback === 'correct' ? 'text-green' : 'text-red'}`}>¤ {skillB.cost}</p>
+                      ) : (
+                          <div className="guess-buttons">
+                              <button onClick={() => handleGuess(true)} className="btn-higher">▲ Daha Pahalı</button>
+                              <button onClick={() => handleGuess(false)} className="btn-lower">▼ Daha Ucuz</button>
+                          </div>
+                      )}
+                  </div>
+              </div>
+          </div>
+      </div>
   );
 }
 
