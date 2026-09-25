@@ -1803,32 +1803,49 @@ function ValorantGame() {
           </div>
           
           <div className="game-arena">
-              <div className="game-card-half">
-                  <div className="game-card-content">
-                      <img src={skillA.image} alt={skillA.name} className="game-img" style={{filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'}} />
-                      <h2>{skillA.name}</h2>
-                      <p style={{color: 'var(--text-secondary)', margin: '0 0 1rem 0'}}>{skillA.agentName}</p>
-                      <p className="price">¤ {skillA.cost}</p>
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div className={`game-card-half ${feedback === 'correct' ? 'correct-bg' : feedback === 'wrong' ? 'wrong-bg' : ''}`}>
+                      <div className="game-card-content">
+                          <img src={skillA.image} alt={skillA.name} className="game-img" style={{filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'}} />
+                          <h2>{skillA.name}</h2>
+                          <p style={{color: 'var(--text-secondary)', margin: '0 0 1rem 0'}}>{skillA.agentName}</p>
+                          {feedback ? (
+                              <p className="price text-green">¤ {skillA.cost}</p>
+                          ) : (
+                              <p className="price" style={{color: 'transparent'}}>¤ {skillA.cost}</p>
+                          )}
+                      </div>
                   </div>
+                  {!feedback && (
+                      <div className="guess-buttons" style={{ flexDirection: 'row', gap: '1rem', marginTop: '1.5rem', visibility: 'hidden' }}>
+                          <button className="btn-higher" style={{ flex: 1, whiteSpace: 'nowrap', padding: '1rem 0' }}>▲ DAHA PAHALI</button>
+                          <button className="btn-lower" style={{ flex: 1, whiteSpace: 'nowrap', padding: '1rem 0' }}>▼ DAHA UCUZ</button>
+                      </div>
+                  )}
               </div>
               
-              <div className="vs-circle">VS</div>
+              <div className="vs-circle" style={{ marginTop: feedback ? '0' : '-35px' }}>VS</div>
               
-              <div className={`game-card-half ${feedback === 'correct' ? 'correct-bg' : feedback === 'wrong' ? 'wrong-bg' : ''}`}>
-                  <div className="game-card-content">
-                      <img src={skillB.image} alt={skillB.name} className="game-img" style={{filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'}} />
-                      <h2>{skillB.name}</h2>
-                      <p style={{color: 'var(--text-secondary)', margin: '0 0 1rem 0'}}>{skillB.agentName}</p>
-                      
-                      {feedback ? (
-                          <p className={`price ${feedback === 'correct' ? 'text-green' : 'text-red'}`}>¤ {skillB.cost}</p>
-                      ) : (
-                          <div className="guess-buttons">
-                              <button onClick={() => handleGuess(true)} className="btn-higher">▲ Daha Pahalı</button>
-                              <button onClick={() => handleGuess(false)} className="btn-lower">▼ Daha Ucuz</button>
-                          </div>
-                      )}
+              <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                  <div className={`game-card-half ${feedback === 'correct' ? 'correct-bg' : feedback === 'wrong' ? 'wrong-bg' : ''}`}>
+                      <div className="game-card-content">
+                          <img src={skillB.image} alt={skillB.name} className="game-img" style={{filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'}} />
+                          <h2>{skillB.name}</h2>
+                          <p style={{color: 'var(--text-secondary)', margin: '0 0 1rem 0'}}>{skillB.agentName}</p>
+                          
+                          {feedback ? (
+                              <p className={`price ${feedback === 'correct' ? 'text-green' : 'text-red'}`}>¤ {skillB.cost}</p>
+                          ) : (
+                              <p className="price" style={{color: 'transparent'}}>¤ {skillB.cost}</p>
+                          )}
+                      </div>
                   </div>
+                  {!feedback && (
+                      <div className="guess-buttons" style={{ flexDirection: 'row', gap: '1rem', marginTop: '1.5rem' }}>
+                          <button onClick={() => handleGuess(true)} className="btn-higher" style={{ flex: 1, whiteSpace: 'nowrap', padding: '1rem 0' }}>▲ DAHA PAHALI</button>
+                          <button onClick={() => handleGuess(false)} className="btn-lower" style={{ flex: 1, whiteSpace: 'nowrap', padding: '1rem 0' }}>▼ DAHA UCUZ</button>
+                      </div>
+                  )}
               </div>
           </div>
       </div>
