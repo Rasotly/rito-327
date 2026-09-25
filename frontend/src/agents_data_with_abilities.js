@@ -1,0 +1,990 @@
+const OFFICIAL_AGENTS = [
+  {
+    "name": "GEKKO",
+    "role": "Öncü",
+    "description": "Los Angeles çocuğu Gekko yaratıklardan oluşan belalı tayfasına liderlik etmekte. Gekko\\'nun tayfası ileri atılarak düşmanların başına bela olur. Sonrasında Gekko onları toplar ve birlikte tekrar bela olacak düşman aramaya koyulurlar.",
+    "image": "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "KANKUŞ",
+        "description": "Kankuş\\'u KUŞAN. Kankuş\\'u düşman aramaya göndermek için ATEŞ ET. Kankuş gördüğü ilk düşmana doğru Sersemletici bir patlama oluşturur. Kankuş\\'un Spike\\'ı yerleştirmesi veya imha etmesi için Spike bölgesine veya yerleştirilmiş Spike\\'a nişan al ve ALT. ATIŞ kullan. Yerleştirmek için Spike Gekko\\'da olmalıdır. Kankuş süresi dolduğunda pasif bir küreye dönüşür. Onu geri almak ve kısa bir bekleme süresinin ardından bir Kankuş yükü daha edinmek için küreyle ETKİLEŞİME GİR.",
+        "icon": "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "ŞAŞKIN",
+        "description": "Şaşkın\\'ı KUŞAN. Şaşkın\\'ı havada süzülecek şekilde fırlatmak için ATEŞ ET. Şaşkın enerji topladıktan sonra görüşüne giren düşmanlara plazma atar. Plazmanın isabet ettiği düşmanlar Kör olur. Şaşkın süresi dolduğunda pasif bir küreye dönüşür. Onu geri almak ve kısa bir bekleme süresinin ardından bir Şaşkın yükü daha edinmek için küreyle ETKİLEŞİME GİR.",
+        "icon": "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "POFUDUK TARLASI",
+        "description": "Pofu\\'yu KUŞAN. Pofu\\'yu bomba gibi fırlatmak için ATEŞ ET. Yavaşça fırlatmak için ALT. ATIŞ kullan. Pofu indiği yerde büyük bir alana yayılır, bu alandaki düşmanlara her saniye düşük miktarda hasar verir ve kısa bir gecikmenin ardından patlar. Onu geri almak ve kısa bir bekleme süresinin ardından bir Pofu yükü daha edinmek için küreyle ETKİLEŞİME GİR.",
+        "icon": "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "ZORBA",
+        "description": "Zorba\\'yı KUŞAN. Zorba\\'nın zihnine girerek onunla düşman bölgesinde gezinmek için ATEŞ ET. Zorba\\'nın ileri atılıp patlayarak küçük bir alandaki tüm oyuncuları Alıkoyması için ETKİNLEŞTİR. Zorba süresi dolduğunda pasif bir küreye dönüşür. Onu geri almak ve kısa bir bekleme süresinin ardından bir Zorba yükü daha edinmek için küreyle ETKİLEŞİME GİR. Zorba yalnızca bir kere geri alınabilir.",
+        "icon": "https://media.valorant-api.com/agents/e370fa57-4757-3604-3648-499e1f642d3f/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "FADE",
+    "role": "Öncü",
+    "description": "Türk kelle avcısı Fade, düşmanların sırlarını gasp etmek için saf kâbus gücünü kullanır. Korkuyla uyum içinde çalışarak hedeflerini avlar ve hedeflerinin işini bitirmeden önce en büyük korkularını açığa çıkarır.",
+    "image": "https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "MIHLA",
+        "description": "Bir saf korku yumağı KUŞAN. Fırlatmak için ATEŞ ET. Yumak belli bir süre sonra yere iner. Yumağı yere erken indirmek için TEKRAR KULLAN. Yumak yere indiğinde açılarak yakındaki düşmanları olduğu yere sabitler. Sabitlenmiş düşmanlar Sağır olur ve Çürüme hasarı almaya başlar.",
+        "icon": "https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "MUSALLAT",
+        "description": "Musallat olan bir gözcü KUŞAN. Fırlatmak için ATEŞ ET. Gözcü belli bir süre sonra yere iner. Gözcüyü yere erken indirmek için TEKRAR KULLAN. Gözcü yere indiğinde etkinleşerek görüş menzili içinde kalan düşmanları Açığa Çıkarır ve hepsine dehşet izi uygular. Düşmanlar gözcüyü yok edebilir.",
+        "icon": "https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "ECEL",
+        "description": "Bir Ecel KUŞAN. Ecel\\'i ileri göndermek için ATEŞ ET. Ecel\\'i nişangâhının baktığı tarafa doğru yönlendirmek için ATEŞ DÜĞMESİNİ BASILI TUT. Ecel gördüğü ilk düşmanın veya dehşet izinin peşine takılır ve yakaladığı düşmanın Görüşünü Kısıtlar.",
+        "icon": "https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "GECE KARANLIĞI",
+        "description": "Kâbusun gücünü KUŞAN. Durdurulamaz bir kâbus enerjisi göndermek için ATEŞ ET. Dalgaya maruz kalan düşmanlar dehşet izleriyle İşaretlenir, Sağır olur ve Çürüme hasarı almaya başlar.",
+        "icon": "https://media.valorant-api.com/agents/dade69b4-4f5a-8528-247b-219e5a1facd6/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "BREACH",
+    "role": "Öncü",
+    "description": "İnsanüstü güçlere sahip İsveçli Breach, düşman zemininde sert bir şekilde yolu açan, hedeflenebilir kinetik dalgalar gönderir. Sebep olduğu hasar ve darbeler, savaşın dengelerini değiştirecek niteliktedir.",
+    "image": "https://media.valorant-api.com/agents/5f8d3a7f-467b-97f3-062c-13acf203c006/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/5f8d3a7f-467b-97f3-062c-13acf203c006/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "GÖZ KAMAŞTIRAN",
+        "description": "Kör Edici bir yük KUŞAN. Duvarın içinden geçtikten sonra art arda hızla gerçekleşen patlamalar oluşturmak için ATEŞ ET. Patlayan yük, ona bakan herkesi Kör eder.",
+        "icon": "https://media.valorant-api.com/agents/5f8d3a7f-467b-97f3-062c-13acf203c006/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "FAY HATTI",
+        "description": "Sismik bir darbe KUŞAN. Darbenin etkili olacağı mesafeyi arttırmak için BASILI TUT. Bir sarsıntı oluşturarak etki alanında ve alan hattı üzerinde kalan tüm oyuncuları Sersemletmek için SERBEST BIRAK.",
+        "icon": "https://media.valorant-api.com/agents/5f8d3a7f-467b-97f3-062c-13acf203c006/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "ARTÇI SARSINTI",
+        "description": "Termonükleer bir yük KUŞAN. Duvarın içinden geçtikten sonra zamanla gerçekleşen patlamalar için ATEŞ ET. Patlayan yük, etki alanında kalan herkese ağır hasar verir.",
+        "icon": "https://media.valorant-api.com/agents/5f8d3a7f-467b-97f3-062c-13acf203c006/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "ZELZELE",
+        "description": "Sismik bir yük KUŞAN. Geniş bir alanın içinde kalan zemini dalga dalga etkileyen bir deprem tetiklemek için ATEŞ ET. Depreme yakalanan herkes Sersemler ve havaya savrulur.",
+        "icon": "https://media.valorant-api.com/agents/5f8d3a7f-467b-97f3-062c-13acf203c006/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "DEADLOCK",
+    "role": "Gözcü",
+    "description": "Norveçli ajan Deadlock, savaş esnasında en ölümcül saldırıları bile savuşturabilecek son teknoloji bir nanobağ ağı kullanır. Keskin gözlerinden kaçan, vahşetinden kurtulan olmamıştır.",
+    "image": "https://media.valorant-api.com/agents/cc8b64c8-4b25-4ff9-6e7f-37b4da43d235/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/cc8b64c8-4b25-4ff9-6e7f-37b4da43d235/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "SONİK SENSÖR",
+        "description": "Bir Sonik Sensör KUŞAN. Sensörü yerleştirmek için ATEŞ ET. Sensör, düşman seslerini algılamak üzere bölgeyi tarar. Eğer taradığı bölgede ayak sesi, silah sesi veya yüksek ses tespit ederse bölgeye sersemletme uygular. Bu yeteneği TEKRAR YERLEŞTİRMEK üzere bıraktığın yerden alabilirsin.",
+        "icon": "https://media.valorant-api.com/agents/cc8b64c8-4b25-4ff9-6e7f-37b4da43d235/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "BARİYER AĞI",
+        "description": "Bir Bariyer Ağı diski KUŞAN. Diski ileri fırlatmak için ATEŞ ET. Diskin indiği noktada yanlara doğru açılan ve karakterlerin hareketini engelleyen bariyerler oluşur.",
+        "icon": "https://media.valorant-api.com/agents/cc8b64c8-4b25-4ff9-6e7f-37b4da43d235/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "NANOÇEKİM",
+        "description": "Bir NanoÇekim bombası KUŞAN. Fırlatmak için ATEŞ ET. Yavaşça fırlatmak için ALT. ATIŞ kullan. NanoÇekim bombası yere temas ettiğinde patlayarak etki alanında kalanların çömelmelerine neden olur ve onları yavaşlatır.",
+        "icon": "https://media.valorant-api.com/agents/cc8b64c8-4b25-4ff9-6e7f-37b4da43d235/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "KISKIVRAK",
+        "description": "Bir Nanobağ Hızlandırıcı KUŞAN. Yakaladığı ilk düşmanı sarıp kıskıvrak yakalayan bir nanobağ dalgası göndermek için ATEŞ ET. Kozaya yakalanan düşman, oluşan nanobağ yolu boyunca çekilir. Düşman, nanobağ kozasından kurtarılmazsa ölür. Nanobağ kozası yok edilebilir.",
+        "icon": "https://media.valorant-api.com/agents/cc8b64c8-4b25-4ff9-6e7f-37b4da43d235/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "TEJO",
+    "role": "Öncü",
+    "description": "Kolombiyalı deneyimli istihbarat danışmanı Tejo\\'nun balistik güdüm sistemi düşmanları oldukları yerden çıkmaya veya canlarını vermeye zorlar. İsabetli saldırıları sayesinde Tejo rakiplerinin dengesini bozar ve onlara karşı üstünlük kurar.",
+    "image": "https://media.valorant-api.com/agents/b444168c-4e35-8076-db47-ef9bf368f384/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/b444168c-4e35-8076-db47-ef9bf368f384/background.png",
+    "abilities": [
+      {
+        "slot": "Ability2",
+        "name": "GÜDÜMLÜ SALVO",
+        "description": "Sanal bir hedefleme sistemi KUŞAN. Harita üzerinden en fazla iki hedef konum seçmek için ATEŞ ET. Otomatik olarak hedef konumlara doğru güdümlenen ve hedefe ulaştığında art arda patlayarak hasar veren füzeler atmak için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/b444168c-4e35-8076-db47-ef9bf368f384/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "ÖZEL TESLİMAT",
+        "description": "Bir yapışkan bomba KUŞAN. Fırlatmak için ATEŞ ET. Bomba değdiği ilk yüzeye yapışır ve patlar. Patlamadan etkilenen tüm hedefler hasar alır ve Sersemler. Bombayı bir kere sekecek şekilde fırlatmak için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/b444168c-4e35-8076-db47-ef9bf368f384/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "KIYAMET",
+        "description": "Bir taktiksel saldırı hedefleme haritası KUŞAN. Saldırının başlangıç noktasını seçmek için ATEŞ ET. Saldırının biteceği noktayı da seçip saldırıyı başlatmak için tekrar ATEŞ ET ve seçilen rota boyunca ilerleyerek ölümcül hasar veren patlama dalgaları gönder. Harita hedeflemesi esnasında başlangıç noktasını iptal etmek için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/b444168c-4e35-8076-db47-ef9bf368f384/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "GİZLİ DRON",
+        "description": "Gizli bir dron KUŞAN. Dronu ileri doğru fırlatıp hareketlerini kontrol etmeye başlamak için ATEŞ ET. İsabet alan düşmanları Sindiren ve Açığa Çıkaran bir dalga göndermek için tekrar ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/b444168c-4e35-8076-db47-ef9bf368f384/abilities/grenade/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "RAZE",
+    "role": "Düellocu",
+    "description": "Bomba gibi bir kişiliğe ve kocaman silahlara sahip olan Raze, aramıza Brezilya\\'dan katılıyor. Kafa göz dalan oyun tarzıyla düşmanları saklandıkları deliklerden çıkarmakta ve dar alanları \\'\\'bam bam bam\\'\\' temizlemekte üstüne yoktur.",
+    "image": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "PATLAYICI ÇANTA",
+        "description": "Zemine yapışan bir Patlayıcı Çanta\\'yı ANINDA fırlat. Elinden çıkan çantayı patlatmak için yeteneği TEKRAR KULLAN. Çanta isabet ettiği her şeyi yerinden oynatır ve tamamen kurulduysa onlara hasar verir.",
+        "icon": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "RENK TESİRLİ BOMBA",
+        "description": "Bir parça tesirli el bombası KUŞAN. Fırlatmak için ATEŞ ET. Bomba patlayıp hasar verdikten sonra her biri menzilindeki herkese hasar veren bombacıklar oluşturur. Yavaşça fırlatmak için ALT. ATIŞ kullan. Renk Tesirli Bomba\\'nın yükü her iki skorda bir dolar.",
+        "icon": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "BOMBOT",
+        "description": "Bir Bombot KUŞAN. Göndermek için ATEŞ ET; bot yerde düz bir hat halinde ilerler ve duvarlardan seker. Bombot önündeki koni şeklindeki alana giren tüm düşmanlara kilitlenir ve onları kovalar. Yakalayabilirse, ağır hasar vererek patlar.",
+        "icon": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "NEFES KESEN",
+        "description": "Bir roketatar KUŞAN. Herhangi bir şeye temas ettiğinde patlayıp muazzam alan hasarı veren bir roket fırlatmak için ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "CHAMBER",
+    "role": "Gözcü",
+    "description": "Her daim şık ve tam teçhizat dolaşan Fransız silah tasarımcısı Chamber, ölümcül isabetliliğiyle rakipleri ortadan kaldırıyor. Özel yeteneklerini kullanarak görüş mesafesi sağlar, uzaktaki rakipleri avlar ve her plana mükemmel bir şekilde uyum sağlar.",
+    "image": "https://media.valorant-api.com/agents/22697a3d-45bf-8dd7-4fec-84a9e28c69d7/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/22697a3d-45bf-8dd7-4fec-84a9e28c69d7/background.png",
+    "abilities": [
+      {
+        "slot": "Ability2",
+        "name": "BULUŞMA",
+        "description": "Bir ışınlayıcı KUŞAN. Işınlayıcıyı zemine yerleştirmek için ATEŞ ET. Işınlayıcının menzilinde ve yerde dururken hızlıca ışınlayıcıya ışınlanmak için TEKRAR ETKİNLEŞTİR. Işınlayıcıyı TEKRAR YERLEŞTİRMEK üzere bıraktığın yerden alabilirsin.",
+        "icon": "https://media.valorant-api.com/agents/22697a3d-45bf-8dd7-4fec-84a9e28c69d7/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "KARTVİZİT",
+        "description": "Düşmanlar için etrafı tarayan bir tuzak KUŞAN. Tuzağı zemine yerleştirmek için ATEŞ ET. Görünen düşmanlar tuzağın menzili içine girdiğinde, tuzak geri sayıma başlar. Tuzak devreye girdiğinde etki alanını stabil olmayan bir hale getirerek içinde bulunan düşmanları Yavaşlatır. Tuzağı TEKRAR YERLEŞTİRMEK üzere bıraktığın yerden alabilirsin.",
+        "icon": "https://media.valorant-api.com/agents/22697a3d-45bf-8dd7-4fec-84a9e28c69d7/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "KELLE AVCISI",
+        "description": "Ağır bir tabanca kuşanmak için ETKİNLEŞTİR. Tabancanın ALT. ATIŞI nişan almanı sağlar.",
+        "icon": "https://media.valorant-api.com/agents/22697a3d-45bf-8dd7-4fec-84a9e28c69d7/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "KESKİN TARZ",
+        "description": "Gövdeye doğrudan isabet ettiği düşmanları anında öldüren güçlü ve özel bir keskin nişancı tüfeği kuşanmak için ETKİNLEŞTİR. Nişan almak için ALT. ATIŞ kullan. Düşmanı öldürdüğün yerde, içine giren düşmanları Yavaşlatan bir etki alanı oluşur.",
+        "icon": "https://media.valorant-api.com/agents/22697a3d-45bf-8dd7-4fec-84a9e28c69d7/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "KAY/O",
+    "role": "Öncü",
+    "description": "KAY/O, Radyantları etkisiz hale getirmek için üretilmiş bir savaş makinesi. Düşmanlarının yeteneklerini Sindirerek karşı koyma yetilerini bastırır. Böylece hem kendisini hem de takım arkadaşlarını korur.",
+    "image": "https://media.valorant-api.com/agents/601dbbe7-43ce-be57-2a40-4abd24953621/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/601dbbe7-43ce-be57-2a40-4abd24953621/background.png",
+    "abilities": [
+      {
+        "slot": "Grenade",
+        "name": "PARÇA/Tesirli",
+        "description": "Patlayıcı bir şarapnel KUŞAN. Fırlatmak için ATEŞ ET. Yavaşça fırlatmak için ALT. ATIŞ kullan. Şarapnel yere yapışır, sonrasında birden fazla kez patlar ve tam merkezinde bulunanlara neredeyse ölümcül hasar verir.",
+        "icon": "https://media.valorant-api.com/agents/601dbbe7-43ce-be57-2a40-4abd24953621/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "FLAŞ/Bellek",
+        "description": "Bir Kör Edici bomba KUŞAN. Yüksekten fırlatmak için ATEŞ ET. Daha zayıf ama hızlı patlayan bir Kör Edici bomba atmak için ALT. ATIŞ kullan. Kör Edici bomba kısa bir süre sonra patlayarak görüş menzili içinde bulunan herkesi Kör eder.",
+        "icon": "https://media.valorant-api.com/agents/601dbbe7-43ce-be57-2a40-4abd24953621/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "SIFIR/Noktası",
+        "description": "Düşmanları Sindirmeni sağlayan bir bıçak KUŞAN. Fırlatmak için ATEŞ ET. Bıçak isabet ettiği ilk yüzeye saplanır ve kısa bir süre sonra patlayarak menzili içindeki düşmanları Sindirir. Düşmanlar bu bıçağı yok edebilir.",
+        "icon": "https://media.valorant-api.com/agents/601dbbe7-43ce-be57-2a40-4abd24953621/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "İPTAL/Komut",
+        "description": "KAY/O, kutuplaşmış radyanit enerjisiyle ANINDA aşırı yüklenir ve bulunduğu konumdan devasa bir etki alanına sahip enerji dalgaları yayar. Enerji dalgalarının isabet ettiği düşmanlar kısa bir süreliğine Sindirilir. Aşırı yükleme durumundayken KAY/O Kuvvetli Savaş kazanır ve çöktüğünde yeniden stabil hale getirilebilir.",
+        "icon": "https://media.valorant-api.com/agents/601dbbe7-43ce-be57-2a40-4abd24953621/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "SKYE",
+    "role": "Öncü",
+    "description": "Aramıza Avustralya\\'dan katılan Skye, beraberinde getirdiği vahşi hayvan ordusuyla birlikte çatışmayı iyiden iyiye kızıştırıyor. Düşmana ayak bağı olan hayvanları ve takım arkadaşlarını iyileştirme yetisiyle, takımının gücünü pekiştiriyor ve takımdaki herkesi kolluyor.",
+    "image": "https://media.valorant-api.com/agents/6f2a04ca-43e0-be17-7f36-b3908627744d/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/6f2a04ca-43e0-be17-7f36-b3908627744d/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "AV PEŞİNDE",
+        "description": "Bir Tazmanya kaplanı figürü KUŞAN. Avcıyı gönderip onu kontrol etmek için ATEŞ ET. Hayvanı kontrol ederken birden ileri atılarak çarpma halinde Sersemletici bir patlamaya sebep olmak ve doğrudan isabet alan düşmanlara hasar vermek için ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/6f2a04ca-43e0-be17-7f36-b3908627744d/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "KILAVUZ IŞIK",
+        "description": "Bir şahin figürü KUŞAN. Şahini ileri göndermek için ATEŞ ET. Şahini nişangâhının baktığı tarafa yöneltmek için ATEŞ DÜĞMESİNİ BASILI TUT. Şahini havada uçarken Kör Edici bir bombaya çevirmek için yeteneği TEKRAR KULLAN. Şahinin uçuşu başladıktan kısa bir süre sonra Kör Etme maksimum potansiyeline ulaşır.",
+        "icon": "https://media.valorant-api.com/agents/6f2a04ca-43e0-be17-7f36-b3908627744d/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "DOĞANIN ŞİFASI",
+        "description": "İyileştiren bir figür KUŞAN. Şifa gücünü odaklayarak menzil içinde ve görüş hattındaki takım arkadaşlarını İyileştirmek için ATEŞ DÜĞMESİNİ BASILI TUT. Bu yetenek, şifa gücü tamamen tükenene kadar birden fazla kez kullanılabilir. Skye kendini iyileştiremez.",
+        "icon": "https://media.valorant-api.com/agents/6f2a04ca-43e0-be17-7f36-b3908627744d/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "İZSÜRENLER",
+        "description": "Bir İzsüren figürü KUŞAN. En yakındaki üç düşmanın peşine düşecek üç tane İzsüren göndermek için ATEŞ ET. Bir İzsüren hedefine ulaştığında, hedefin Görüşünü Kısıtlar ve onu yavaşlatır. Düşmanlar İzsürenleri yok edebilir.",
+        "icon": "https://media.valorant-api.com/agents/6f2a04ca-43e0-be17-7f36-b3908627744d/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "CYPHER",
+    "role": "Gözcü",
+    "description": "Faslı bilgi uzmanı ve tek kişilik gözetleme ağı Cypher, düşmanın her hareketini bilir. Her sırrını duyar. Her manevrasını görür. Cypher\\'ın gözleri hep üzerinizdedir.",
+    "image": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "SİBER KAFES",
+        "description": "Siber kafesi ANINDA Cypher\\'ın önüne fırlat. Düşmanlar içinden geçtiğinde ses çıkaran ve görüşü engelleyen bir alan oluşturmak için ETKİNLEŞTİR.",
+        "icon": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "GİZLİ KAMERA",
+        "description": "Bir gizli kamera KUŞAN. Gizli kamerayı hedef konuma yerleştirmek için ATEŞ ET. Kamera görüşünü kontrol etmek için bu yeteneği TEKRAR KULLAN. Kamera kontrolü sendeyken düşmanları işaretleyen bir iğne fırlatmak için ATEŞ ET. Bu iğne, isabet ettiği herhangi bir düşmanın konumunu Açığa Çıkarır. Bu yeteneği TEKRAR YERLEŞTİRMEK üzere bıraktığın yerden alabilirsin.",
+        "icon": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "BUBİ TUZAĞI",
+        "description": "Bir bubi tuzağı KUŞAN. Hedef konuma yok edilebilir, gizli bir bubi tuzağı yerleştirmek için ATEŞ ET. Yerleştirilen konum ile karşısındaki duvar arasına bir hat çekilir. Bubi tuzağına yakalanan düşmanlar cihazı zamanında yok edemedikleri takdirde kısa süre içinde Yavaşlatılır ve Açığa Çıkar. Bu yeteneği TEKRAR YERLEŞTİRMEK üzere bıraktığın yerden alabilirsin.",
+        "icon": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "NÖRON HIRSIZI",
+        "description": "Ölü bir düşman üzerinde ANINDA kullan ve takımı hakkında bilgi indir. Kısa bir gecikmenin ardından hayatta olan diğer düşmanların konumu iki kere Açığa Çıkar.",
+        "icon": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "SOVA",
+    "role": "Öncü",
+    "description": "Rusya\\'nın uçsuz bucaksız tundralarında yetişen Sova düşmanlarını acımasız bir verimlilik ve titizlikle tespit eder, izlerini sürer ve onları yok eder. Özel yayı ve sıra dışı iz sürme yetenekleri ile ondan kaçsanız da asla saklanamazsınız. ",
+    "image": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "ŞOK OKU",
+        "description": "Şok okuna sahip bir yay KUŞAN. Patlayıcı oku ileri yollamak için ATEŞ ET. Ok çarpışma anında infilak eder ve yakındaki oyunculara hasar verir. Atış mesafesini uzatmak için ATEŞ DÜĞMESİNİ BASILI TUT. Oku iki kereye kadar sektirmek için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "KEŞİF OKU",
+        "description": "Keşif okuna sahip bir yay KUŞAN. Keşif okunu ileri yollamak için ATEŞ ET. Ok çarpışma anında etkinleşir ve görüş hattı yakınında kalan düşmanların konumunu Açığa Çıkarır. Düşmanlar bu oku yok edebilir. Atış mesafesini uzatmak için ATEŞ DÜĞMESİNİ BASILI TUT. Oku iki kereye kadar sektirmek için ALT. ATIŞ kullan. ",
+        "icon": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "BAYKUŞ DRON",
+        "description": "Bir Baykuş Dron KUŞAN. Dronu göndermek ve hareketlerini kontrol etmek için ATEŞ ET. Dronun kontrolü sendeyken düşmanları işaretleyen bir iğne fırlatmak için ATEŞ ET. Bu iğne, isabet ettiği herhangi bir düşmanın konumunu Açığa Çıkarır. Düşmanlar Baykuş Dron\\'u yok edebilir.",
+        "icon": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "AVCININ HİDDETİ",
+        "description": "Üç taneye kadar duvar delici enerji patlaması ateşleyebilen bir yay KUŞAN. Sova\\'nın önündeki bir hat üzerinde enerji patlamaları oluşturmak ve isabet alan düşmanlara hasar verip konumlarını Açığa Çıkarmak için ATEŞ ET. Bu yetenek, yetenek sayacı etkinken iki kez daha YENİDEN KULLANILABİLİR.",
+        "icon": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Passive",
+        "name": "Tekinsiz Nişancı",
+        "description": "Sova\\'nın özel yapım yayı, okları atar ve onları çevredeki yüzeylerden sektirebilir. Atış düğmesini basılı tutmak yayın gücünü yükler, bırakmak da oku serbest bırakır. Sekme sayısını ayarlamak için alternatif atış kullan. Okların yüzeylerden sekebilir. Sol fare düğmesini basılı tutmak, yayın menzil doğrultusunu genişletir. Sağ fare düğmesiyle yüzey sekme sayıları arasında geçiş yap. Sol fare düğmesi bırakıldığında ok serbest kalır.",
+        "icon": null
+      }
+    ]
+  },
+  {
+    "name": "MIKS",
+    "role": "Kontrol Uzmanı",
+    "description": "Hırvatistan\\'dan gelen Miks, saf ses enerjisini sahneye taşıyor. Bulaşıcı tutkusu ve ses dalgalarını kontrol eden güçleriyle ekibini birlikte hareket etmeye teşvik eder ve savaş alanının temposunu beraber değiştirirler.",
+    "image": "https://media.valorant-api.com/agents/7c8a4701-4de6-9355-b254-e09bc2a34b72/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/7c8a4701-4de6-9355-b254-e09bc2a34b72/background.png",
+    "abilities": [
+      {
+        "slot": "Grenade",
+        "name": "M PATLAMASI",
+        "description": "M Patlaması\\'nı KUŞAN. ALT. ATIŞ ile Sersemletme ve İyileştirme arasında geçiş yap. Cihazı fırlatmak için ATEŞ ET. M Patlaması yere düştüğünde ses dalgaları yayarak oyunculara Sersemletme veya İyileştirme uygular.",
+        "icon": "https://media.valorant-api.com/agents/7c8a4701-4de6-9355-b254-e09bc2a34b72/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "DALGA FORMU",
+        "description": "Bir Harita Hedefleyicisi KUŞAN. Konum belirlemek için ATEŞ ET. ALT. ATIŞ ile belirlediğin konumlarda duman oluştur.",
+        "icon": "https://media.valorant-api.com/agents/7c8a4701-4de6-9355-b254-e09bc2a34b72/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "ARMONİ",
+        "description": "Armoni\\'yi KUŞAN. Bir takım arkadaşını hedef alarak ATEŞ ET ve hem kendine hem de hedeflediğin takım arkadaşına her öldürmeyle yenilenen bir Kuvvetli Savaş etkisi ve hız artışı sağla. Kendine Kuvvetli Savaş etkisi ve hız artışı sağlamak için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/7c8a4701-4de6-9355-b254-e09bc2a34b72/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "BAS DEPREMİ",
+        "description": "Bas Depremi\\'ni KUŞAN. İleriye doğru bir Ses Işıltısı hazırlayıp fırlatmak için ATEŞ ET. Oyuncuları geriye savurur, Sağırlaştırma ve Yavaşlatma uygular.",
+        "icon": "https://media.valorant-api.com/agents/7c8a4701-4de6-9355-b254-e09bc2a34b72/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "KILLJOY",
+    "role": "Gözcü",
+    "description": "Alman dâhi Killjoy, kendi icatlarından oluşan cephaneliğiyle savaş meydanını kontrol altına alır. Cihazlarının verdiği hasar rakiplerini durdurmaya yetmezse robotlarının yardımıyla rakiplerini zayıflatarak onların ortadan kaldırılmalarını kolaylaştırır.",
+    "image": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/background.png",
+    "abilities": [
+      {
+        "slot": "Grenade",
+        "name": "NANOSÜRÜ",
+        "description": "Nanosürü bombası KUŞAN. Bombayı fırlatmak için ATEŞ ET. Nanosürü bir yere isabet ettiği anda gizlenir. Yavaşça fırlatmak için ALT. ATIŞ kullan. Hasar veren nano robot sürüsünü salmak için Nanosürü\\'yü ETKİNLEŞTİR.",
+        "icon": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "ALARM BOTU",
+        "description": "Gizli bir Alarm Botu KUŞAN. Menzili içine giren düşmanların peşine düşen bir robot göndermek için ATEŞ ET. Robot hedefine ulaştığında patlayarak bölge içindeki düşmanları Savunmasız hale getirir. Gönderdiğin botu geri çağırmak için KUŞANMA DÜĞMESİNİ BASILI TUT.",
+        "icon": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "TARET",
+        "description": "Bir taret KUŞAN. 100 derecelik bir koni içindeki düşmanlara ateş eden bir taret yerleştirmek için ATEŞ ET. Taretin yönünü değiştirmek için hedef alırken tekrar KUŞAN. Döndürmek için ALT. ATIŞ\\'ı BASILI TUT. Yerleştirdiğin tareti kaldırmak için KUŞANMA DÜĞMESİNİ BASILI TUT.",
+        "icon": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "TECRİT",
+        "description": "Tecrit cihazını KUŞAN. Cihazı yerleştirmek için ATEŞ ET. Uzun bir hazırlık süresinin ardından cihazın etki alanında kalan düşmanların hepsi Alıkoyulur. Bu cihaz düşmanlar tarafından yok edilebilir.",
+        "icon": "https://media.valorant-api.com/agents/1e58de9c-4950-5125-93e9-a0aee9f98746/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "HARBOR",
+    "role": "Kontrol Uzmanı",
+    "description": "Hindistan\\'ın kıyılarından gelen Harbor, kadim teknolojilerle suya hükmederek sahada fırtınalar koparıyor. Dostlarını korumak ve düşmanlarını alt etmek için güçlü akıntılar ve coşkun dalgalar çağırıyor.",
+    "image": "https://media.valorant-api.com/agents/95b78ed7-4637-86d9-7e41-71ba8c293152/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/95b78ed7-4637-86d9-7e41-71ba8c293152/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "TAŞKIN",
+        "description": "Taşkın\\'ı KUŞAN. Suyu zemin boyunca hareket ettirmek için ATEŞ ET. Suyu nişangâhının baktığı tarafa yöneltmek ve güzergâhı boyunca görüş engelleyen bir perde oluşturmak için ATEŞ DÜĞMESİNİ BASILI TUT. Suyu erkenden durdurmak için ALT. ATIŞ\\'a bas. Taşkın\\'ı geçen tüm oyuncular Yavaşlar.",
+        "icon": "https://media.valorant-api.com/agents/95b78ed7-4637-86d9-7e41-71ba8c293152/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "FIRTINA AKINI",
+        "description": "Fırtına Akını\\'nı KUŞAN. Fırlatmak için ATEŞ ET ve kısa bir sürenin ardından içindeki oyuncuları Yavaşlatan ve onların Görüşlerini Kısıtlayan patlayıcı bir girdap oluştur.",
+        "icon": "https://media.valorant-api.com/agents/95b78ed7-4637-86d9-7e41-71ba8c293152/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "DALGAKIRAN",
+        "description": "Dalgakıran\\'ı KUŞAN. Belirlenen konumda bir su dumanı oluşturmak için ETKİNLEŞTİR. Hedef alma esnasında işaretçiyi daha uzağa götürmek için ATEŞ DÜĞMESİNİ BASILI TUT, yakına getirmek içinse ALT. ATIŞ DÜĞMESİNİ BASILI TUT. Hedef almaya geçmek için DOLDURMA DÜĞMESİNE BAS. Su dumanını korumak ve ona isabet eden tüm kurşunları engellemek için TEKRAR ETKİNLEŞTİR. Korunan su dumanı yok edilebilir.",
+        "icon": "https://media.valorant-api.com/agents/95b78ed7-4637-86d9-7e41-71ba8c293152/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "KAYNAMA NOKTASI",
+        "description": "Kaynama Noktası\\'nı KUŞAN. Yadigârının gerçek gücünü açığa çıkarmak için ATEŞ ET ve ileri doğru giderek isabet ettiği düşmanlara Görüş Kısıtlama ve Yavaşlatma uygulayan bir su dalgası oluştur.",
+        "icon": "https://media.valorant-api.com/agents/95b78ed7-4637-86d9-7e41-71ba8c293152/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "VYSE",
+    "role": "Gözcü",
+    "description": "Vyse sıvı metali kontrol ederek düşmanlarını sürüden ayıran, tuzağa düşüren ve silahsız bırakan bir dâhi. Kurnazlığı ve manipülasyon kabiliyeti sayesinde karşısına çıkanları bizzat savaş alanının kendisinden korkar hale getirir.",
+    "image": "https://media.valorant-api.com/agents/efba5359-4016-a1e5-7626-b1ae76895940/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/efba5359-4016-a1e5-7626-b1ae76895940/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "DİKENLİ ÇİT",
+        "description": "Bir miktar sıvı metal KUŞAN. Gizli bir duvar tuzağı yerleştirmek için ATEŞ ET. Bir düşman tuzaktan geçtiğinde arkasında yok edilemeyen bir duvar oluşur. Duvar kısa bir süre sonra ortadan kalkar.",
+        "icon": "https://media.valorant-api.com/agents/efba5359-4016-a1e5-7626-b1ae76895940/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "ARK GÜLÜ",
+        "description": "Bir Ark Gülü KUŞAN. Gizli bir Ark Gülü yerleştirmek için bir yüzeye hedef al ve ATEŞ ET. Ark Gülü\\'nü duvarın arkasına yerleştirmek için ALT. ATIŞ kullan. Ark Gülü\\'ne bakan tüm oyuncuları kör etmek için yeteneği TEKRAR KULLAN. Bu yeteneği TEKRAR YERLEŞTİRMEK üzere bıraktığın yerden alabilirsin.",
+        "icon": "https://media.valorant-api.com/agents/efba5359-4016-a1e5-7626-b1ae76895940/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "KESKİN SARMAŞIK",
+        "description": "Bir miktar sıvı metal KUŞAN. Fırlatmak için ATEŞ ET. Sıvı metal indiği konumda görünmez olur. Keskin sarmaşıklardan oluşan ve içerisindeki tüm oyuncuları yavaşlatıp onlara hasar veren geniş bir alan oluşturmak için ETKİNLEŞTİR.",
+        "icon": "https://media.valorant-api.com/agents/efba5359-4016-a1e5-7626-b1ae76895940/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "ÇELİK BAHÇESİ",
+        "description": "Dikenli bir sıvı metal KUŞAN. Metal dikenlerden oluşan bir akım gönderip kısa bir süre sonra düşmanların birincil silahlarına TUTUKLUK YAPTIRMAK için ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/efba5359-4016-a1e5-7626-b1ae76895940/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "VIPER",
+    "role": "Kontrol Uzmanı",
+    "description": "Amerikalı kimyager Viper zehir yüklü, çeşit çeşit kimyasal cihazıyla savaş alanını kontrol altında tutarken düşmanın görüşünü de sekteye uğratır. Avını zehriyle değilse bile aklıyla mutlaka avcunun içine alır.",
+    "image": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "ZEHİR BULUTU",
+        "description": "Bir gaz salgılayıcı KUŞAN. Tur boyunca devamlı yerde kalacak salgılayıcıyı fırlatmak için ATEŞ ET. Yavaşça fırlatmak için ALT. ATIŞ kullan. Yakıt harcayarak içindeki rakiplere Çürüme uygulayan zehirli bir duman bulutu oluşturmak için yeteneği TEKRAR KULLAN. Bu yeteneği tur başlamadan önce TEKRAR YERLEŞTİRMEK üzere bıraktığın yerden alabilirsin ve tur boyunca birden fazla kez TEKRAR KULLANABİLİRSİN.",
+        "icon": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "ZEHİR PERDESİ",
+        "description": "Yüzeyleri delip geçen bir gaz salgılayıcı fırlatıcısı KUŞAN. Gaz salgılayıcılardan uzun bir hat oluşturmak için ATEŞ ET. Yeteneği TEKRAR KULLAN ve içinden geçen rakiplere Çürüme uygulayan yüksek bir zehir duvarı yakıt karşılığında oluştur. Bu yetenek birden fazla kez TEKRAR KULLANILABİLİR.",
+        "icon": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "ASİT HAVUZU",
+        "description": "Bir kimyasal fırlatıcı KUŞAN. Yere çarptığında parçalanan bir kapsül fırlatmak için ATEŞ ET. Oluşturduğu uzun süreli kimyasal alanda kalan düşmanlar hasar alır ve Savunmasız hale gelir.",
+        "icon": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "VIPER'IN İNİ",
+        "description": "Bir kimyasal püskürtücü KUŞAN. Viper\\'ın etrafında her yöne yayılan kimyasal bir bulut oluşturmak için ATEŞ ET. Oluşan geniş bulut, içinde kalan oyuncuların Görüşünü Kısıtlar ve düşmanların canlarını Çürütür. Bulutu erken dağıtmak için yetenek düğmesini BASILI TUT.",
+        "icon": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Passive",
+        "name": "Zehirli",
+        "description": "Yeteneklerini kullanmanı sağlayan zehri zamanla üretir ve yenilersin. Viper\\'ın Zehir Bulutu, Zehir Perdesi veya Viper\\'ın İni\\'nin içinden geçen düşmanlara anında en az 30 Çürüme uygulanır. Bu yeteneklere maruz kalma süresine göre Çürüme oranı artar.",
+        "icon": null
+      }
+    ]
+  },
+  {
+    "name": "PHOENIX",
+    "role": "Düellocu",
+    "description": "Aramıza Birleşik Krallık\\'tan katılan ve yıldızlardan aldığı gücü dövüş stilinin her noktasına yansıtan Phoenix, savaş alanını alevlerle ve patlamalarla aydınlatır. Arkasında destek olsun olmasın, bildiği gibi savaşmak için ileri atılacağından şüpheniz olmasın.",
+    "image": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/background.png",
+    "abilities": [
+      {
+        "slot": "Grenade",
+        "name": "ATEŞTEN DUVAR",
+        "description": "Bir ateş duvarı KUŞAN. Haritanın içinde ilerleyen, görüş engelleyen ve içinden geçenlere hasar veren ateş duvarını göndermek için ATEŞ ET. Ateş duvarı Phoenix\\'e hasar vermek yerine onu iyileştirir. Ateş duvarını nişangâhın yönünde bükmek için BASILI TUTARAK ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "YAKAR TOP",
+        "description": "Bir alev topu KUŞAN. Yere temas ettiğinde ya da bir gecikmenin ardından patlayan alev topunu fırlatmak için ATEŞ ET. Yerde bir süre kalan alev bölgesi düşmanlara hasar verir. Alev bölgesi Phoenix\\'e hasar vermek yerine onu iyileştirir. Yavaşça fırlatmak için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "FALSO",
+        "description": "Kavisli giden ve fırlatıldıktan kısa bir süre sonra patlayan bir işaret küresi KUŞAN. İşaret küresine sola doğru yön vermek için ATEŞ ET. Küre patladığında onu gören tüm oyuncular Kör olur. Küreyi sağa doğru göndermek için ALT. ATIŞ kullan. Falso\\'nun yükü her iki skorda bir dolar.",
+        "icon": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "YAKARDÖNER",
+        "description": "Phoenix\\'in bulunduğu konumu ANINDA işaretle. Yetenek etkinken ölmek veya süresinin dolması yeteneği sonlandırır ve Phoenix\\'i işaretlenen konumda dolu canla ve yeteneği kullandığı esnadaki zırh miktarıyla hayata döndürür.",
+        "icon": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Passive",
+        "name": "Tutuşuyor",
+        "description": "Phoenix kendi ateşinin içinde durduktan sonra hasar almak yerine PASİF olarak İyileşir.",
+        "icon": null
+      }
+    ]
+  },
+  {
+    "name": "VETO",
+    "role": "Gözcü",
+    "description": "Durdurulamaz bir DNA mutasyonuyla gücüne güç katan Senegalli fedai Veto, rakibinin güçlerini ve teknolojisini etkisiz kılarak çatışma kurallarını hiçe sayıyor. Veto\\'nun savaş meydanında tek güvenilir seçeneğin silahların.",
+    "image": "https://media.valorant-api.com/agents/92eeef5d-43b5-1d4a-8d03-b3927a09034b/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/92eeef5d-43b5-1d4a-8d03-b3927a09034b/background.png",
+    "abilities": [
+      {
+        "slot": "Ability2",
+        "name": "TEHDİTSAVAR",
+        "description": "Tehditsavar\\'ı KUŞAN. Tehditsavar\\'ı belirlenen konuma yerleştirmek için ATEŞ ET. Yerleştirdikten sonra etkinleştirmek için TEKRAR KULLAN. Etkin haldeki Tehditsavar bir oyuncudan SEKEBİLEN veya silahla yok edilebilen bütün yetenekleri yok eder. Düşmanlar Tehditsavar\\'ı yok edebilir.",
+        "icon": "https://media.valorant-api.com/agents/92eeef5d-43b5-1d4a-8d03-b3927a09034b/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "GERİ SAR",
+        "description": "Bir burgaç KUŞAN. Zemine yerleştirmek için ATEŞ ET. Burgaca ışınlanmak için menzilindeyken ve burgaca bakarken ETKİNLEŞTİR. SATIN ALMA EVRESİ sırasında burgacı TEKRAR YERLEŞTİRMEK üzere geri alabilirsin.",
+        "icon": "https://media.valorant-api.com/agents/92eeef5d-43b5-1d4a-8d03-b3927a09034b/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "EVRİM",
+        "description": "ANINDA tamamen mutasyona uğramaya başlayarak kuvvetli savaş ile can yenilemesi ve bütün zayıflatma etkilerine karşı BAĞIŞIKLIK kazanırsın.",
+        "icon": "https://media.valorant-api.com/agents/92eeef5d-43b5-1d4a-8d03-b3927a09034b/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "DARBOĞAZ",
+        "description": "Mutasyonundan yapışkan bir parçacık KUŞAN. Fırlatmak için ATEŞ ET. Parçacık yere değdiğinde açılır ve düşmanları yerine sabitleyen bir tuzak oluşturur. Sabitlenmiş düşmanlar Sağır olur ve Çürüme hasarı almaya başlar. Düşmanlar etkinleşmeden önce tuzağı yok edebilir.",
+        "icon": "https://media.valorant-api.com/agents/92eeef5d-43b5-1d4a-8d03-b3927a09034b/abilities/ability1/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "ASTRA",
+    "role": "Kontrol Uzmanı",
+    "description": "Ganalı ajan Astra, kozmosun enerjisini kullanarak savaş meydanını lehine değiştirebiliyor. Astral yolculuğu üzerinde tam kontrole sahip olması ve engin stratejik öngörüsüyle, düşmanın bir sonraki hamlesinden her zaman birkaç ışık yılı önde.",
+    "image": "https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "NOVA DARBESİ",
+        "description": "Astral Yolcu halindeyken yıldız yerleştir (ulti düğmesi).\n\nPatlayarak Nova Darbesi oluşturması için bir yıldızı ETKİNLEŞTİR. Nova Darbesi kısa bir süre güç topladıktan sonra patlayarak etki alanı içindeki tüm oyuncuları Sersemletir.",
+        "icon": "https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "YILDIZ BULUTU / KOZMİK ÇÖZÜNÜM",
+        "description": "Astral Yolcu halindeyken yıldız yerleştir (ulti düğmesi). \nDönüşerek Yıldız Bulutu (duman) oluşturması için bir yıldızı ETKİNLEŞTİR.\nBir yıldızı Kozmik Çözünüm\\'le geri almak için KULLAN. Geri alınan yıldızı belli bir süre sonra tekrar yerleştirebilirsin.\nKozmik Çözünüm, dönmeden önce yıldızın yerinde kısa süreliğine sahte bir Yıldız Bulutu oluşturur.",
+        "icon": "https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "ÇEKİM ALANI",
+        "description": "Astral Yolcu halindeyken yıldız yerleştir (ulti düğmesi).\n\nÇekim Alanı oluşturmak için bir yıldızı ETKİNLEŞTİR. Etki alanı içindeki oyuncular merkeze çekilir ve ardından merkez patlayarak içerideki oyuncuları Savunmasız hale getirir.",
+        "icon": "https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "ASTRAL YOLCU / \nKOZMİK AYRIM",
+        "description": "ATIŞ düğmesiyle yıldız yerleştirebileceğin Astral Yolcu haline geçmek için ETKİNLEŞTİR. Yerleştirilen yıldızlar daha sonra etkinleştirilerek Nova Darbesi, Yıldız Bulutu ve Çekim Alanı\\'na dönüştürülebilir.\n\nKozmik Ayrım yeteneği hazır olduğunda Astral Yolcu halindeyken ALT. ATIŞ kullanarak hedef al ve ATIŞ düğmesine basarak iki konum seç. Bu iki konum arasında sonsuz bir Kozmik Ayrım bağlantısı oluşur. Kozmik Ayrım mermileri ve sesleri engeller.",
+        "icon": "https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Passive",
+        "name": "ASTRAL YOLCU",
+        "description": "Astral Yolcu haline geçmek için ultiyi ETKİNLEŞTİR ve TEMEL ATIŞ düğmesiyle yıldız yerleştir. Yeteneklerini kullanmak için yıldızları Nova Darbesi, Yıldız Bulutu veya Çekim Alanı\\'yla hedef al.",
+        "icon": "https://media.valorant-api.com/agents/41fb69c1-4189-7b37-f117-bcaf1e96f1bf/abilities/passive/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "BRIMSTONE",
+    "role": "Kontrol Uzmanı",
+    "description": "Aramıza ABD\\'den katılan Brimstone\\'un hava araçları sayesinde takımı her zaman 1-0 öndedir. Gereken her türlü işlevselliği titizlikle ve güvenle sağlaması, muharebe alanında bu kumandanı eşsiz kılar.",
+    "image": "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/background.png",
+    "abilities": [
+      {
+        "slot": "Grenade",
+        "name": "KUVVET İŞARETİ",
+        "description": "ANINDA bir Kuvvet İşareti at. Yere inen Kuvvet İşareti oyunculara Kuvvetli Savaş ve Hız Takviyesi sağlayan bir alan oluşturur.",
+        "icon": "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "YAKICI",
+        "description": "Bir yangın bombası atar KUŞAN. Yerde durduğu anda infilak eden bir bomba fırlatmak için ATEŞ ET. Yerde bir süre kalan alev bölgesi, içindeki oyunculara hasar verir.",
+        "icon": "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "DUMANLI HAVA SAHASI",
+        "description": "Bir taktik harita KUŞAN. Brimstone\\'un duman bulutlarının ineceği konumları belirlemek için ATEŞ ET. Seçili alanda görüş engelleyen uzun süreli duman bulutları oluşturmak için ALT. ATIŞ ile onayla.",
+        "icon": "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "UYDU SALDIRISI",
+        "description": "Bir taktik harita KUŞAN. Seçili konuma bir süre yerde kalan bir uydu saldırısı lazeri fırlatmak için ATEŞ ET. Seçili alanda kalan oyuncular zaman içinde yüksek hasar alır.",
+        "icon": "https://media.valorant-api.com/agents/9f0d8ba9-4140-b941-57d3-a7ad57c6b417/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "ISO",
+    "role": "Düellocu",
+    "description": "Çinli kiralık suikastçı Iso düşmanların saflarını darmadağın etmek için bir akış haline girer. Çevredeki enerjiyi yeniden şekillendirerek kurşun geçirmez bir kalkana dönüştüren Iso odağını yitirmeden bir sonraki ölümüne düellosuna ilerler.",
+    "image": "https://media.valorant-api.com/agents/0e38b510-41a8-5780-5e8f-568b2a4f2d6c/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/0e38b510-41a8-5780-5e8f-568b2a4f2d6c/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "GAREZ",
+        "description": "Bir moleküler dalga KUŞAN. Dalgayı ileri fırlatarak temas ettiği bütün oyunculara Savunmasız ve Sindirme etkileri uygulamak için ATEŞ ET. Bu dalga duvarlar dahil olmak üzere sert cisimlerin içinden geçebilir.",
+        "icon": "https://media.valorant-api.com/agents/0e38b510-41a8-5780-5e8f-568b2a4f2d6c/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "KİRALIK KATİL",
+        "description": "Bir boyutlararası arena KUŞAN. Seni ve temas ettiği ilk düşmanı iyileştirip ölümüne bir düelloya gireceğiniz arenaya çekecek bir enerji dalgasını savaş meydanına göndermek için ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/0e38b510-41a8-5780-5e8f-568b2a4f2d6c/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "ÇELİK İRADE",
+        "description": "ANINDA odaklanmaya başla. Odaklanma tamamlandığında herhangi bir kaynaktan gelecek ilk hasarı engelleyen bir kalkan kazanırsın, silahını daha hızlı doldurursun ve öldürdüğün veya ölmeden önce senden hasar alan düşmanların enerji küresi düşürdüğü bir akış haline girersin. Bu küreye ateş ettiğinde akış halini ve var olan kalkanını yenilersin veya yeni bir kalkan kazanırsın.",
+        "icon": "https://media.valorant-api.com/agents/0e38b510-41a8-5780-5e8f-568b2a4f2d6c/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "B PLANI",
+        "description": "Prizmatik enerji biriktirmek için KUŞAN. Yok edilemeyen ve mermileri engelleyen bir enerji duvarını ileri doğru göndermek için ATEŞ ET. Duvarı ileri doğru daha yavaş göndermek için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/0e38b510-41a8-5780-5e8f-568b2a4f2d6c/abilities/grenade/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "CLOVE",
+    "role": "Kontrol Uzmanı",
+    "description": "İskoç ajan Clove muziplikleriyle hem çatışma sırasında hem de ölümden sonra sürekli ortalığı karıştırıyor. Ölüm nedir bilmeyen bu genç ajanın mezarından çıkıp gelerek düşmanlarının başına bela olması daima an meselesi.",
+    "image": "https://media.valorant-api.com/agents/1dbf2edd-4729-0984-3115-daa5eed44993/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/1dbf2edd-4729-0984-3115-daa5eed44993/background.png",
+    "abilities": [
+      {
+        "slot": "Grenade",
+        "name": "DİNÇLEŞTİRİCİ ÖZÜT",
+        "description": "Clove\\'un öldürdüğü veya hasar vererek asist aldığı düşmanlardan yaşam enerjisi çekerek hız ve geçici can kazanmak için ETKİNLEŞTİR.",
+        "icon": "https://media.valorant-api.com/agents/1dbf2edd-4729-0984-3115-daa5eed44993/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "KATAKULLİ",
+        "description": "Savaş meydanının haritasını KUŞAN. Clove\\'un duman bulutlarının düşeceği konumları belirlemek için ATEŞ ET. Seçili alanlarda görüş engelleyen duman bulutları oluşturmak için ALT. ATIŞ ile onayla. Clove bu yeteneği öldükten sonra da kullanabilir.",
+        "icon": "https://media.valorant-api.com/agents/1dbf2edd-4729-0984-3115-daa5eed44993/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "DAHA ÖLMEDİK",
+        "description": "Öldükten sonra hayata dönmek için ETKİNLEŞTİR. Clove hayata döndükten sonra belirli bir süre içerisinde bir skor veya hasar yoluyla asist almazsa ölür. Yeteneği erkenden iptal etmek için TEKRAR ETKİNLEŞTİR.",
+        "icon": "https://media.valorant-api.com/agents/1dbf2edd-4729-0984-3115-daa5eed44993/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "İŞGÜZAR",
+        "description": "Bir ölümsüzlük özü parçası KUŞAN. Parçayı fırlatmak için ATEŞ ET. Fırlattığın parça yere değdikten sonra kısa bir gecikmenin ardından patlayarak etki alanında kalan tüm hedeflere geçici Çürüme uygular.",
+        "icon": "https://media.valorant-api.com/agents/1dbf2edd-4729-0984-3115-daa5eed44993/abilities/ability1/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "NEON",
+    "role": "Düellocu",
+    "description": "Filipinli Ajan Neon, şoke edici bir hızla öne atılır ve bedeninin ürettiği biyoelektrik dalgalarını düşmanların üstüne salar. Düşmanları gafil avlamak için yarışırcasına koşar ve hepsini yıldırım hızıyla indirir.",
+    "image": "https://media.valorant-api.com/agents/bb2a4828-46eb-8cd1-e765-15848195d751/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/bb2a4828-46eb-8cd1-e765-15848195d751/background.png",
+    "abilities": [
+      {
+        "slot": "Ability2",
+        "name": "YÜKSEK DEVİR",
+        "description": "Neon\\'u Hızlandırmak için ANINDA gücünü odakla. Yükü dolduğunda atılmak için ALT. ATIŞ\\'la elektrikli kayma hareketini etkinleştir. Her iki skorda bir kayma hareketinin yükü dolar.",
+        "icon": "https://media.valorant-api.com/agents/bb2a4828-46eb-8cd1-e765-15848195d751/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "ELEKTRO OK",
+        "description": "ANINDA bir enerji oku fırlat. Ok bir kere seker. Ok bir yüzeye çarptığında Sersemletici bir patlamayla altındaki zemine elektrik akımı verir.",
+        "icon": "https://media.valorant-api.com/agents/bb2a4828-46eb-8cd1-e765-15848195d751/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "HIZ ŞERİDİ",
+        "description": "Önüne doğru, kısa bir mesafe veya bir yüzeye çarpana kadar ilerleyen iki enerji hattı çıkarmak için ATEŞ ET. Bu enerji hatları, görüş engelleyen statik elektrik duvarlarına dönüşür.",
+        "icon": "https://media.valorant-api.com/agents/bb2a4828-46eb-8cd1-e765-15848195d751/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "ENERJİ PATLAMASI",
+        "description": "Neon\\'un tüm gücünü ve hızını kısa bir süreliğine etkinleştirerek tüm yakıtını yenile ve bir kayma yükü kazan. Gücünü, hareket ederken isabetliliği yüksek olan ölümcül bir ışın saldırısına dönüştürmek için ATEŞ ET. Skor almak bu etkinin süresini yeniler. ",
+        "icon": "https://media.valorant-api.com/agents/bb2a4828-46eb-8cd1-e765-15848195d751/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "YORU",
+    "role": "Düellocu",
+    "description": "Japon Yoru, gerçeklikte açtığı geçitlerden geçerek düşman hattına sinsice sızıyor. Yanılsamalardan ve kaba kuvvetten eşit oranda faydalanarak hedeflerini göz açıp kapayıncaya kadar indiriyor.",
+    "image": "https://media.valorant-api.com/agents/7f94d92c-4234-0a36-9646-3a87eb8b5c89/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/7f94d92c-4234-0a36-9646-3a87eb8b5c89/background.png",
+    "abilities": [
+      {
+        "slot": "Grenade",
+        "name": "FAKE AT",
+        "description": "Etkinleştirildiğinde Yoru\\'nun birebir kopyası biçiminde bir yanılsama KUŞAN. Yanılsamayı etkinleştirerek ileri göndermek için ATEŞ ET. Hareketsiz bir yanılsama yerleştirmek için ALT. ATIŞ\\'a bas. Yerleştirilmiş hareketsiz yanılsamanın ileri yürümesi için KULLAN\\'a bas. Yanılsamalar düşmanlar tarafından yok edildiğinde Kör Edici bir flaşla patlar.",
+        "icon": "https://media.valorant-api.com/agents/7f94d92c-4234-0a36-9646-3a87eb8b5c89/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "KÖR NOKTA",
+        "description": "Kararsız bir boyut parçacığını gerçeklikten koparıp almak için KUŞAN. Parçacığı fırlatmak için ATEŞ ET. Fırlattığın parçacık sert bir yüzeye çarptığında Kör Edici bir ışık saçar.",
+        "icon": "https://media.valorant-api.com/agents/7f94d92c-4234-0a36-9646-3a87eb8b5c89/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "ÇATKAPI",
+        "description": "Bir boyut geçidi küresi KUŞAN. Küreyi ilerletmek için ATEŞ ET. Küreyi sabit bir yere yerleştirmek için ALT. ATIŞ kullan. Kürenin bulunduğu konuma ışınlanmak için küreyi ETKİNLEŞTİR. Sahte bir ışınlanma görüntüsü vermek için KULLAN. ÇATKAPI\\'nın yükü her iki skorda bir dolar.",
+        "icon": "https://media.valorant-api.com/agents/7f94d92c-4234-0a36-9646-3a87eb8b5c89/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "BOYUTLARARASI GEÇİŞ",
+        "description": "Boyutlararasını görebilen bir maske KUŞAN. Yoru\\'nun boyutuna geçmek için ATEŞ ET. Yoru\\'nun boyutundayken dışarıdaki düşmanlar tarafından görülemez ve onlardan etkilenmezsin. Yoru\\'nun boyutundan erken ayrılmak için TEKRAR ETKİNLEŞTİR.",
+        "icon": "https://media.valorant-api.com/agents/7f94d92c-4234-0a36-9646-3a87eb8b5c89/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "WAYLAY",
+    "role": "Düellocu",
+    "description": "Taylandlı prizmatik radyant Waylay, bizzat ışığın kendisine dönüşüp savaş alanının bir ucundan diğer ucuna fırlar. Hedeflerini göz açıp kapayıncaya kadar ışık parçalarıyla alt eden Waylay daha onlar ne olduğunu anlamadan güvenli bir noktaya dönmüştür bile.",
+    "image": "https://media.valorant-api.com/agents/df1cb487-4902-002e-5c17-d28e83e78588/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/df1cb487-4902-002e-5c17-d28e83e78588/background.png",
+    "abilities": [
+      {
+        "slot": "Ability2",
+        "name": "KIRILMA",
+        "description": "ANINDA yere bir ışık huzmesi yerleştir. Saf ışığa dönüşüp hızlı bir şekilde ışık huzmesinin konumuna dönmek için TEKRAR ETKİNLEŞTİR. Saf ışığa dönüştüğünde hasar görmez olursun. Kırılma\\'nın yükü her iki skorda bir dolar.",
+        "icon": "https://media.valorant-api.com/agents/df1cb487-4902-002e-5c17-d28e83e78588/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "TUTULMA",
+        "description": "Bir ışık kümesi KUŞAN. Kümeyi fırlatmak için ATEŞ ET. Işık kümesi yere temas ettiği anda patlar ve yakındaki oyunculara Ağırlaştırma uygulayarak onları güçlü bir hareket ve silah yavaşlatmasına maruz bırakır.",
+        "icon": "https://media.valorant-api.com/agents/df1cb487-4902-002e-5c17-d28e83e78588/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ability1",
+        "name": "IŞIK HIZI",
+        "description": "Hızla atılmaya hazırlanmak için KUŞAN. İki kere ileri atılmak için ATEŞ ET. Bir kere ileri atılmak için ALT. ATIŞ kullan. İlk atılmada yukarı yönlü hareket edebilirsin.",
+        "icon": "https://media.valorant-api.com/agents/df1cb487-4902-002e-5c17-d28e83e78588/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "YAKINSAYAN IŞINLAR",
+        "description": "Prizmatik gücünü odaklamak için KUŞAN. Işın demeti saçan bir kopyanı oluşturmak için ATEŞ ET. Kısa bir gecikmenin ardından büyük oranda hızlanırsın ve ışın demeti genişleyerek bölgedeki diğer oyunculara Ağırlaştırma uygular.",
+        "icon": "https://media.valorant-api.com/agents/df1cb487-4902-002e-5c17-d28e83e78588/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "SAGE",
+    "role": "Gözcü",
+    "description": "Çinli ve kapı gibi Sage gittiği her yerde kendisini ve takımını güvende tutar. Öldürülen silah arkadaşlarını hayata döndürme yeteneği ve agresif saldırıları bertaraf edebilmesiyle, cehennemvari savaş meydanında etrafına huzur verir.",
+    "image": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "YAVAŞLATAN KÜRE",
+        "description": "Bir yavaşlatma küresi KUŞAN. Yere temas ettiğinde patlayarak bir süre yerde kalan ve oluşturduğu alanda kalan oyuncuları ve oyuncuların atılma hızlarını Yavaşlatan bir yavaşlatma küresi göndermek için ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "CAN KÜRESİ",
+        "description": "Bir iyileştirme küresi KUŞAN. Nişangâhını hasar almış bir silah arkadaşına doğrult ve onu Zaman İçinde İyileştirmek için ATEŞ ET. Sage hasar aldıysa, kendini Zaman İçinde İyileştirmek için ALT. ATIŞ kullan.",
+        "icon": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "BARİYER KÜRESİ",
+        "description": "Bir Bariyer Küresi KUŞAN. Birkaç saniye sonra güçlenen bir duvar yerleştirmek için ATEŞ ET. ALT. ATIŞ, hedefleyiciyi döndürür.",
+        "icon": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "DİRİLİŞ",
+        "description": "Bir diriltme yeteneği KUŞAN. Nişangâhını dost bir cesede doğrult ve onu hayata döndürmek için ATEŞ ET. Silah arkadaşın kısa bir sürenin ardından tamamen iyileşmiş olarak hayata döner.",
+        "icon": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "REYNA",
+    "role": "Düellocu",
+    "description": "Meksika\\'nın kalbinden kopup gelen Reyna, teke tek çatışmalarda düşmanını ezer ve aldığı her skorla daha da coşar. Yapabilecekleri tamamen saf beceri gerektirir ve onu ciddi şekilde performansa dayalı kılar. ",
+    "image": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "SÖMÜR",
+        "description": "Ruh Hasadı: Reyna\\'dan hasar aldıktan sonra 3 saniye içinde ölen düşmanlar, arkalarında 3 saniyeliğine Ruh Küreleri bırakır.\r\nSömür: ANINDA bir Ruh Küresi\\'ni tüket ve hızla geçici can kazan. İMPARATORİÇE etkinse Sömür otomatik olarak kullanılır, Ruh Küresi harcamaz ve iyileştirme kalıcı olur.",
+        "icon": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "AZLET",
+        "description": "Yakınlardaki bir Ruh Küresi\\'ni ANINDA tüketerek kısa süreliğine Saydamlaş. İMPARATORİÇE etkinse, aynı zamanda Görünmez olursun.",
+        "icon": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "KEM GÖZ",
+        "description": "Yok edilebilir, ruhtan bir göz KUŞAN. Gözü yakın mesafede ileri doğru kullanmak için ETKİNLEŞTİR. Göz, ona bakan tüm düşmanların Görüşünü Kısıtlar.",
+        "icon": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "İMPARATORİÇE",
+        "description": "ANINDA bir coşku haline geçerek atış, kuşanma ve doldurma hızını ciddi şekilde arttıran bir Kuvvetli Savaş edin. Ruh Hasadı yetenekleri için sonsuz yük kazanırsın.",
+        "icon": "https://media.valorant-api.com/agents/a3bfb853-43b2-7238-a4f1-ad90e9e46bcc/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "OMEN",
+    "role": "Kontrol Uzmanı",
+    "description": "Bir anının hayaleti olan Omen gölgelerin içinde avlanır. Düşmanlarını kör eder, savaş alanını boydan boya kat eder ve paranoyanın, onun ne taraftan saldıracağını anlamaya çalışan rakiplerinin damarlarında gezinmesini sağlar.",
+    "image": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "PARANOYA",
+        "description": "Kör edici bir küre KUŞAN. İleri fırlatmak için ATEŞ ET. Küre kısa süreliğine, dokunduğu düşmanların Görüşünü Kısıtlar ve onları Sağır eder. Bu yetenek doğrudan duvarlardan geçebilir.",
+        "icon": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "KARANLIK ÖRTÜ",
+        "description": "Bir gölge küresi KUŞAN, küreleri yerleştirmek ve hedef almak için soyut bir dünyaya adım at. Küreyi işaretlenen konuma fırlatarak görüş engelleyen uzun süreli bir gölge küresi oluşturmak için yetenek düğmesine BAS. Hedef alma esnasında işaretçiyi daha uzağa götürmek için ATEŞ DÜĞMESİNİ BASILI TUT. İşaretçiyi daha yakına getirmek için ALT. ATIŞ DÜĞMESİNİ BASILI TUT. Normal hedef almaya geçmek için DOLDURMA DÜĞMESİNE BAS.",
+        "icon": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "GİZLİ ADIM",
+        "description": "Bir gizli adım yeteneği KUŞAN ve menzil göstergesini görüntüle. Kısa bir beklemenin ardından işaretli konuma ışınlanmak için ATEŞ ET.",
+        "icon": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "GÖLGELERİN İÇİNDEN",
+        "description": "Bir taktik harita KUŞAN. Seçili konuma ışınlanmaya başlamak için ATEŞ ET. Omen, ışınlanma esnasında Gölge suretine bürünür ve düşmanları onu yok ederek ışınlanmayı iptal edebilir ya da Omen KUŞANMAYA BASARAK ışınlanmasını kendisi iptal edebilir.",
+        "icon": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/ultimate/displayicon.png"
+      }
+    ]
+  },
+  {
+    "name": "JETT",
+    "role": "Düellocu",
+    "description": "Anavatanı Güney Kore\\'yi temsil eden Jett\\'in çevik ve darbelerden kaçmaya dayalı dövüş tarzı, başkalarının alamadığı riskleri almasını sağlar. Her çatışmada üstünlüğünü belli eder ve rakipleri daha nerede olduğunu anlamadan onları kesip biçmeye başlar.",
+    "image": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/fullportrait.png",
+    "background": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/background.png",
+    "abilities": [
+      {
+        "slot": "Ability1",
+        "name": "HAFİFLE",
+        "description": "Jett\\'i ANINDA havaya doğru fırlat.",
+        "icon": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/ability1/displayicon.png"
+      },
+      {
+        "slot": "Ability2",
+        "name": "RÜZGÂR GİBİ",
+        "description": "Kısa süreliğine sert bir rüzgâr estirmeye hazırlanmak için ETKİNLEŞTİR. Jett\\'i hareket ettiği yönde fırlatmak için TEKRAR KULLAN. Jett hareketsiz durursa ileriye doğru atılır. Rüzgâr Gibi\\'nin yükü her iki skorda bir dolar.",
+        "icon": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/ability2/displayicon.png"
+      },
+      {
+        "slot": "Grenade",
+        "name": "DUMAN BULUTU",
+        "description": "ANINDA yaptığın atış, yüzeye çarptığında patlayarak kısa süreliğine görüş engelleyen bir sis bulutuna dönüşür. Duman bulutuna nişangâhın yönünde falso vermek için yetenek düğmesini BASILI TUT.",
+        "icon": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/grenade/displayicon.png"
+      },
+      {
+        "slot": "Ultimate",
+        "name": "KESKİN FIRTINA",
+        "description": "Oldukça isabetli fırlatma bıçakları KUŞAN. Hedefine tek bir bıçak fırlatmak için ATEŞ ET. Düşmanı öldürdüğünde yükü dolacak. Kalan tüm hançerleri hedefine fırlatmak için ALT. ATIŞ kullan. Bu saldırı düşmanı öldürdüğünde yük doldurmaz.",
+        "icon": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/ultimate/displayicon.png"
+      },
+      {
+        "slot": "Passive",
+        "name": "SÜZÜL",
+        "description": "Düşerken zıplama düğmesini basılı tutmak, havada süzülmeni sağlar.",
+        "icon": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/passive/displayicon.png"
+      }
+    ]
+  }
+];
+
