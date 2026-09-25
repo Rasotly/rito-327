@@ -323,3 +323,54 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+
+/* Valorant Maps */
+.maps-section-container {
+  animation: fadeIn 0.5s ease-out;
+}
+
+.maps-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+}
+
+.map-card {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.map-card:hover {
+  transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--valorant-red);
+  box-shadow: 0 5px 15px rgba(255, 70, 85, 0.2);
+}
+
+.map-card h4 {
+  font-size: 1.5rem;
+  font-family: 'Teko', sans-serif;
+  color: var(--text-primary);
+  margin-bottom: 0.2rem;
+  letter-spacing: 1px;
+}
+
+.map-card .map-location {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--valorant-red);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.map-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.4;
+}

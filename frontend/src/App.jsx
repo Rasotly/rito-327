@@ -102,7 +102,7 @@ function ValorantModule({ onBack }) {
           {loading && <p>Veriler yükleniyor...</p>}
           {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
 
-          {data && (
+          {data && activeTab === 'home' && (
             <div>
               <h3>Sunucu Mesajı</h3>
               <p>{data.message}</p>
@@ -123,6 +123,8 @@ function ValorantModule({ onBack }) {
               </div>
             </div>
           )}
+
+          {activeTab === 'maps' && <ValorantMaps />}
         </div>
       </div>
     </div>
@@ -192,6 +194,37 @@ function LolModule({ onBack }) {
             </div>
           )}
         </div>
+      </div>
+    </div>
+  );
+}
+
+const OFFICIAL_MAPS = [
+  { name: 'Abyss', location: 'Norveç', description: 'Uçurum kenarında, sınırları zorlayan dikey bir harita.' },
+  { name: 'Sunset', location: 'Los Angeles, ABD', description: "Geleneksel üç şeritli tasarım ve Gekko'nun memleketi." },
+  { name: 'Lotus', location: 'Batı Ghats, Hindistan', description: 'Üç farklı bomba alanına sahip antik bir harabe.' },
+  { name: 'Pearl', location: 'Lizbon, Portekiz', description: 'Su altındaki bir şehirde geçen, teleportsuz geniş bir harita.' },
+  { name: 'Fracture', location: 'Santa Fe, ABD', description: 'Savunanların ortada, saldıranların dışarıda başladığı H şeklinde harita.' },
+  { name: 'Breeze', location: 'Bermuda Şeytan Üçgeni', description: 'Geniş açık alanlar ve uzun görüş mesafeleri sunan tropik bir ada.' },
+  { name: 'Icebox', location: 'Bennett Adası, Rusya', description: 'Dikey oynanışa sahip karlı bir tundra haritası.' },
+  { name: 'Bind', location: 'Rabat, Fas', description: 'Ortası olmayan, ışınlanma kapılarına sahip çöl haritası.' },
+  { name: 'Haven', location: 'Thimphu, Butan', description: 'Üç bomba alanına sahip geleneksel bir manastır haritası.' },
+  { name: 'Split', location: 'Tokyo, Japonya', description: 'Dikey halatlara sahip, iki bomba alanlı şehir haritası.' },
+  { name: 'Ascent', location: 'Venedik, İtalya', description: 'Kontrol edilebilir kapılara sahip, geniş bir orta alana sahip harita.' }
+];
+
+function ValorantMaps() {
+  return (
+    <div className="maps-section-container">
+      <h3 style={{ marginBottom: '1.5rem', color: 'var(--valorant-red)', fontSize: '2rem', fontFamily: "'Teko', sans-serif" }}>Resmi Haritalar</h3>
+      <div className="maps-grid">
+        {OFFICIAL_MAPS.map(map => (
+          <div key={map.name} className="map-card">
+            <h4>{map.name}</h4>
+            <span className="map-location">{map.location}</span>
+            <p>{map.description}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
