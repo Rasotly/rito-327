@@ -1765,6 +1765,8 @@ if (typeof OFFICIAL_AGENTS !== 'undefined') {
     OFFICIAL_AGENTS.forEach(agent => {
         if (agent.abilities) {
             agent.abilities.forEach(ab => {
+                if (ab.slot === 'Passive') return; // Passives do not have sounds or icons
+                
                 // KAY/O is special, otherwise format as Title Case (Gekko, Fade, etc.)
                 let folderName = agent.name;
                 if (agent.name.toUpperCase() === 'KAY/O') {
@@ -2157,7 +2159,7 @@ function ValorantHeardle({ onBack }) {
                         </div>
                         <span style={{fontSize: '1rem', color: '#fff', fontWeight: 'bold'}}>{agent.name}</span>
                         <div style={{display: 'flex', gap: '0.5rem'}}>
-                            {agent.abilities.map(ab => (
+                            {agent.abilities.filter(ab => ab.slot !== 'Passive').map(ab => (
                                 <button key={ab.name} className="ability-icon" onClick={() => handleGuess(agent.name, ab.name)} title={ab.name}>
                                     <img src={ab.icon} alt={ab.name} style={{width: '100%', height: '100%', objectFit: 'contain'}} />
                                 </button>
