@@ -69,7 +69,6 @@ const CloseIcon = () => (
   </svg>
 );
 
-
 const GameIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <rect x="2" y="6" width="20" height="12" rx="2" ry="2"></rect>
@@ -80,12 +79,20 @@ const GameIcon = () => (
   </svg>
 );
 
+const SoundIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+  </svg>
+);
+
 const NAV_ITEMS = [
   { id: 'home', label: 'Ana Sayfa', icon: <HomeIcon /> },
   { id: 'agents', label: 'Ajanlar', icon: <AgentIcon /> },
   { id: 'weapons', label: 'Silahlar', icon: <WeaponIcon /> },
   { id: 'maps', label: 'Haritalar', icon: <MapIcon /> },
   { id: 'game', label: 'Vufufu', icon: <GameIcon /> },
+  { id: 'heardle', label: 'V-sense', icon: <SoundIcon /> },
   { id: 'guides', label: 'Rehberler', icon: <GuideIcon /> },
   { id: 'cosmetics', label: 'Kozmetikler', icon: <CosmeticIcon /> },
   { id: 'patch-notes', label: 'Yama Notları', icon: <PatchIcon /> },
