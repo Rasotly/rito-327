@@ -17,7 +17,7 @@ if ($game === 'valorant') {
         "stats" => [
             "activePlayers" => "2.4M",
             "serverStatus" => "Online",
-            "currentAct" => "Bölüm 8, Kısım 2"
+            "currentAct" => "Bölüm 0, Kısım 2"
         ]
     ];
 } elseif ($game === 'lol') {
