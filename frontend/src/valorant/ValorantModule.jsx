@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Sidebar from './Sidebar';
+import ValorantMapGuessr from './ValorantMapGuessr';
 
 const BackArrow = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -101,6 +102,11 @@ function ValorantModule({ onBack }) {
       {activeTab === 'heardle' && (
         <div style={{ width: '100%', padding: '2rem', boxSizing: 'border-box' }}>
             <ValorantHeardle onBack={() => setActiveTab('home')} />
+        </div>
+      )}
+      {activeTab === 'mapguessr' && (
+        <div style={{ width: '100%', padding: '2rem', boxSizing: 'border-box' }}>
+            <ValorantMapGuessr onBack={() => setActiveTab('home')} />
         </div>
       )}
     </div>
