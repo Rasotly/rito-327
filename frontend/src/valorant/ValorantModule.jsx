@@ -1521,34 +1521,16 @@ const GAME_SKILLS = [
     "cost": 300
   },
   {
-    "name": "RENK TESİRLİ BOMBA",
-    "agentName": "RAZE",
-    "image": "https://media.valorant-api.com/agents/f94c3b30-42be-e959-889c-5aa313dba261/abilities/ability2/displayicon.png",
-    "cost": 200
-  },
-  {
     "name": "SİBER KAFES",
     "agentName": "CYPHER",
     "image": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/ability1/displayicon.png",
     "cost": 200
   },
   {
-    "name": "GİZLİ KAMERA",
-    "agentName": "CYPHER",
-    "image": "https://media.valorant-api.com/agents/117ed9e3-49f3-6512-3ccf-0cada7e3823b/abilities/ability2/displayicon.png",
-    "cost": 100
-  },
-  {
     "name": "ŞOK OKU",
     "agentName": "SOVA",
     "image": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/ability1/displayicon.png",
     "cost": 400
-  },
-  {
-    "name": "KEŞİF OKU",
-    "agentName": "SOVA",
-    "image": "https://media.valorant-api.com/agents/320b2a48-4d9b-a075-30f1-1f93a9b638fa/abilities/ability2/displayicon.png",
-    "cost": 150
   },
   {
     "name": "NANOSÜRÜ",
@@ -1569,18 +1551,6 @@ const GAME_SKILLS = [
     "cost": 300
   },
   {
-    "name": "ZEHİR PERDESİ",
-    "agentName": "VIPER",
-    "image": "https://media.valorant-api.com/agents/707eab51-4836-f488-046a-cda6bf494859/abilities/ability2/displayicon.png",
-    "cost": 200
-  },
-  {
-    "name": "YAKAR TOP",
-    "agentName": "PHOENIX",
-    "image": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/ability1/displayicon.png",
-    "cost": 250
-  },
-  {
     "name": "FALSO",
     "agentName": "PHOENIX",
     "image": "https://media.valorant-api.com/agents/eb93336a-449b-9c1b-0a54-a891f7921d69/abilities/ability2/displayicon.png",
@@ -1591,12 +1561,6 @@ const GAME_SKILLS = [
     "agentName": "SAGE",
     "image": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/ability1/displayicon.png",
     "cost": 400
-  },
-  {
-    "name": "CAN KÜRESİ",
-    "agentName": "SAGE",
-    "image": "https://media.valorant-api.com/agents/569fdd95-4d10-43ab-ca70-79becc718b46/abilities/ability2/displayicon.png",
-    "cost": 200
   },
   {
     "name": "SÖMÜR",
@@ -1615,18 +1579,6 @@ const GAME_SKILLS = [
     "agentName": "OMEN",
     "image": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/ability1/displayicon.png",
     "cost": 250
-  },
-  {
-    "name": "KARANLIK ÖRTÜ",
-    "agentName": "OMEN",
-    "image": "https://media.valorant-api.com/agents/8e253930-4c05-31dd-1b6c-968525494517/abilities/ability2/displayicon.png",
-    "cost": 100
-  },
-  {
-    "name": "HAFİFLE",
-    "agentName": "JETT",
-    "image": "https://media.valorant-api.com/agents/add6443a-41bd-e414-f6ad-e58d267f4e95/abilities/ability1/displayicon.png",
-    "cost": 150
   },
   {
     "name": "DUMAN BULUTU",
@@ -1715,11 +1667,9 @@ function ValorantGame({ onBack }) {
                           <img src={skillA.image} alt={skillA.name} className="game-img" style={{filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.5))'}} />
                           <h2>{skillA.name}</h2>
                           <p style={{color: 'var(--text-secondary)', margin: '0 0 1rem 0'}}>{skillA.agentName}</p>
-                          {feedback ? (
-                              <p className="price text-green">¤ {skillA.cost}</p>
-                          ) : (
-                              <p className="price" style={{color: 'transparent'}}>¤ {skillA.cost}</p>
-                          )}
+                          <p className="price" style={{color: '#2ecc71', textShadow: '0 0 10px rgba(46,204,113,0.3)'}}>
+                              ¤ {skillA.cost}
+                          </p>
                       </div>
                   </div>
                   {!feedback && (
