@@ -1883,6 +1883,14 @@ function ValorantHeardle({ onBack }) {
                     0%, 100% { height: 15px; }
                     50% { height: 45px; }
                 }
+                @keyframes fadeIn {
+                    from { opacity: 0; }
+                    to { opacity: 1; }
+                }
+                @keyframes popIn {
+                    0% { transform: scale(0.8); opacity: 0; }
+                    100% { transform: scale(1); opacity: 1; }
+                }
                 .wave-bar {
                     width: 3px;
                     background-color: rgba(255,255,255,0.3);
@@ -1961,65 +1969,118 @@ function ValorantHeardle({ onBack }) {
                 </div>
             </div>
 
-            {gameStatus === 'playing' ? (
-                <div style={{background: 'rgba(17,17,17,0.5)', padding: '2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '3rem'}}>
+            <div style={{background: 'rgba(17,17,17,0.5)', padding: '2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '3rem'}}>
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', height: '60px', margin: '0 auto 2rem'}}>
+                    {Array.from({length: 40}).map((_, i) => (
+                        <div key={i} className={`wave-bar ${isPlaying ? 'playing' : ''}`} style={{animationDelay: `${Math.random() * 0.5}s`}}></div>
+                    ))}
+                </div>
+
+                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem'}}>
+                    <span style={{color: 'var(--text-secondary)', fontFamily: "'Teko', sans-serif", fontSize: '1.5rem'}}>0.0s</span>
                     
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', height: '60px', margin: '0 auto 2rem'}}>
-                        {Array.from({length: 40}).map((_, i) => (
-                            <div key={i} className={`wave-bar ${isPlaying ? 'playing' : ''}`} style={{animationDelay: `${Math.random() * 0.5}s`}}></div>
+                    <button onClick={playAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d={isPlaying ? "M6 19h4V5H6v14zm8-14v14h4V5h-4z" : "M8 5v14l11-7z"}/></svg>
+                    </button>
+                    
+                    <button onClick={replayAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+                    </button>
+                    
+                    <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem'}}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
+                        <input type="range" min="0" max="1" step="0.01" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))} style={{width: '100px'}} />
+                    </div>
+                </div>
+
+                {wrongGuesses.length > 0 && (
+                    <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2.5rem', flexWrap: 'wrap'}}>
+                        {wrongGuesses.map(guess => (
+                            <div key={guess} style={{
+                                background: '#e8e6df', 
+                                color: '#a13333', 
+                                padding: '0.4rem 1rem', 
+                                borderRadius: '6px', 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                gap: '0.5rem',
+                                fontWeight: 'bold',
+                                fontSize: '0.95rem'
+                            }}>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                  <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+                                  <path d="m12 13-1-3 2-2-2-3"></path>
+                                </svg>
+                                {guess}
+                            </div>
                         ))}
                     </div>
+                )}
+            </div>
 
-                    <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem'}}>
-                        <span style={{color: 'var(--text-secondary)', fontFamily: "'Teko', sans-serif", fontSize: '1.5rem'}}>0.0s</span>
-                        
-                        <button onClick={playAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d={isPlaying ? "M6 19h4V5H6v14zm8-14v14h4V5h-4z" : "M8 5v14l11-7z"}/></svg>
-                        </button>
-                        
-                        <button onClick={replayAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                        </button>
-                        
-                        <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem'}}>
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                            <input type="range" min="0" max="1" step="0.01" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))} style={{width: '100px'}} />
+            {gameStatus !== 'playing' && (
+                <div style={{
+                    position: 'fixed',
+                    top: 0, left: 0, right: 0, bottom: 0,
+                    backgroundColor: 'rgba(0, 0, 0, 0.85)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    zIndex: 9999,
+                    backdropFilter: 'blur(5px)',
+                    animation: 'fadeIn 0.3s ease-out'
+                }}>
+                    <div style={{
+                        background: 'linear-gradient(135deg, rgba(30,30,30,0.9), rgba(15,15,15,0.95))',
+                        padding: '4rem',
+                        borderRadius: '16px',
+                        border: `2px solid ${gameStatus === 'won' ? '#2ecc71' : '#e74c3c'}`,
+                        boxShadow: `0 0 40px ${gameStatus === 'won' ? 'rgba(46,204,113,0.3)' : 'rgba(231,76,60,0.3)'}`,
+                        textAlign: 'center',
+                        transform: 'scale(1)',
+                        animation: 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+                    }}>
+                        <h2 style={{
+                            fontFamily: "'Teko', sans-serif", 
+                            fontSize: '6rem', 
+                            color: gameStatus === 'won' ? '#2ecc71' : '#e74c3c', 
+                            margin: 0,
+                            textTransform: 'uppercase',
+                            textShadow: '0 4px 15px rgba(0,0,0,0.5)'
+                        }}>
+                            {gameStatus === 'won' ? 'Doğru Bİldİn!' : 'Oyun Bİttİ'}
+                        </h2>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            margin: '2rem 0'
+                        }}>
+                            <span style={{color: 'rgba(255,255,255,0.7)', fontSize: '1.2rem', marginBottom: '0.5rem'}}>Cevap Şuydu:</span>
+                            <strong style={{color: '#fff', fontSize: '2.5rem', fontFamily: "'Teko', sans-serif", letterSpacing: '2px'}}>
+                                {currentSound.title}
+                            </strong>
                         </div>
+                        
+                        <button onClick={restartGame} style={{
+                            background: gameStatus === 'won' ? '#2ecc71' : '#e74c3c',
+                            color: '#fff',
+                            border: 'none',
+                            padding: '1rem 3rem',
+                            fontSize: '1.5rem',
+                            fontFamily: "'Teko', sans-serif",
+                            borderRadius: '8px',
+                            cursor: 'pointer',
+                            letterSpacing: '1px',
+                            transition: 'all 0.2s',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.3)'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
+                        onMouseOut={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+                        >
+                            TEKRAR OYNA
+                        </button>
                     </div>
-
-                    {wrongGuesses.length > 0 && (
-                        <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2.5rem', flexWrap: 'wrap'}}>
-                            {wrongGuesses.map(guess => (
-                                <div key={guess} style={{
-                                    background: '#e8e6df', 
-                                    color: '#a13333', 
-                                    padding: '0.4rem 1rem', 
-                                    borderRadius: '6px', 
-                                    display: 'flex', 
-                                    alignItems: 'center', 
-                                    gap: '0.5rem',
-                                    fontWeight: 'bold',
-                                    fontSize: '0.95rem'
-                                }}>
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
-                                      <path d="m12 13-1-3 2-2-2-3"></path>
-                                    </svg>
-                                    {guess}
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </div>
-            ) : (
-                <div style={{textAlign: 'center', padding: '3rem', background: 'rgba(17,17,17,0.8)', borderRadius: '12px', marginBottom: '3rem', border: '1px solid rgba(255,255,255,0.1)'}}>
-                    <h2 style={{fontFamily: "'Teko', sans-serif", fontSize: '4rem', color: gameStatus === 'won' ? '#2ecc71' : '#e74c3c', margin: 0}}>
-                        {gameStatus === 'won' ? 'CORRECT!' : 'GAME OVER'}
-                    </h2>
-                    <p style={{fontSize: '1.5rem', marginBottom: '2rem', color: '#fff'}}>
-                        The answer was: <strong style={{color: 'var(--valorant-red)'}}>{currentSound.title}</strong>
-                    </p>
-                    <button onClick={restartGame} className="category-btn active" style={{padding: '1rem 3rem', fontSize: '1.2rem'}}>Play Again</button>
                 </div>
             )}
 
