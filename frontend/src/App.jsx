@@ -1228,6 +1228,13 @@ const OFFICIAL_AGENTS = [
 
 function ValorantAgents() {
   const [selectedAgent, setSelectedAgent] = useState(null);
+  const [activeRole, setActiveRole] = useState('Tümü');
+
+  const roles = ['Tümü', 'Düellocu', 'Gözcü', 'Kontrol Uzmanı', 'Öncü'];
+
+  const filteredAgents = activeRole === 'Tümü'
+    ? OFFICIAL_AGENTS
+    : OFFICIAL_AGENTS.filter(a => a.role === activeRole);
 
   if (selectedAgent) {
     return (
@@ -1267,8 +1274,21 @@ function ValorantAgents() {
   return (
     <div className="maps-section-container">
       <h3 style={{ marginBottom: '1.5rem', color: 'var(--valorant-red)', fontSize: '2rem', fontFamily: "'Teko', sans-serif" }}>Ajanlar</h3>
+      
+      <div className="weapon-categories">
+        {roles.map(role => (
+          <button 
+            key={role} 
+            className={`category-btn ${activeRole === role ? 'active' : ''}`}
+            onClick={() => setActiveRole(role)}
+          >
+            {role}
+          </button>
+        ))}
+      </div>
+
       <div className="maps-grid">
-        {[...OFFICIAL_AGENTS].sort((a, b) => a.name.localeCompare(b.name)).map(agent => (
+        {[...filteredAgents].sort((a, b) => a.name.localeCompare(b.name)).map(agent => (
           <div key={agent.name} className="map-card agent-card" onClick={() => setSelectedAgent(agent)} style={{ backgroundImage: `url(${agent.image})`, backgroundSize: '150%', backgroundPosition: 'center top', backgroundColor: '#2b1d22' }}>
             <div className="map-card-overlay"></div>
             <div className="map-card-content">
