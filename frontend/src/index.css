@@ -331,46 +331,78 @@ body {
 
 .maps-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
 }
 
 .map-card {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid var(--glass-border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: all 0.3s ease;
+  height: 420px;
+  border-radius: 16px;
+  cursor: pointer;
   position: relative;
   overflow: hidden;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background-size: cover;
+  background-position: center top;
+  border: 1px solid var(--glass-border);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1.5rem;
+}
+
+.map-card-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to top, rgba(17, 17, 17, 1) 0%, rgba(17, 17, 17, 0.1) 70%);
+  transition: all 0.5s ease;
+  z-index: 1;
 }
 
 .map-card:hover {
-  transform: translateY(-5px);
-  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-10px);
   border-color: var(--valorant-red);
-  box-shadow: 0 5px 15px rgba(255, 70, 85, 0.2);
+  box-shadow: 0 10px 25px rgba(255, 70, 85, 0.3);
+}
+
+.map-card:hover .map-card-overlay {
+  background: linear-gradient(to top, rgba(17, 17, 17, 0.95) 0%, rgba(17, 17, 17, 0.3) 80%);
+}
+
+.map-card-content {
+  position: relative;
+  z-index: 2;
 }
 
 .map-card h4 {
-  font-size: 1.5rem;
+  font-size: 2.5rem;
   font-family: 'Teko', sans-serif;
-  color: var(--text-primary);
-  margin-bottom: 0.2rem;
-  letter-spacing: 1px;
+  color: var(--valorant-red);
+  margin-bottom: 0;
+  letter-spacing: 2px;
+  text-transform: uppercase;
 }
 
 .map-card .map-location {
   display: block;
-  font-size: 0.8rem;
-  color: var(--valorant-red);
-  margin-bottom: 1rem;
+  font-size: 0.9rem;
+  color: #fff;
+  margin-bottom: 0.8rem;
   text-transform: uppercase;
   font-weight: 600;
+  opacity: 0.9;
 }
 
 .map-card p {
   color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.4;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.4s ease;
+}
+
+.map-card:hover p {
+  opacity: 1;
+  transform: translateY(0);
 }
