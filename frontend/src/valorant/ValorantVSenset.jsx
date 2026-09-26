@@ -245,16 +245,6 @@ export default function ValorantVSenset({ onBack }) {
   return (
     <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', color: '#fff', fontFamily: "'Inter', sans-serif" }}>
       
-      {/* Header Back Button */}
-      <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
-        <button 
-          onClick={onBack}
-          style={{ padding: '0.6rem 1.2rem', backgroundColor: '#333', color: '#ddd', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '0.9rem' }}
-        >
-          ← Merkeze Dön
-        </button>
-      </div>
-
       <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
         <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0', fontWeight: 'bold' }}>Hangi Kaplama Paketi?</h1>
         <p style={{ color: '#ccc', fontSize: '1rem', lineHeight: '1.5', maxWidth: '700px', margin: '0 auto' }}>
