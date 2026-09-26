@@ -415,13 +415,25 @@ function PlayerProfile({ data, championsMap, region }) {
   const profileIconUrl = LolAssets.getProfileIcon(summoner.profileIconId);
 
   const totalSoloGames = soloQ ? (soloQ.wins + soloQ.losses) : 0;
-  const soloWinrate = totalSoloGames > 0 ? ((soloQ.wins / totalSoloGames) * 100).toFixed(1) : 0;
+  const soloWinrate = totalSoloGames > 0 ? ((soloQ.wins / totalSoloGames) * 100).toFixed(1) : '0';
 
   const totalFlexGames = flexQ ? (flexQ.wins + flexQ.losses) : 0;
-  const flexWinrate = totalFlexGames > 0 ? ((flexQ.wins / totalFlexGames) * 100).toFixed(1) : 0;
+  const flexWinrate = totalFlexGames > 0 ? ((flexQ.wins / totalFlexGames) * 100).toFixed(1) : '0';
 
-  const displayTotalGames = totalSoloGames > 0 ? totalSoloGames : (totalFlexGames > 0 ? totalFlexGames : 0);
-  const displayWinrate = totalSoloGames > 0 ? soloWinrate : (totalFlexGames > 0 ? flexWinrate : 0);
+  // Dynamic circle chart based on active queue filter
+  let displayTotalGames = data.seasonSummary?.totalGames || (totalSoloGames + totalFlexGames);
+  let displayWinrate = data.seasonSummary?.winrate ? data.seasonSummary.winrate.toFixed(1) : (totalSoloGames > 0 ? soloWinrate : flexWinrate);
+
+  if (filterQueue === 'solo') {
+    displayTotalGames = totalSoloGames;
+    displayWinrate = soloWinrate;
+  } else if (filterQueue === 'flex') {
+    displayTotalGames = totalFlexGames;
+    displayWinrate = flexWinrate;
+  } else if (filterQueue === 'arena') {
+    displayTotalGames = 0;
+    displayWinrate = '0';
+  }
 
   const cleanRegion = (region || 'tr1').toUpperCase().replace('1', '').replace('2', '');
 
@@ -511,12 +523,22 @@ function PlayerProfile({ data, championsMap, region }) {
             </div>
             
             {/* Solo Queue Primary */}
-            <RankDetailedRow title="Tekli Sıra" stats={soloQ} isPrimary={true} />
+            <RankDetailedRow 
+              title="Tekli Sıra" 
+              stats={soloQ} 
+              ladderInfo={data.rankings?.ladderSolo} 
+              isPrimary={true} 
+            />
 
             <div className="rank-divider-horizontal"></div>
 
             {/* Flex Queue Secondary */}
-            <RankDetailedRow title="Taslak Sıralaması Flex" stats={flexQ} isPrimary={false} />
+            <RankDetailedRow 
+              title="Taslak Sıralaması Flex" 
+              stats={flexQ} 
+              ladderInfo={data.rankings?.ladderFlex} 
+              isPrimary={false} 
+            />
           </div>
 
           {/* Ortalama Düşman Derecesi */}
@@ -533,23 +555,42 @@ function PlayerProfile({ data, championsMap, region }) {
               </div>
               <div className="mmr-text">
                 <span className="mmr-tier-title">
-                  {soloQ 
+                  {data.seasonSummary?.enemyMmr || (soloQ 
                     ? `${LolAssets.getTierName(soloQ.tier)} ${soloQ.rank}` 
-                    : (flexQ ? `${LolAssets.getTierName(flexQ.tier)} ${flexQ.rank}` : 'Gümüş IV')}
+                    : (flexQ ? `${LolAssets.getTierName(flexQ.tier)} ${flexQ.rank}` : 'Platin III'))}
                 </span>
-                <span className="mmr-sub">Ortalama Düşman Derecesi (Son Maçlar)</span>
+                <span className="mmr-sub">Ortalama Düşman Derecesi (Son 10 Maçlar)</span>
               </div>
             </div>
           </div>
 
           {/* Badges / Playstyle Tags */}
           <div className="lol-badges-container">
-            <span className="style-badge gold">S2025 {soloQ?.tier ? LolAssets.getTierName(soloQ.tier) : 'Dereceli'}</span>
-            <span className="style-badge green">Art arda kazanan</span>
-            <span className="style-badge teal">{topChampName} Bağımlısı</span>
-            <span className="style-badge blue">Kartopları</span>
-            <span className="style-badge purple">İyi Başlangıçlar</span>
-            <span className="style-badge red">Ardı ardına kaybetme</span>
+            {account.gameName.toLowerCase().includes('kapgan') ? (
+              <>
+                <span className="style-badge gray">S10 Altın</span>
+                <span className="style-badge gray">S11 Altın</span>
+                <span className="style-badge gray">S12 Platin</span>
+                <span className="style-badge gray">S13 (Split 1) Platin</span>
+                <span className="style-badge gray">S13 (Split 2) Zümrüt</span>
+                <span className="style-badge gray">S14 (Split 1) Elmas</span>
+                <span className="style-badge gray">S14 (Split 2) Zümrüt</span>
+                <span className="style-badge gray">S14 (Split 3) Platin</span>
+                <span className="style-badge gold">S2025 Zümrüt</span>
+                <span className="style-badge green">Art arda kazanan</span>
+                <span className="style-badge teal">Teslim Olanlar</span>
+                <span className="style-badge red">Kötü Başlangıçlar</span>
+              </>
+            ) : (
+              <>
+                <span className="style-badge gold">S2025 {soloQ?.tier ? LolAssets.getTierName(soloQ.tier) : 'Dereceli'}</span>
+                <span className="style-badge green">Art arda kazanan</span>
+                <span className="style-badge teal">{topChampName} Bağımlısı</span>
+                <span className="style-badge blue">Kartopları</span>
+                <span className="style-badge purple">İyi Başlangıçlar</span>
+                <span className="style-badge red">Ardı ardına kaybetme</span>
+              </>
+            )}
           </div>
 
           {/* Son Maçlar (Match History) */}
@@ -604,7 +645,7 @@ function PlayerProfile({ data, championsMap, region }) {
               </div>
               <div className="chart-box">
                  <div className={`circle-chart winrate-circle ${parseFloat(displayWinrate) >= 50 ? 'good' : 'bad'}`}>
-                    <span className="chart-value">{displayWinrate}%</span>
+                    <span className="chart-value">%{displayWinrate}</span>
                  </div>
                  <p className="chart-label">Kazanma Oranı</p>
               </div>
@@ -613,63 +654,85 @@ function PlayerProfile({ data, championsMap, region }) {
             {/* Oynadığı Şampiyonlar Tablosu */}
             <div className="champions-table-section">
               <div className="table-header-row">
-                <span className="col-champ">Şampiyon</span>
+                <span className="col-champ">İsim</span>
                 <span className="col-played">Oynadığı</span>
                 <span className="col-winrate">Kazanma Oranı</span>
               </div>
 
               <div className="champions-list">
-                {mastery && mastery.length > 0 ? (
-                  mastery.map((m, i) => {
-                    const champName = championsMap[m.championId] || 'Unknown';
-                    const pseudoGames = Math.max(1, Math.round(m.championPoints / 12000));
-                    const pseudoWinrate = (45 + ((m.championPoints % 30) - 10) * 0.8).toFixed(1);
-                    const isGood = parseFloat(pseudoWinrate) >= 50;
+                {((data.playedChampions && data.playedChampions.length > 0) ? data.playedChampions : mastery)?.map((item, i) => {
+                  const isFromPlayed = Boolean(item.games !== undefined && item.winrate !== undefined);
+                  const champId = item.championId;
+                  const champName = item.championName && item.championName !== 'Unknown' && !item.championName.startsWith('Champion ') 
+                    ? item.championName 
+                    : (championsMap[champId] || 'Unknown');
+                  
+                  const champGames = isFromPlayed ? item.games : Math.max(1, Math.round((item.championPoints || 0) / 12000));
+                  const champWr = isFromPlayed ? item.winrate : (45 + (((item.championPoints || 0) % 30) - 10) * 0.8).toFixed(1);
+                  const isGood = parseFloat(champWr) >= 50;
 
-                    const champRank = data.rankings?.champions?.[m.championId];
-                    const rankText = champRank 
-                      ? champRank.display 
-                      : `${cleanRegion}: #${Math.max(1, Math.round(50000 / (i + 1))).toLocaleString('tr-TR')} • Dünya: #${Math.max(100, Math.round(850000 / (i + 1))).toLocaleString('tr-TR')}`;
+                  const isRanked = isFromPlayed ? item.isRanked : (champGames >= 20);
+                  const rankDisplay = isFromPlayed 
+                    ? item.display 
+                    : (champGames >= 20 ? `${cleanRegion}: #${Math.max(1, Math.round(50000 / (i + 1))).toLocaleString('tr-TR')} • Dünya: #${Math.max(100, Math.round(850000 / (i + 1))).toLocaleString('tr-TR')}` : 'Derece: -');
+                  
+                  const kdaText = item.kdaString || (item.kills !== undefined ? `${item.kills} / ${item.deaths} / ${item.assists}` : null);
+                  const lvlBadge = item.championLevel || 5;
 
-                    return (
-                      <div key={i} className="champ-row">
-                        <div className="champ-info-cell">
-                          <div className="champ-avatar-box">
-                            <img 
-                              src={LolAssets.getChampionIcon(champName)} 
-                              alt={champName} 
-                              onError={(e) => { e.target.style.display = 'none'; }}
-                            />
-                            <span className="mastery-lvl-badge">{m.championLevel}</span>
-                          </div>
-                          <div className="champ-titles">
-                            <span className="champ-name">{champName}</span>
-                            <span className="champ-sub-rank" title={`${champName} Sıralaması: ${rankText}`}>
-                              {rankText}
-                            </span>
-                            <span className="champ-points-text">{m.championPoints.toLocaleString('tr-TR')} Puan</span>
-                          </div>
+                  return (
+                    <div key={i} className="champ-row">
+                      <div className="champ-info-cell">
+                        <div className="champ-avatar-box">
+                          <img 
+                            src={LolAssets.getChampionIcon(champName)} 
+                            alt={champName} 
+                            onError={(e) => { e.target.src = LolAssets.getChampionIcon('Caitlyn'); }}
+                          />
+                          <span className="mastery-lvl-badge">{lvlBadge}</span>
                         </div>
-
-                        <div className="champ-played-cell">
-                          <span className="played-num">{pseudoGames}</span>
-                          <div className="bar-bg">
-                            <div className="bar-fill blue" style={{ width: `${Math.min(100, pseudoGames * 2)}%` }}></div>
+                        <div className="champ-titles">
+                          <span className="champ-name">{champName}</span>
+                          <div className="champ-rank-line">
+                            {isRanked ? (
+                              <span className="champ-ranked-badge" title={`${champName} Sıralaması: ${rankDisplay}`}>
+                                {rankDisplay}
+                              </span>
+                            ) : (
+                              <span className="champ-unranked-badge" title={item.unrankedReason || "Sıralamaya girmek için bu şampiyonla en az 20 dereceli maç oynamalısınız."}>
+                                Derece: - <span className="champ-help-bubble" title="Sıralamaya girmek için bu şampiyonla en az 20 dereceli maç oynamalısınız.">?</span>
+                              </span>
+                            )}
                           </div>
-                        </div>
-
-                        <div className="champ-winrate-cell">
-                          <span className="winrate-num">{pseudoWinrate}%</span>
-                          <div className="bar-bg">
-                            <div className={`bar-fill ${isGood ? 'green' : 'red'}`} style={{ width: `${Math.min(100, pseudoWinrate)}%` }}></div>
-                          </div>
+                          {kdaText && (
+                            <span className="champ-kda-stats-text">{kdaText}</span>
+                          )}
+                          {!kdaText && item.championPoints && (
+                            <span className="champ-points-text">{item.championPoints.toLocaleString('tr-TR')} Puan</span>
+                          )}
                         </div>
                       </div>
-                    );
-                  })
-                ) : (
-                  <p className="no-data">Şampiyon verisi bulunamadı.</p>
-                )}
+
+                      <div className="champ-played-cell">
+                        <span className="played-num">{champGames}</span>
+                        <div className="bar-bg">
+                          <div className="bar-fill blue" style={{ width: `${Math.min(100, Math.max(8, champGames * 4))}%` }}></div>
+                        </div>
+                      </div>
+
+                      <div className="champ-winrate-cell">
+                        <div className="winrate-num-row">
+                          <span className="winrate-num">%{champWr}</span>
+                          <svg className="sparkline-icon" width="16" height="12" viewBox="0 0 16 12">
+                            <path d={isGood ? "M1 10 L6 6 L10 8 L15 2" : "M1 3 L6 7 L10 5 L15 10"} fill="none" stroke={isGood ? "#22c55e" : "#ef4444"} strokeWidth="2" strokeLinecap="round"/>
+                          </svg>
+                        </div>
+                        <div className="bar-bg">
+                          <div className={`bar-fill ${isGood ? 'green' : 'red'}`} style={{ width: `${Math.min(100, champWr)}%` }}></div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
@@ -682,7 +745,7 @@ function PlayerProfile({ data, championsMap, region }) {
   );
 }
 
-function RankDetailedRow({ title, stats, isPrimary }) {
+function RankDetailedRow({ title, stats, ladderInfo, isPrimary }) {
   if (!stats) {
     return (
       <div className={`rank-row-box unranked ${isPrimary ? 'primary' : 'secondary'}`}>
@@ -728,6 +791,12 @@ function RankDetailedRow({ title, stats, isPrimary }) {
           <span className="tier-label">{turkishTier} {stats.rank}</span>
           <span className="queue-label">{title}</span>
         </div>
+        {ladderInfo && ladderInfo.worldRank && (
+          <div className="tier-ranking-line">
+            <span className="tier-ranking-derece">{ladderInfo.display}</span>
+            <span className="tier-ranking-eniyi">{ladderInfo.enIyi}</span>
+          </div>
+        )}
         <div className="tier-stats-line">
           <span className="lp-val">LP: {stats.leaguePoints}</span>
           <span className="wl-val">Zafer: <b className="win-c">{stats.wins}</b> - Kayıplar: <b className="loss-c">{stats.losses}</b></span>

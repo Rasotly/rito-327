@@ -1670,3 +1670,96 @@ button.nav-item.active, .nav-item.active {
   border-radius: 3px;
 }
 
+/* League of Graphs Tier Ranking Line inside RankDetailedRow */
+.tier-ranking-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.78rem;
+  margin: 3px 0 4px 0;
+  line-height: 1.2;
+}
+
+.tier-ranking-derece {
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.tier-ranking-eniyi {
+  color: #38bdf8;
+  font-weight: 700;
+  background: rgba(56, 189, 248, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+}
+
+/* Champion Played & Ranking Styles */
+.champ-rank-line {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin: 1px 0;
+}
+
+.champ-ranked-badge {
+  font-size: 0.75rem;
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.champ-unranked-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  cursor: help;
+}
+
+.champ-help-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #cbd5e1;
+  font-size: 0.65rem;
+  font-weight: 800;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+
+.champ-unranked-badge:hover .champ-help-bubble {
+  background: #38bdf8;
+  color: #0f172a;
+}
+
+.champ-kda-stats-text {
+  font-size: 0.75rem;
+  color: #94a3b8;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+.winrate-num-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.sparkline-icon {
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.5));
+}
+
+.style-badge.gray {
+  background: rgba(148, 163, 184, 0.12);
+  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: #94a3b8;
+}
+
+
