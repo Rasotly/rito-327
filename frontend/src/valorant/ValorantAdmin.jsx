@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import ValorantHigherLowerAdmin from './ValorantHigherLowerAdmin';
 
-export default function ValorantGeoAdmin() {
+export default function ValorantAdmin() {
   const [token, setToken] = useState(localStorage.getItem('geovalo_token') || '');
   const [password, setPassword] = useState('');
   const [loginError, setLoginError] = useState('');
+  const [activeTab, setActiveTab] = useState('geo'); // 'geo' or 'higherlower'
 
   const [questions, setQuestions] = useState([]);
   const [filterMap, setFilterMap] = useState('All');
@@ -142,7 +144,7 @@ export default function ValorantGeoAdmin() {
   if (!token) {
     return (
       <div style={{ color: 'white', maxWidth: '400px', margin: '4rem auto', padding: '2rem', backgroundColor: '#111', borderRadius: '8px', border: '1px solid #333' }}>
-        <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#ff4655' }}>GeoValo Admin Girişi</h2>
+        <h2 style={{ textAlign: 'center', marginBottom: '2rem', color: '#ff4655' }}>Riot Merkezi Yönetim</h2>
         <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           <input 
             type="password" 
@@ -163,18 +165,42 @@ export default function ValorantGeoAdmin() {
   const filteredQuestions = questions.filter(q => filterMap === 'All' || q.mapName === filterMap);
 
   return (
-    <div style={{ color: 'white', maxWidth: '1000px', margin: '0 auto', fontFamily: 'sans-serif', paddingBottom: '4rem' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem', borderBottom: '1px solid #333', paddingBottom: '1rem' }}>
-        <h2 style={{ color: '#00ff00' }}>GeoValo Yönetim Paneli</h2>
+    <div style={{ color: 'white', maxWidth: '1200px', margin: '0 auto', fontFamily: 'sans-serif', paddingBottom: '4rem', display: 'flex', gap: '2rem' }}>
+      
+      {/* Sol İç Menü (Inner Sidebar) */}
+      <div style={{ width: '250px', backgroundColor: '#111', padding: '1.5rem', borderRadius: '8px', border: '1px solid #333', display: 'flex', flexDirection: 'column', gap: '0.5rem', height: 'fit-content' }}>
+        <h2 style={{ color: '#ff4655', margin: '0 0 1rem 0', fontSize: '1.5rem', borderBottom: '1px solid #333', paddingBottom: '1rem', textAlign: 'center' }}>Riot Yönetimi</h2>
+        
         <button 
-          onClick={() => { setToken(''); localStorage.removeItem('geovalo_token'); }}
-          style={{ padding: '0.5rem 1rem', backgroundColor: '#333', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+          onClick={() => setActiveTab('geo')}
+          style={{ textAlign: 'left', padding: '1rem', backgroundColor: activeTab === 'geo' ? 'rgba(255, 70, 85, 0.2)' : 'transparent', color: activeTab === 'geo' ? '#ff4655' : 'white', border: activeTab === 'geo' ? '1px solid #ff4655' : '1px solid transparent', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', transition: 'all 0.2s' }}
         >
-          Çıkış Yap
+          📍 GeoValo
         </button>
+
+        <button 
+          onClick={() => setActiveTab('higherlower')}
+          style={{ textAlign: 'left', padding: '1rem', backgroundColor: activeTab === 'higherlower' ? 'rgba(255, 70, 85, 0.2)' : 'transparent', color: activeTab === 'higherlower' ? '#ff4655' : 'white', border: activeTab === 'higherlower' ? '1px solid #ff4655' : '1px solid transparent', borderRadius: '4px', cursor: 'pointer', fontWeight: 'bold', fontSize: '1rem', transition: 'all 0.2s' }}
+        >
+          📈 Alt mı Üst mü?
+        </button>
+
+        <div style={{ marginTop: '2rem', borderTop: '1px solid #333', paddingTop: '1rem' }}>
+          <button 
+            onClick={() => { setToken(''); localStorage.removeItem('geovalo_token'); }}
+            style={{ width: '100%', padding: '0.8rem', backgroundColor: '#222', color: '#aaa', border: '1px solid #444', borderRadius: '4px', cursor: 'pointer', transition: 'all 0.2s' }}
+            onMouseOver={e => { e.currentTarget.style.backgroundColor = '#333'; e.currentTarget.style.color = '#fff'; }}
+            onMouseOut={e => { e.currentTarget.style.backgroundColor = '#222'; e.currentTarget.style.color = '#aaa'; }}
+          >
+            Çıkış Yap
+          </button>
+        </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
+      {/* Sağ İçerik Alanı */}
+      <div style={{ flex: 1 }}>
+        {activeTab === 'geo' ? (
+          <div style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
         {/* Yükleme Formu */}
         <div style={{ flex: '1 1 400px', backgroundColor: '#111', padding: '2rem', borderRadius: '8px', border: '1px solid #333' }}>
           <h3 style={{ marginBottom: '1.5rem', color: '#aaa' }}>Yeni Soru Ekle</h3>
@@ -287,6 +313,10 @@ export default function ValorantGeoAdmin() {
             )}
           </div>
         </div>
+      </div>
+      ) : (
+        <ValorantHigherLowerAdmin token={token} />
+        )}
       </div>
     </div>
   );

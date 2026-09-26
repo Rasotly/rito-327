@@ -100,6 +100,13 @@ const AdminIcon = () => (
   </svg>
 );
 
+const TrendingIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+    <polyline points="17 6 23 6 23 12"></polyline>
+  </svg>
+);
+
 const NAV_ITEMS = [
   { id: 'home', label: 'Ana Sayfa', icon: <HomeIcon /> },
   { id: 'agents', label: 'Ajanlar', icon: <AgentIcon /> },
@@ -108,7 +115,8 @@ const NAV_ITEMS = [
   { id: 'game', label: 'Vufufu', icon: <GameIcon /> },
   { id: 'heardle', label: 'V-sense', icon: <SoundIcon /> },
   { id: 'mapguessr', label: 'GeoValo', icon: <LocationIcon /> },
-  { id: 'geoadmin', label: 'Admin (Gizli)', icon: <AdminIcon /> },
+  { id: 'higherlower', label: 'Alt mı Üst mü?', icon: <TrendingIcon /> },
+  { id: 'geoadmin', label: 'Riot Yönetimi', icon: <AdminIcon /> },
   { id: 'guides', label: 'Rehberler', icon: <GuideIcon /> },
   { id: 'cosmetics', label: 'Kozmetikler', icon: <CosmeticIcon /> },
   { id: 'patch-notes', label: 'Yama Notları', icon: <PatchIcon /> },
