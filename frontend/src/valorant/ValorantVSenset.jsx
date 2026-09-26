@@ -242,11 +242,61 @@ export default function ValorantVSenset({ onBack }) {
     );
   };
 
+  const gridContent = useMemo(() => {
+    return filteredBundles.map(bundle => {
+      const isWrong = wrongGuesses.includes(bundle.uuid);
+      return (
+        <div 
+          key={bundle.uuid}
+          onClick={() => handleGuess(bundle)}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            cursor: isWrong ? 'not-allowed' : 'pointer',
+            opacity: isWrong ? 0.4 : 1,
+            filter: isWrong ? 'grayscale(100%)' : 'none',
+            transition: 'transform 0.2s'
+          }}
+          onMouseOver={(e) => { if(!isWrong) e.currentTarget.style.transform = 'scale(1.03)'; }}
+          onMouseOut={(e) => { if(!isWrong) e.currentTarget.style.transform = 'scale(1)'; }}
+        >
+          <div style={{ 
+            width: '100%', 
+            aspectRatio: '16/9', 
+            backgroundColor: '#1a1a1a', 
+            borderRadius: '12px',
+            overflow: 'hidden',
+            marginBottom: '0.8rem',
+            border: isWrong ? '2px solid #ff4655' : '1px solid transparent',
+            boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            position: 'relative'
+          }}>
+            <span style={{ position: 'absolute', color: '#333', fontSize: '0.8rem', fontWeight: 'bold' }}>VALORANT</span>
+            <img 
+              src={`https://wsrv.nl/?url=${bundle.displayIcon}&w=300&output=webp`}
+              alt={bundle.displayName} 
+              loading="lazy"
+              style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'relative', zIndex: 1 }} 
+            />
+          </div>
+          <span style={{ fontSize: '0.95rem', color: '#ccc', textAlign: 'center', fontWeight: '500' }}>{bundle.displayName}</span>
+        </div>
+      );
+    });
+  }, [filteredBundles, wrongGuesses, gameState]);
+
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', color: '#fff', fontFamily: "'Inter', sans-serif" }}>
-      
-      <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
-        <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0', fontWeight: 'bold' }}>Hangi Kaplama Paketi?</h1>
+    <div className="game-container" style={{ 
+      maxWidth: '1200px', margin: '0 auto', color: '#fff', 
+      fontFamily: "'Inter', sans-serif"
+    }}>
+        
+        <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+          <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0', fontWeight: 'bold' }}>Hangi Kaplama Paketi?</h1>
         <p style={{ color: '#ccc', fontSize: '1rem', lineHeight: '1.5', maxWidth: '700px', margin: '0 auto' }}>
           Raunttaki 5. skorundan sonra, her premium kaplama paketine özgü bir seri katil (ace) sesi çalar. <br/>
           Sesi dinleyerek doğru paketi bulmak için 3 hakkın var.
@@ -321,52 +371,7 @@ export default function ValorantVSenset({ onBack }) {
           gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
           gap: '1.5rem' 
         }}>
-          {useMemo(() => filteredBundles.map(bundle => {
-            const isWrong = wrongGuesses.includes(bundle.uuid);
-            return (
-              <div 
-                key={bundle.uuid}
-                onClick={() => handleGuess(bundle)}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  cursor: isWrong ? 'not-allowed' : 'pointer',
-                  opacity: isWrong ? 0.4 : 1,
-                  filter: isWrong ? 'grayscale(100%)' : 'none',
-                  transition: 'transform 0.2s'
-                }}
-                onMouseOver={(e) => { if(!isWrong) e.currentTarget.style.transform = 'scale(1.03)'; }}
-                onMouseOut={(e) => { if(!isWrong) e.currentTarget.style.transform = 'scale(1)'; }}
-              >
-                <div style={{ 
-                  width: '100%', 
-                  aspectRatio: '16/9', 
-                  backgroundColor: '#1a1a1a', 
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  marginBottom: '0.8rem',
-                  border: isWrong ? '2px solid #ff4655' : '1px solid transparent',
-                  boxShadow: '0 4px 10px rgba(0,0,0,0.3)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative'
-                }}>
-                  {/* Subtle placeholder icon or text while loading */}
-                  <span style={{ position: 'absolute', color: '#333', fontSize: '0.8rem', fontWeight: 'bold' }}>VALORANT</span>
-                  
-                  <img 
-                    src={`https://wsrv.nl/?url=${bundle.displayIcon}&w=300&output=webp`}
-                    alt={bundle.displayName} 
-                    loading="lazy"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'relative', zIndex: 1 }} 
-                  />
-                </div>
-                <span style={{ fontSize: '0.95rem', color: '#ccc', textAlign: 'center', fontWeight: '500' }}>{bundle.displayName}</span>
-              </div>
-            );
-          }), [filteredBundles, wrongGuesses])}
+          {gridContent}
         </div>
       ) : (
         <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: '#1a1a1a', borderRadius: '12px', border: `2px solid ${gameState === 'won' ? '#00ff00' : '#ff4655'}` }}>
