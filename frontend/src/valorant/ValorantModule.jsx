@@ -1997,8 +1997,8 @@ function ValorantHeardle({ onBack }) {
                 <div style={{marginTop: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem'}}>
                     <span style={{color: '#fff', fontWeight: 'bold'}}>Difficulty:</span>
                     <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} style={{background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.5rem 1rem', borderRadius: '4px', outline: 'none'}}>
-                        <option value="Normal">Normal</option>
-                        <option value="Hard">Hard</option>
+                        <option value="Normal" style={{ background: '#222', color: '#fff' }}>Normal</option>
+                        <option value="Hard" style={{ background: '#222', color: '#fff' }}>Hard</option>
                     </select>
                 </div>
             </div>
