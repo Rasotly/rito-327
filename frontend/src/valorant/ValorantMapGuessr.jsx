@@ -99,11 +99,28 @@ export default function ValorantMapGuessr() {
             />
             <div style={{ display: 'none', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '2rem' }}>
               <span style={{ fontSize: '3rem', marginBottom: '1rem' }}>📷</span>
-              <p style={{ color: '#ff4655', fontWeight: 'bold' }}>Resim Bulunamadı!</p>
-              <p style={{ color: '#aaa', fontSize: '0.9rem' }}>Lütfen oyun içinden çektiğiniz resmi şu yola kaydedin:</p>
-              <code style={{ backgroundColor: '#222', padding: '0.5rem', borderRadius: '4px', marginTop: '0.5rem' }}>
-                public{currentChallenge.wallImage}
-              </code>
+              <p style={{ color: '#ff4655', fontWeight: 'bold', marginBottom: '1rem' }}>Resim Bulunamadı!</p>
+              
+              <div style={{ backgroundColor: '#222', padding: '1rem', borderRadius: '8px', border: '1px dashed #555' }}>
+                 <p style={{ color: '#aaa', fontSize: '0.9rem', marginBottom: '1rem' }}>Lütfen bilgisayarınızdaki resmi seçin:</p>
+                 <input 
+                   type="file" 
+                   accept="image/*"
+                   onChange={(e) => {
+                     if (e.target.files && e.target.files[0]) {
+                       const reader = new FileReader();
+                       reader.onload = (event) => {
+                         const imgElement = e.target.closest('div').previousSibling;
+                         imgElement.src = event.target.result;
+                         imgElement.style.display = 'block';
+                         e.target.closest('div').style.display = 'none';
+                       };
+                       reader.readAsDataURL(e.target.files[0]);
+                     }
+                   }}
+                   style={{ color: 'white' }}
+                 />
+              </div>
             </div>
           </div>
         </div>
