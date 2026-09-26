@@ -4,9 +4,16 @@ const SAMPLE_LOCATIONS = [
   {
     id: 1,
     mapName: 'Ascent',
-    wallImage: 'https://images.contentstack.io/v3/assets/bltb6530b271fddd0b1/blt7275f922eb43bdce/5ebc4cdccb7617498c819661/ascent-1.jpg',
-    correctX: 45,
-    correctY: 60,
+    wallImage: '/geovalo/ascent_1.jpg',
+    correctX: 88, // A Main fıçılarının haritadaki sağ yatay konumu
+    correctY: 47, // A Main fıçılarının dikey konumu
+  },
+  {
+    id: 2,
+    mapName: 'Abyss',
+    wallImage: '/geovalo/abyss_1.jpg', 
+    correctX: 50, 
+    correctY: 85, 
   }
 ];
 
@@ -71,13 +78,34 @@ export default function ValorantMapGuessr() {
           <div style={{ 
             width: '100%', 
             height: '400px', 
-            backgroundImage: `url(${currentChallenge.wallImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
             borderRadius: '8px',
             border: '2px solid #333',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.5)'
-          }}></div>
+            boxShadow: '0 4px 10px rgba(0,0,0,0.5)',
+            backgroundColor: '#111',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden',
+            position: 'relative'
+          }}>
+            <img 
+              src={currentChallenge.wallImage} 
+              alt="Gizemli Yer" 
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div style={{ display: 'none', flexDirection: 'column', alignItems: 'center', textAlign: 'center', padding: '2rem' }}>
+              <span style={{ fontSize: '3rem', marginBottom: '1rem' }}>📷</span>
+              <p style={{ color: '#ff4655', fontWeight: 'bold' }}>Resim Bulunamadı!</p>
+              <p style={{ color: '#aaa', fontSize: '0.9rem' }}>Lütfen oyun içinden çektiğiniz resmi şu yola kaydedin:</p>
+              <code style={{ backgroundColor: '#222', padding: '0.5rem', borderRadius: '4px', marginTop: '0.5rem' }}>
+                public{currentChallenge.wallImage}
+              </code>
+            </div>
+          </div>
         </div>
 
         {/* Sağ taraf: Harita Seçimi ve İşaretleme */}
