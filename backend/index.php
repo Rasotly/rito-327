@@ -11,25 +11,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 $game = isset($_GET['game']) ? $_GET['game'] : '';
 
 if ($game === 'valorant') {
-    $response = [
-        "status" => "success",
-        "message" => "Valorant modülüne başarıyla bağlandınız. Ajan verileri senkronize ediliyor.",
-        "stats" => [
-            "activePlayers" => "2.4M",
-            "serverStatus" => "Online",
-            "currentAct" => "Bölüm 0, Kısım 2"
-        ]
-    ];
+    include 'valorant/valorant.php';
 } elseif ($game === 'lol') {
-    $response = [
-        "status" => "success",
-        "message" => "League of Legends modülüne başarıyla bağlandınız. Vadi verileri yükleniyor.",
-        "stats" => [
-            "activeMatches" => "145,230",
-            "currentPatch" => "14.5",
-            "featuredMode" => "ARAM"
-        ]
-    ];
+    include 'lol/lol.php';
 } else {
     $response = [
         "status" => "error",
