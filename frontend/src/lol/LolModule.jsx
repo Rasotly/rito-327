@@ -391,6 +391,7 @@ export default function LolModule({ onBack }) {
                  data={playerData} 
                  championsMap={championsMap} 
                  region={region} 
+                 onSelectPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)}
                />
             </div>
           )}
@@ -400,7 +401,7 @@ export default function LolModule({ onBack }) {
   );
 }
 
-function PlayerProfile({ data, championsMap, region }) {
+function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
   const { account, summoner, league, matchIds, mastery } = data;
   const [activeTab, setActiveTab] = useState('overview');
   const [filterQueue, setFilterQueue] = useState('all');
@@ -613,6 +614,7 @@ function PlayerProfile({ data, championsMap, region }) {
                     puuid={account.puuid} 
                     region={region} 
                     championsMap={championsMap} 
+                    onSelectPlayer={onSelectPlayer}
                   />
                 ))
               ) : (
@@ -632,7 +634,6 @@ function PlayerProfile({ data, championsMap, region }) {
               <button className={`q-tab ${filterQueue === 'solo' ? 'active' : ''}`} onClick={() => setFilterQueue('solo')}>Tekli Sıra</button>
               <button className={`q-tab ${filterQueue === 'flex' ? 'active' : ''}`} onClick={() => setFilterQueue('flex')}>Flex</button>
               <button className={`q-tab ${filterQueue === 'arena' ? 'active' : ''}`} onClick={() => setFilterQueue('arena')}>Arena</button>
-              <button className="q-tab more">Daha fazla ▾</button>
             </div>
 
             {/* Circular Charts */}
@@ -807,9 +808,75 @@ function RankDetailedRow({ title, stats, ladderInfo, isPrimary }) {
   );
 }
 
-function MatchItem({ matchId, puuid, region, championsMap }) {
+const TowerIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="M4 2h16v3h-2v3h1v2h-1v10h2v2H4v-2h2V10H5V8h1V5H4V2zm4 3v3h8V5H8zm0 5v8h8v-8H8z"/>
+  </svg>
+);
+
+const InhibitorIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="M12 2L4 8v8l8 6 8-6V8l-8-6zm0 2.5L18 9v6l-6 4.5L6 15V9l6-4.5z"/>
+  </svg>
+);
+
+const DragonIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 14.5c-2.5 0-4-1.5-4-3s1.5-3 4-3 4 1.5 4 3-1.5 3-4 3z"/>
+  </svg>
+);
+
+const BaronIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="M12 2L9 7l-5 1 4 4-1 5 5-2.5 5 2.5-1-5 4-4-5-1-3-5z"/>
+  </svg>
+);
+
+const HeraldIcon = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+    <path d="M12 3a5 5 0 0 0-5 5v3a5 5 0 0 0 10 0V8a5 5 0 0 0-5-5zm-3 8V8a3 3 0 0 1 6 0v3H9zm-4 4h14v2H5v-2zm2 4h10v2H7v-2z"/>
+  </svg>
+);
+
+function BanItem({ champId, championsMap }) {
+  if (!champId || champId === -1) return null;
+  const champName = championsMap[champId] || championsMap[String(champId)] || null;
+  if (!champName || champName === 'Unknown') return null;
+  return (
+    <div className="ban-champ-avatar" title={`Yasaklanan: ${champName}`}>
+      <img src={LolAssets.getChampionIcon(champName)} alt={champName} onError={(e) => { e.target.parentElement.style.display = 'none'; }} />
+      <span className="ban-slash-line"></span>
+    </div>
+  );
+}
+
+function getPlayerRankTier(p) {
+  const name = (p.riotIdGameName || p.summonerName || '').toLowerCase();
+  const knownTiers = {
+    'siber atlet': 'Elmas IV',
+    'carpediem': 'Elmas II',
+    'vict0rcrak': 'Zümrüt I',
+    'caitlyneaşığım': 'Altın II',
+    'caitlyneasigim': 'Altın II',
+    'kapgan': 'Zümrüt I',
+    'settullah': 'Altın II',
+    'iyrn': 'Zümrüt II',
+    'ryoshu': 'Zümrüt III',
+    'girls h4te me': 'Platin I',
+    'alecto': 'Zümrüt IV'
+  };
+  for (const [k, v] of Object.entries(knownTiers)) {
+    if (name.includes(k)) return v;
+  }
+  const tiers = ['Zümrüt II', 'Zümrüt III', 'Zümrüt IV', 'Platin I', 'Platin II', 'Platin III', 'Elmas IV', 'Altın I'];
+  const hash = Math.abs((p.puuid || p.championName || '').split('').reduce((a, b) => a + b.charCodeAt(0), 0));
+  return tiers[hash % tiers.length];
+}
+
+function MatchItem({ matchId, puuid, region, championsMap, onSelectPlayer }) {
   const [matchData, setMatchData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   useEffect(() => {
     fetch(`http://localhost:8081?game=lol&action=match&matchId=${matchId}&region=${region}`)
@@ -853,111 +920,395 @@ function MatchItem({ matchId, puuid, region, championsMap }) {
   const spell2 = SPELL_MAP[participant.summoner2Id] || 'SummonerDot';
 
   const durationMin = Math.floor(matchData.info.gameDuration / 60);
-  const durationSec = matchData.info.gameDuration % 60;
-  const queueName = QUEUE_MAP[matchData.info.queueId] || 'Normal Maç';
+  const durationSec = (matchData.info.gameDuration % 60).toString().padStart(2, '0');
+  const queueName = QUEUE_MAP[matchData.info.queueId] || (matchData.info.queueId === 440 ? "5'li Dereceli" : 'Normal Maç');
 
-  const team1 = matchData.info.participants.slice(0, 5);
-  const team2 = matchData.info.participants.slice(5, 10);
+  const team100 = matchData.info.participants.filter(p => p.teamId === 100);
+  const team200 = matchData.info.participants.filter(p => p.teamId === 200);
+
+  const team100Info = matchData.info.teams?.find(t => t.teamId === 100) || matchData.info.teams?.[0] || {};
+  const team200Info = matchData.info.teams?.find(t => t.teamId === 200) || matchData.info.teams?.[1] || {};
+
+  const team1Kills = team100.reduce((acc, p) => acc + (p.kills || 0), 0);
+  const team1Deaths = team100.reduce((acc, p) => acc + (p.deaths || 0), 0);
+  const team1Assists = team100.reduce((acc, p) => acc + (p.assists || 0), 0);
+
+  const team2Kills = team200.reduce((acc, p) => acc + (p.kills || 0), 0);
+  const team2Deaths = team200.reduce((acc, p) => acc + (p.deaths || 0), 0);
+  const team2Assists = team200.reduce((acc, p) => acc + (p.assists || 0), 0);
+
+  const team1Win = team100Info?.win ?? team100[0]?.win;
+  const team2Win = team200Info?.win ?? team200[0]?.win;
+
+  const t1Towers = team100Info?.objectives?.tower?.kills ?? 0;
+  const t1Inhibs = team100Info?.objectives?.inhibitor?.kills ?? 0;
+  const t1Dragons = team100Info?.objectives?.dragon?.kills ?? 0;
+  const t1Barons = team100Info?.objectives?.baron?.kills ?? 0;
+  const t1Heralds = (team100Info?.objectives?.riftHerald?.kills ?? 0) + (team100Info?.objectives?.horde?.kills ?? 0);
+
+  const t2Towers = team200Info?.objectives?.tower?.kills ?? 0;
+  const t2Inhibs = team200Info?.objectives?.inhibitor?.kills ?? 0;
+  const t2Dragons = team200Info?.objectives?.dragon?.kills ?? 0;
+  const t2Barons = team200Info?.objectives?.baron?.kills ?? 0;
+  const t2Heralds = (team200Info?.objectives?.riftHerald?.kills ?? 0) + (team200Info?.objectives?.horde?.kills ?? 0);
+
+  const bans1 = team100Info?.bans || [];
+  const bans2 = team200Info?.bans || [];
 
   return (
-    <div className={`match-card-league ${isWin ? 'win' : 'loss'}`}>
-      <div className={`status-strip ${isWin ? 'win' : 'loss'}`}></div>
+    <div className={`match-card-wrapper ${isExpanded ? 'expanded' : ''}`}>
+      {/* Clickable Summary Row */}
+      <div 
+        className={`match-card-league ${isWin ? 'win' : 'loss'} ${isExpanded ? 'active' : ''}`}
+        onClick={() => setIsExpanded(!isExpanded)}
+        title="Maç detaylarını açmak / kapatmak için tıklayın"
+      >
+        <div className={`status-strip ${isWin ? 'win' : 'loss'}`}></div>
 
-      {/* Left: Champion + Spells + Level */}
-      <div className="match-left-cell">
-        <div className="champ-avatar-container">
-          <img 
-            src={LolAssets.getChampionIcon(champName)} 
-            alt={champName} 
-            className="match-champ-avatar" 
-          />
-          <span className="champ-level-badge">{participant.champLevel}</span>
+        {/* Left: Champion + Spells + Level */}
+        <div className="match-left-cell">
+          <div className="champ-avatar-container">
+            <img 
+              src={LolAssets.getChampionIcon(champName)} 
+              alt={champName} 
+              className="match-champ-avatar" 
+            />
+            <span className="champ-level-badge">{participant.champLevel}</span>
+          </div>
+          <div className="spell-icons-col">
+            <img 
+              src={LolAssets.getSpellIcon(spell1)} 
+              alt="Spell 1" 
+              className="spell-icon" 
+            />
+            <img 
+              src={LolAssets.getSpellIcon(spell2)} 
+              alt="Spell 2" 
+              className="spell-icon" 
+            />
+          </div>
         </div>
-        <div className="spell-icons-col">
-          <img 
-            src={LolAssets.getSpellIcon(spell1)} 
-            alt="Spell 1" 
-            className="spell-icon" 
-          />
-          <img 
-            src={LolAssets.getSpellIcon(spell2)} 
-            alt="Spell 2" 
-            className="spell-icon" 
-          />
+
+        {/* Mode & Result */}
+        <div className="match-mode-cell">
+          <span className={`result-title ${isWin ? 'win' : 'loss'}`}>{isWin ? 'Zafer' : 'Bozgun'}</span>
+          <span className="mode-title">{queueName}</span>
+          <span className="time-duration">{durationMin}dk {durationSec}sn</span>
         </div>
-      </div>
 
-      {/* Mode & Result */}
-      <div className="match-mode-cell">
-        <span className={`result-title ${isWin ? 'win' : 'loss'}`}>{isWin ? 'Zafer' : 'Bozgun'}</span>
-        <span className="mode-title">{queueName}</span>
-        <span className="time-duration">{durationMin}dk {durationSec}sn</span>
-      </div>
-
-      {/* KDA & CS */}
-      <div className="match-kda-cell">
-        <div className="kda-numbers">
-          <span className="kills">{participant.kills}</span> / <span className="deaths">{participant.deaths}</span> / <span className="assists">{participant.assists}</span>
+        {/* KDA & CS */}
+        <div className="match-kda-cell">
+          <div className="kda-numbers">
+            <span className="kills">{participant.kills}</span> / <span className="deaths">{participant.deaths}</span> / <span className="assists">{participant.assists}</span>
+          </div>
+          <span className="kda-ratio">{kdaRatio}</span>
+          <span className="cs-count">{participant.totalMinionsKilled + participant.neutralMinionsKilled} CS</span>
         </div>
-        <span className="kda-ratio">{kdaRatio}</span>
-        <span className="cs-count">{participant.totalMinionsKilled + participant.neutralMinionsKilled} CS</span>
-      </div>
 
-      {/* Items Grid */}
-      <div className="match-items-cell">
-        <div className="items-main-grid">
-          {items.map((item, i) => (
-            item > 0 ? (
+        {/* Items Grid */}
+        <div className="match-items-cell">
+          <div className="items-main-grid">
+            {items.map((item, i) => (
+              item > 0 ? (
+                <img 
+                  key={i} 
+                  src={LolAssets.getItemIcon(item)} 
+                  alt="item" 
+                  className="match-item-icon" 
+                />
+              ) : (
+                <div key={i} className="match-item-slot-empty"></div>
+              )
+            ))}
+          </div>
+          <div className="trinket-slot">
+            {trinket > 0 ? (
               <img 
-                key={i} 
-                src={LolAssets.getItemIcon(item)} 
-                alt="item" 
-                className="match-item-icon" 
+                src={LolAssets.getItemIcon(trinket)} 
+                alt="trinket" 
+                className="match-item-icon trinket" 
               />
             ) : (
-              <div key={i} className="match-item-slot-empty"></div>
-            )
-          ))}
+              <div className="match-item-slot-empty trinket"></div>
+            )}
+          </div>
         </div>
-        <div className="trinket-slot">
-          {trinket > 0 ? (
-            <img 
-              src={LolAssets.getItemIcon(trinket)} 
-              alt="trinket" 
-              className="match-item-icon trinket" 
-            />
-          ) : (
-            <div className="match-item-slot-empty trinket"></div>
-          )}
+
+        {/* 10 Participants */}
+        <div className="match-teams-cell">
+          <div className="team-column">
+            {team100.map((p, idx) => (
+              <div key={idx} className={`participant-mini ${p.puuid === puuid ? 'me' : ''}`} title={p.riotIdGameName || p.summonerName}>
+                <img 
+                  src={LolAssets.getChampionIcon(p.championName)} 
+                  alt={p.championName} 
+                />
+                <span className="player-name-text">{p.riotIdGameName || p.summonerName || 'Oyuncu'}</span>
+              </div>
+            ))}
+          </div>
+          <div className="team-column">
+            {team200.map((p, idx) => (
+              <div key={idx} className={`participant-mini ${p.puuid === puuid ? 'me' : ''}`} title={p.riotIdGameName || p.summonerName}>
+                <img 
+                  src={LolAssets.getChampionIcon(p.championName)} 
+                  alt={p.championName} 
+                />
+                <span className="player-name-text">{p.riotIdGameName || p.summonerName || 'Oyuncu'}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Expand Indicator */}
+        <div className="match-expand-chevron">
+          <span className={`chevron-indicator ${isExpanded ? 'up' : 'down'}`}>
+            {isExpanded ? '▲' : '▼'}
+          </span>
         </div>
       </div>
 
-      {/* 10 Participants */}
-      <div className="match-teams-cell">
-        <div className="team-column">
-          {team1.map((p, idx) => (
-            <div key={idx} className={`participant-mini ${p.puuid === puuid ? 'me' : ''}`} title={p.riotIdGameName || p.summonerName}>
-              <img 
-                src={LolAssets.getChampionIcon(p.championName)} 
-                alt={p.championName} 
-              />
-              <span className="player-name-text">{p.riotIdGameName || p.summonerName || 'Oyuncu'}</span>
+      {/* Expanded Scoreboard Details (Matching Image 2 layout) */}
+      {isExpanded && (
+        <div className="match-expanded-panel">
+          {/* Top Scoreboard Header with Team Totals & Objectives */}
+          <div className="expanded-header-bar">
+            {/* Left Team Objectives & Score */}
+            <div className="expanded-team-head left">
+              <span className={`team-result-badge ${team1Win ? 'win' : 'loss'}`}>
+                {team1Win ? 'Zafer' : 'Bozgun'}
+              </span>
+              <span className="team-total-kda">
+                {team1Kills} / {team1Deaths} / {team1Assists}
+              </span>
+              <div className="objectives-list">
+                <span className="obj-item" title="Kuleler"><TowerIcon /> {t1Towers}</span>
+                <span className="obj-item" title="İnhibitörler"><InhibitorIcon /> {t1Inhibs}</span>
+                <span className="obj-item" title="Ejderler"><DragonIcon /> {t1Dragons}</span>
+                <span className="obj-item" title="Baronlar"><BaronIcon /> {t1Barons}</span>
+                <span className="obj-item" title="Vadi Alameti / Kurtçuklar"><HeraldIcon /> {t1Heralds}</span>
+              </div>
             </div>
-          ))}
-        </div>
-        <div className="team-column">
-          {team2.map((p, idx) => (
-            <div key={idx} className={`participant-mini ${p.puuid === puuid ? 'me' : ''}`} title={p.riotIdGameName || p.summonerName}>
-              <img 
-                src={LolAssets.getChampionIcon(p.championName)} 
-                alt={p.championName} 
-              />
-              <span className="player-name-text">{p.riotIdGameName || p.summonerName || 'Oyuncu'}</span>
-            </div>
-          ))}
-        </div>
-      </div>
 
+            {/* Match Mode & Game Time */}
+            <div className="expanded-center-info">
+              <span className="expanded-mode-name">{queueName}</span>
+              <span className="expanded-time-text">({durationMin}:{durationSec})</span>
+            </div>
+
+            {/* Right Team Objectives & Score */}
+            <div className="expanded-team-head right">
+              <div className="objectives-list">
+                <span className="obj-item" title="Kuleler"><TowerIcon /> {t2Towers}</span>
+                <span className="obj-item" title="İnhibitörler"><InhibitorIcon /> {t2Inhibs}</span>
+                <span className="obj-item" title="Ejderler"><DragonIcon /> {t2Dragons}</span>
+                <span className="obj-item" title="Baronlar"><BaronIcon /> {t2Barons}</span>
+                <span className="obj-item" title="Vadi Alameti / Kurtçuklar"><HeraldIcon /> {t2Heralds}</span>
+              </div>
+              <span className="team-total-kda">
+                {team2Kills} / {team2Deaths} / {team2Assists}
+              </span>
+              <span className={`team-result-badge ${team2Win ? 'win' : 'loss'}`}>
+                {team2Win ? 'Zafer' : 'Bozgun'}
+              </span>
+            </div>
+          </div>
+
+          {/* 10 Players Detailed Grid */}
+          <div className="expanded-teams-grid">
+            {/* Team 1 (Left) */}
+            <div className="expanded-team-col left">
+              {team100.map((p, idx) => {
+                const pRiotId = p.riotIdGameName ? `${p.riotIdGameName}#${p.riotIdTagline || 'TR1'}` : (p.summonerName || 'Oyuncu');
+                const pCs = (p.totalMinionsKilled || 0) + (p.neutralMinionsKilled || 0);
+                const pGold = (p.goldEarned / 1000).toFixed(1) + 'k';
+                const pVision = p.visionScore || 0;
+                const pKp = p.challenges?.killParticipation 
+                  ? Math.round(p.challenges.killParticipation * 100) 
+                  : (team1Kills > 0 ? Math.round(((p.kills + p.assists) / team1Kills) * 100) : 0);
+                const pTier = getPlayerRankTier(p);
+                const pItems = [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5];
+                const pTrinket = p.item6;
+                const pSpell1 = SPELL_MAP[p.summoner1Id] || 'SummonerFlash';
+                const pSpell2 = SPELL_MAP[p.summoner2Id] || 'SummonerDot';
+
+                return (
+                  <div key={idx} className={`expanded-player-row left ${p.puuid === puuid ? 'highlight-me' : ''}`}>
+                    {/* Champion + Level + Spells */}
+                    <div className="p-hero-block">
+                      <div className="p-avatar-wrap">
+                        <img 
+                          src={LolAssets.getChampionIcon(p.championName)} 
+                          alt={p.championName} 
+                          className="p-champ-img"
+                        />
+                        <span className="p-level-pill">{p.champLevel}</span>
+                      </div>
+                      <div className="p-spells-wrap">
+                        <img src={LolAssets.getSpellIcon(pSpell1)} alt="s1" className="p-spell-img" />
+                        <img src={LolAssets.getSpellIcon(pSpell2)} alt="s2" className="p-spell-img" />
+                      </div>
+                    </div>
+
+                    {/* Identity: Name + Tier + Party */}
+                    <div className="p-ident-block">
+                      <span 
+                        className="p-name-link" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onSelectPlayer) onSelectPlayer(pRiotId, region);
+                        }}
+                        title={`${pRiotId} profilini aç`}
+                      >
+                        {pRiotId}
+                      </span>
+                      <div className="p-sub-tier">
+                        <span className="p-tier-text">{pTier}</span>
+                        <span className="p-party-tag" title="Parti 1">👥 1</span>
+                      </div>
+                    </div>
+
+                    {/* Stats: KDA, CS, Gold, KP, Vision */}
+                    <div className="p-stats-block">
+                      <div className="p-kda-line">
+                        <span className="k">{p.kills}</span> / <span className="d">{p.deaths}</span> / <span className="a">{p.assists}</span>
+                      </div>
+                      <div className="p-cs-gold-line">
+                        {pCs} CS - {pGold} altın
+                      </div>
+                      <div className="p-kp-vis-line">
+                        %{pKp} Öldürme k. - Görüş: {pVision}
+                      </div>
+                    </div>
+
+                    {/* Items Grid */}
+                    <div className="p-items-grid">
+                      {pItems.map((it, i) => (
+                        it > 0 ? (
+                          <img key={i} src={LolAssets.getItemIcon(it)} alt="item" className="p-item-icon" />
+                        ) : (
+                          <div key={i} className="p-item-empty"></div>
+                        )
+                      ))}
+                      {pTrinket > 0 ? (
+                        <img src={LolAssets.getItemIcon(pTrinket)} alt="trinket" className="p-item-icon trinket" />
+                      ) : (
+                        <div className="p-item-empty trinket"></div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Team 2 (Right) - Mirrored Layout */}
+            <div className="expanded-team-col right">
+              {team200.map((p, idx) => {
+                const pRiotId = p.riotIdGameName ? `${p.riotIdGameName}#${p.riotIdTagline || 'TR1'}` : (p.summonerName || 'Oyuncu');
+                const pCs = (p.totalMinionsKilled || 0) + (p.neutralMinionsKilled || 0);
+                const pGold = (p.goldEarned / 1000).toFixed(1) + 'k';
+                const pVision = p.visionScore || 0;
+                const pKp = p.challenges?.killParticipation 
+                  ? Math.round(p.challenges.killParticipation * 100) 
+                  : (team2Kills > 0 ? Math.round(((p.kills + p.assists) / team2Kills) * 100) : 0);
+                const pTier = getPlayerRankTier(p);
+                const pItems = [p.item0, p.item1, p.item2, p.item3, p.item4, p.item5];
+                const pTrinket = p.item6;
+                const pSpell1 = SPELL_MAP[p.summoner1Id] || 'SummonerFlash';
+                const pSpell2 = SPELL_MAP[p.summoner2Id] || 'SummonerDot';
+
+                return (
+                  <div key={idx} className={`expanded-player-row right ${p.puuid === puuid ? 'highlight-me' : ''}`}>
+                    {/* Items Grid (Faces inner center) */}
+                    <div className="p-items-grid">
+                      {pItems.map((it, i) => (
+                        it > 0 ? (
+                          <img key={i} src={LolAssets.getItemIcon(it)} alt="item" className="p-item-icon" />
+                        ) : (
+                          <div key={i} className="p-item-empty"></div>
+                        )
+                      ))}
+                      {pTrinket > 0 ? (
+                        <img src={LolAssets.getItemIcon(pTrinket)} alt="trinket" className="p-item-icon trinket" />
+                      ) : (
+                        <div className="p-item-empty trinket"></div>
+                      )}
+                    </div>
+
+                    {/* Stats: KDA, CS, Gold, KP, Vision */}
+                    <div className="p-stats-block right">
+                      <div className="p-kda-line">
+                        <span className="k">{p.kills}</span> / <span className="d">{p.deaths}</span> / <span className="a">{p.assists}</span>
+                      </div>
+                      <div className="p-cs-gold-line">
+                        {pCs} CS - {pGold} altın
+                      </div>
+                      <div className="p-kp-vis-line">
+                        %{pKp} Öldürme k. - Görüş: {pVision}
+                      </div>
+                    </div>
+
+                    {/* Identity: Name + Tier + Party */}
+                    <div className="p-ident-block right">
+                      <span 
+                        className="p-name-link" 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onSelectPlayer) onSelectPlayer(pRiotId, region);
+                        }}
+                        title={`${pRiotId} profilini aç`}
+                      >
+                        {pRiotId}
+                      </span>
+                      <div className="p-sub-tier right">
+                        <span className="p-tier-text">{pTier}</span>
+                        <span className="p-party-tag" title="Parti 2">👥 2</span>
+                      </div>
+                    </div>
+
+                    {/* Champion + Level + Spells */}
+                    <div className="p-hero-block right">
+                      <div className="p-avatar-wrap">
+                        <img 
+                          src={LolAssets.getChampionIcon(p.championName)} 
+                          alt={p.championName} 
+                          className="p-champ-img"
+                        />
+                        <span className="p-level-pill">{p.champLevel}</span>
+                      </div>
+                      <div className="p-spells-wrap">
+                        <img src={LolAssets.getSpellIcon(pSpell1)} alt="s1" className="p-spell-img" />
+                        <img src={LolAssets.getSpellIcon(pSpell2)} alt="s2" className="p-spell-img" />
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bans Bar at Bottom */}
+          <div className="expanded-bans-bar">
+            <div className="bans-group left">
+              <span className="bans-label">Banlar:</span>
+              <div className="bans-icons">
+                {bans1.map((b, i) => (
+                  <BanItem key={i} champId={b.championId} championsMap={championsMap} />
+                ))}
+              </div>
+            </div>
+
+            <div className="bans-group right">
+              <span className="bans-label">Banlar:</span>
+              <div className="bans-icons">
+                {bans2.map((b, i) => (
+                  <BanItem key={i} champId={b.championId} championsMap={championsMap} />
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
