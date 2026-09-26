@@ -236,15 +236,15 @@ export default function ValorantVSenset({ onBack }) {
   };
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', color: '#fff', fontFamily: "'Inter', sans-serif", backgroundColor: '#202020', minHeight: '100vh', borderRadius: '12px' }}>
+    <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto', color: '#fff', fontFamily: "'Inter', sans-serif" }}>
       
       {/* Header Back Button */}
-      <div style={{ marginBottom: '1rem' }}>
+      <div style={{ marginBottom: '1rem', display: 'flex', justifyContent: 'flex-end' }}>
         <button 
           onClick={onBack}
           style={{ padding: '0.6rem 1.2rem', backgroundColor: '#333', color: '#ddd', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500', fontSize: '0.9rem' }}
         >
-          ← Ana Menü
+          ← Merkeze Dön
         </button>
       </div>
 
