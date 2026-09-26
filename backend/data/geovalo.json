@@ -1,0 +1,16 @@
+[
+    {
+        "id": "6ab793f879dd5",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab793f874498.png",
+        "correctX": 47.12,
+        "correctY": 5.63
+    },
+    {
+        "id": "6ab794485a683",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7944855da0.png",
+        "correctX": 72.36,
+        "correctY": 49.14
+    }
+]

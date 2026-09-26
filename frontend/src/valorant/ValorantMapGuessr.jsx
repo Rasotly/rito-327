@@ -1,30 +1,34 @@
-import React, { useState } from 'react';
-
-const SAMPLE_LOCATIONS = [
-  {
-    id: 1,
-    mapName: 'Ascent',
-    wallImage: '/geovalo/ascent_1.jpg',
-    correctX: 88, // A Main fıçılarının haritadaki sağ yatay konumu
-    correctY: 47, // A Main fıçılarının dikey konumu
-  },
-  {
-    id: 2,
-    mapName: 'Abyss',
-    wallImage: '/geovalo/abyss_1.jpg', 
-    correctX: 50, 
-    correctY: 85, 
-  }
-];
+import React, { useState, useEffect } from 'react';
 
 export default function ValorantMapGuessr() {
+  const [questions, setQuestions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
   const [currentRound, setCurrentRound] = useState(0);
   const [selectedMap, setSelectedMap] = useState(null);
   const [marker, setMarker] = useState(null);
   const [hasGuessed, setHasGuessed] = useState(false);
   const [score, setScore] = useState(0);
 
-  const currentChallenge = SAMPLE_LOCATIONS[currentRound % SAMPLE_LOCATIONS.length];
+  useEffect(() => {
+    fetch('http://localhost:8081/geovalo.php?action=get_questions')
+      .then(res => res.json())
+      .then(json => {
+        if (json.status === 'success') {
+          setQuestions(json.data);
+        } else {
+          setError(json.message);
+        }
+        setLoading(false);
+      })
+      .catch(err => {
+        setError('Sunucu bağlantı hatası');
+        setLoading(false);
+      });
+  }, []);
+
+  const currentChallenge = questions.length > 0 ? questions[currentRound % questions.length] : null;
 
   const handleMapClick = (e) => {
     if (hasGuessed) return;
@@ -60,6 +64,10 @@ export default function ValorantMapGuessr() {
   };
 
   const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset', 'Abyss'];
+
+  if (loading) return <div style={{ color: 'white', textAlign: 'center', padding: '2rem' }}>Sorular Yükleniyor...</div>;
+  if (error) return <div style={{ color: '#ff4655', textAlign: 'center', padding: '2rem' }}>Hata: {error}</div>;
+  if (questions.length === 0) return <div style={{ color: 'white', textAlign: 'center', padding: '2rem' }}>Henüz hiç soru eklenmemiş! Lütfen Admin panelinden soru ekleyin.</div>;
 
   return (
     <div style={{ color: 'white', maxWidth: '1000px', margin: '0 auto', fontFamily: 'sans-serif' }}>

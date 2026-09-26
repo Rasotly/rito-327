@@ -93,6 +93,13 @@ const LocationIcon = () => (
   </svg>
 );
 
+const AdminIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+  </svg>
+);
+
 const NAV_ITEMS = [
   { id: 'home', label: 'Ana Sayfa', icon: <HomeIcon /> },
   { id: 'agents', label: 'Ajanlar', icon: <AgentIcon /> },
@@ -101,6 +108,7 @@ const NAV_ITEMS = [
   { id: 'game', label: 'Vufufu', icon: <GameIcon /> },
   { id: 'heardle', label: 'V-sense', icon: <SoundIcon /> },
   { id: 'mapguessr', label: 'GeoValo', icon: <LocationIcon /> },
+  { id: 'geoadmin', label: 'Admin (Gizli)', icon: <AdminIcon /> },
   { id: 'guides', label: 'Rehberler', icon: <GuideIcon /> },
   { id: 'cosmetics', label: 'Kozmetikler', icon: <CosmeticIcon /> },
   { id: 'patch-notes', label: 'Yama Notları', icon: <PatchIcon /> },
