@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 
 // Custom icons
 const PlayIcon = () => (
@@ -331,7 +331,7 @@ export default function ValorantVSenset({ onBack }) {
           gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', 
           gap: '1.5rem' 
         }}>
-          {filteredBundles.map(bundle => {
+          {useMemo(() => filteredBundles.map(bundle => {
             const isWrong = wrongGuesses.includes(bundle.uuid);
             return (
               <div 
@@ -376,7 +376,7 @@ export default function ValorantVSenset({ onBack }) {
                 <span style={{ fontSize: '0.95rem', color: '#ccc', textAlign: 'center', fontWeight: '500' }}>{bundle.displayName}</span>
               </div>
             );
-          })}
+          }), [filteredBundles, wrongGuesses])}
         </div>
       ) : (
         <div style={{ textAlign: 'center', padding: '3rem', backgroundColor: '#1a1a1a', borderRadius: '12px', border: `2px solid ${gameState === 'won' ? '#00ff00' : '#ff4655'}` }}>
