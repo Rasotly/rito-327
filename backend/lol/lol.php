@@ -113,6 +113,9 @@ if ($action === 'search') {
     }
     $api->recordPlayerSearch($fullRiotId, $region, $iconId, $level, $playerTier);
 
+    // Calculate dynamic precision server and world ladder rankings
+    $rankings = $api->calculatePlayerRankings($puuid, $region, $leagueData, $masteryData);
+
     $response = [
         "status" => "success",
         "region" => $region,
@@ -120,7 +123,8 @@ if ($action === 'search') {
         "summoner" => $summonerData,
         "league" => $leagueData,
         "matchIds" => $matchIds,
-        "mastery" => $masteryData
+        "mastery" => $masteryData,
+        "rankings" => $rankings
     ];
 
 } elseif ($action === 'match') {

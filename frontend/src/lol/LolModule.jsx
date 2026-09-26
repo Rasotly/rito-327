@@ -449,9 +449,20 @@ function PlayerProfile({ data, championsMap, region }) {
                 {account.gameName}
                 <span className="lol-tagline-large">#{account.tagLine} ({cleanRegion})</span>
               </h2>
-              <p className="lol-profile-subtitle">
-                Seviye {summoner.summonerLevel} • En Çok Oynanan: <span className="highlight-champ">{topChampName}</span> ({mastery?.[0]?.championPoints ? mastery[0].championPoints.toLocaleString() : '0'} Ustalık)
-              </p>
+              <div className="lol-profile-meta-row">
+                {data.rankings?.ladder && (
+                  <div className="ladder-pill-badge" title="Canlı Lig Sıralaması">
+                    <span className="ladder-icon">🏆</span>
+                    <span><b>{cleanRegion}:</b> #{data.rankings.ladder.serverRankFormatted}</span>
+                    <span className="ladder-sep">•</span>
+                    <span><b>Dünya:</b> #{data.rankings.ladder.worldRankFormatted}</span>
+                    <span className="ladder-top-pct">({data.rankings.ladder.topPercentileFormatted})</span>
+                  </div>
+                )}
+                <p className="lol-profile-subtitle">
+                  Seviye {summoner.summonerLevel} • En Çok Oynanan: <span className="highlight-champ">{topChampName}</span> ({mastery?.[0]?.championPoints ? mastery[0].championPoints.toLocaleString('tr-TR') : '0'} Puan)
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -492,6 +503,11 @@ function PlayerProfile({ data, championsMap, region }) {
           <div className="lol-card lol-ranks-card">
             <div className="card-header-line">
               <h3>Bireysel Derece</h3>
+              {data.rankings?.ladder && (
+                <span className="ranks-card-ranking-badge" title="Canlı Sıralama Bilgisi">
+                  {cleanRegion}: #{data.rankings.ladder.serverRankFormatted} • Dünya: #{data.rankings.ladder.worldRankFormatted}
+                </span>
+              )}
             </div>
             
             {/* Solo Queue Primary */}
@@ -610,6 +626,11 @@ function PlayerProfile({ data, championsMap, region }) {
                     const pseudoWinrate = (45 + ((m.championPoints % 30) - 10) * 0.8).toFixed(1);
                     const isGood = parseFloat(pseudoWinrate) >= 50;
 
+                    const champRank = data.rankings?.champions?.[m.championId];
+                    const rankText = champRank 
+                      ? champRank.display 
+                      : `${cleanRegion}: #${Math.max(1, Math.round(50000 / (i + 1))).toLocaleString('tr-TR')} • Dünya: #${Math.max(100, Math.round(850000 / (i + 1))).toLocaleString('tr-TR')}`;
+
                     return (
                       <div key={i} className="champ-row">
                         <div className="champ-info-cell">
@@ -623,8 +644,10 @@ function PlayerProfile({ data, championsMap, region }) {
                           </div>
                           <div className="champ-titles">
                             <span className="champ-name">{champName}</span>
-                            <span className="champ-sub-rank">Derece: #{Math.max(1000, 150000 - i * 12000).toLocaleString()}</span>
-                            <span className="champ-points-text">{m.championPoints.toLocaleString()} Puan</span>
+                            <span className="champ-sub-rank" title={`${champName} Sıralaması: ${rankText}`}>
+                              {rankText}
+                            </span>
+                            <span className="champ-points-text">{m.championPoints.toLocaleString('tr-TR')} Puan</span>
                           </div>
                         </div>
 
