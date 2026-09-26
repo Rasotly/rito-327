@@ -44,8 +44,15 @@ export default function ValorantVSenset({ onBack }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [wrongGuesses, setWrongGuesses] = useState([]);
+  const [volume, setVolume] = useState(0.5);
   
   const audioRef = useRef(null);
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume;
+    }
+  }, [volume, currentBundle]);
 
   // We will use a fallback array of ACE sounds because real ones aren't exposed easily
   const FALLBACK_SOUNDS = [
@@ -280,10 +287,13 @@ export default function ValorantVSenset({ onBack }) {
           </button>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#333', padding: '0 1rem', height: '40px', borderRadius: '8px' }}>
             <VolumeIcon />
-            <div style={{ width: '60px', height: '4px', backgroundColor: '#666', borderRadius: '2px', position: 'relative' }}>
-              <div style={{ position: 'absolute', left: 0, top: 0, height: '100%', width: '70%', backgroundColor: '#fff', borderRadius: '2px' }}></div>
-              <div style={{ position: 'absolute', left: '70%', top: '-4px', width: '12px', height: '12px', backgroundColor: '#fff', borderRadius: '50%' }}></div>
-            </div>
+            <input 
+              type="range" 
+              min="0" max="1" step="0.01" 
+              value={volume} 
+              onChange={(e) => setVolume(parseFloat(e.target.value))}
+              style={{ width: '80px', cursor: 'pointer', accentColor: '#ff4655' }}
+            />
           </div>
         </div>
         <audio 
