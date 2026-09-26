@@ -32,7 +32,33 @@ export const LolAssets = {
     `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/item/${itemId}.png`,
 
   getSpellIcon: (spellName) => 
-    `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/spell/${spellName}.png`
+    `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/spell/${spellName}.png`,
+
+  getRankEmblem: (tier = 'unranked') => {
+    const t = (tier || 'unranked').toLowerCase();
+    const validTiers = ['iron', 'bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster', 'challenger'];
+    if (validTiers.includes(t)) {
+      return `https://opgg-static.akamaized.net/images/medals_new/${t}.png`;
+    }
+    return `https://opgg-static.akamaized.net/images/medals_new/iron.png`;
+  },
+
+  getTierName: (tier = '') => {
+    const map = {
+      'iron': 'Demir',
+      'bronze': 'Bronz',
+      'silver': 'Gümüş',
+      'gold': 'Altın',
+      'platinum': 'Platin',
+      'emerald': 'Zümrüt',
+      'diamond': 'Elmas',
+      'master': 'Ustalık',
+      'grandmaster': 'Üstatlık',
+      'challenger': 'Şampiyonluk',
+      'unranked': 'Derecesiz'
+    };
+    return map[(tier || '').toLowerCase()] || tier || 'Derecesiz';
+  }
 };
 
 export const LolLogoIcon = ({ size = 28, className = "" }) => (

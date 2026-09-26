@@ -512,7 +512,7 @@ class RiotApi {
     /**
      * Save/update searched players into server cache for fast suggestions
      */
-    public function recordPlayerSearch(string $riotId, string $region, int $iconId = 1, int $level = 30): void {
+    public function recordPlayerSearch(string $riotId, string $region, int $iconId = 1, int $level = 30, string $tier = 'unranked'): void {
         $cacheFile = $this->getCacheDir() . '/players_cache.json';
         $players = [];
         if (file_exists($cacheFile)) {
@@ -532,6 +532,7 @@ class RiotApi {
             'region' => $region,
             'icon'   => $iconId,
             'level'  => $level,
+            'tier'   => $tier,
             'time'   => time()
         ]);
 
@@ -541,7 +542,7 @@ class RiotApi {
     }
 
     /**
-     * Returns cached players matching prefix across all global servers with icons and levels
+     * Returns cached players matching prefix across all global servers with icons, levels, and rank tiers
      */
     public function getSuggestions(string $query): array {
         $cacheDir = $this->getCacheDir();
@@ -564,7 +565,8 @@ class RiotApi {
                                     'tagLine'  => $p['tagLine'] ?? (explode('#', $p['riotId'])[1] ?? ''),
                                     'region'   => $p['server'] ?? $srv,
                                     'icon'     => (int)($p['profileIconId'] ?? 1),
-                                    'level'    => (int)($p['summonerLevel'] ?? 100)
+                                    'level'    => (int)($p['summonerLevel'] ?? 100),
+                                    'tier'     => 'challenger'
                                 ];
                             }
                         }
@@ -573,7 +575,27 @@ class RiotApi {
             }
         }
 
-        // 2. Load from recent search cache
+        // 2. Popular Players Tier Map
+        $popTierMap = [
+            'hide on bush#kr1' => 'challenger',
+            'thebausffs#euw' => 'challenger',
+            'caps#euw' => 'challenger',
+            'elwind#tr1' => 'grandmaster',
+            'holyphoenix#tr1' => 'challenger',
+            'caitlyneaşığım#cait' => 'emerald',
+            'hans sama#euw' => 'challenger',
+            'ca koi#vn444' => 'challenger',
+            'ca huyen#1315' => 'master',
+            'doublelift#na1' => 'challenger',
+            'bjergsen#na1' => 'challenger',
+            'agurin#euw' => 'challenger',
+            'dopa#kr1' => 'challenger',
+            'chovy#kr1' => 'challenger',
+            'showmaker#kr1' => 'challenger',
+            'zeus#kr1' => 'challenger'
+        ];
+
+        // 3. Load from recent search cache
         $recentFile = $cacheDir . '/players_cache.json';
         if (file_exists($recentFile)) {
             $raw = @file_get_contents($recentFile);
@@ -582,37 +604,43 @@ class RiotApi {
                 foreach ($rec as $r) {
                     if (!empty($r['riotId'])) {
                         $parts = explode('#', $r['riotId'], 2);
+                        $cleanKey = mb_strtolower(trim($r['riotId']), 'UTF-8');
+                        $t = $r['tier'] ?? null;
+                        if (empty($t) || $t === 'unranked') {
+                            $t = $popTierMap[$cleanKey] ?? 'unranked';
+                        }
                         $allPlayers[] = [
                             'riotId'   => $r['riotId'],
                             'gameName' => $parts[0] ?? $r['riotId'],
                             'tagLine'  => $parts[1] ?? '',
                             'region'   => $r['region'] ?? 'tr1',
                             'icon'     => (int)($r['icon'] ?? 1),
-                            'level'    => (int)($r['level'] ?? 30)
+                            'level'    => (int)($r['level'] ?? 30),
+                            'tier'     => $t
                         ];
                     }
                 }
             }
         }
 
-        // 3. Famous Popular Players Pool with exact region, icon and level
+        // 4. Famous Popular Players Pool with exact region, icon, level, and tier
         $defaultPopular = [
-            ['riotId' => 'Hide on bush#KR1', 'gameName' => 'Hide on bush', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 6, 'level' => 940],
-            ['riotId' => 'Thebausffs#EUW', 'gameName' => 'Thebausffs', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 4568, 'level' => 820],
-            ['riotId' => 'Caps#EUW', 'gameName' => 'Caps', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 3200, 'level' => 650],
-            ['riotId' => 'Elwind#TR1', 'gameName' => 'Elwind', 'tagLine' => 'TR1', 'region' => 'tr1', 'icon' => 4500, 'level' => 530],
-            ['riotId' => 'HolyPhoenix#TR1', 'gameName' => 'HolyPhoenix', 'tagLine' => 'TR1', 'region' => 'tr1', 'icon' => 580, 'level' => 640],
-            ['riotId' => 'CaitlyneAşığım#CAIT', 'gameName' => 'CaitlyneAşığım', 'tagLine' => 'CAIT', 'region' => 'tr1', 'icon' => 3460, 'level' => 420],
-            ['riotId' => 'Hans Sama#EUW', 'gameName' => 'Hans Sama', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 534, 'level' => 580],
-            ['riotId' => 'ca koi#vn444', 'gameName' => 'ca koi', 'tagLine' => 'vn444', 'region' => 'vn2', 'icon' => 54, 'level' => 320],
-            ['riotId' => 'CA HUYEN#1315', 'gameName' => 'CA HUYEN', 'tagLine' => '1315', 'region' => 'euw1', 'icon' => 29, 'level' => 210],
-            ['riotId' => 'Doublelift#NA1', 'gameName' => 'Doublelift', 'tagLine' => 'NA1', 'region' => 'na1', 'icon' => 512, 'level' => 710],
-            ['riotId' => 'Bjergsen#NA1', 'gameName' => 'Bjergsen', 'tagLine' => 'NA1', 'region' => 'na1', 'icon' => 715, 'level' => 690],
-            ['riotId' => 'Agurin#EUW', 'gameName' => 'Agurin', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 4220, 'level' => 890],
-            ['riotId' => 'Dopa#KR1', 'gameName' => 'Dopa', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 1, 'level' => 510],
-            ['riotId' => 'Chovy#KR1', 'gameName' => 'Chovy', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 20, 'level' => 840],
-            ['riotId' => 'ShowMaker#KR1', 'gameName' => 'ShowMaker', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 45, 'level' => 880],
-            ['riotId' => 'Zeus#KR1', 'gameName' => 'Zeus', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 25, 'level' => 620]
+            ['riotId' => 'Hide on bush#KR1', 'gameName' => 'Hide on bush', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 6, 'level' => 940, 'tier' => 'challenger'],
+            ['riotId' => 'Thebausffs#EUW', 'gameName' => 'Thebausffs', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 4568, 'level' => 820, 'tier' => 'challenger'],
+            ['riotId' => 'Caps#EUW', 'gameName' => 'Caps', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 3200, 'level' => 650, 'tier' => 'challenger'],
+            ['riotId' => 'Elwind#TR1', 'gameName' => 'Elwind', 'tagLine' => 'TR1', 'region' => 'tr1', 'icon' => 4500, 'level' => 530, 'tier' => 'grandmaster'],
+            ['riotId' => 'HolyPhoenix#TR1', 'gameName' => 'HolyPhoenix', 'tagLine' => 'TR1', 'region' => 'tr1', 'icon' => 580, 'level' => 640, 'tier' => 'challenger'],
+            ['riotId' => 'CaitlyneAşığım#CAIT', 'gameName' => 'CaitlyneAşığım', 'tagLine' => 'CAIT', 'region' => 'tr1', 'icon' => 3460, 'level' => 420, 'tier' => 'emerald'],
+            ['riotId' => 'Hans Sama#EUW', 'gameName' => 'Hans Sama', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 534, 'level' => 580, 'tier' => 'challenger'],
+            ['riotId' => 'ca koi#vn444', 'gameName' => 'ca koi', 'tagLine' => 'vn444', 'region' => 'vn2', 'icon' => 54, 'level' => 320, 'tier' => 'challenger'],
+            ['riotId' => 'CA HUYEN#1315', 'gameName' => 'CA HUYEN', 'tagLine' => '1315', 'region' => 'euw1', 'icon' => 29, 'level' => 210, 'tier' => 'master'],
+            ['riotId' => 'Doublelift#NA1', 'gameName' => 'Doublelift', 'tagLine' => 'NA1', 'region' => 'na1', 'icon' => 512, 'level' => 710, 'tier' => 'challenger'],
+            ['riotId' => 'Bjergsen#NA1', 'gameName' => 'Bjergsen', 'tagLine' => 'NA1', 'region' => 'na1', 'icon' => 715, 'level' => 690, 'tier' => 'challenger'],
+            ['riotId' => 'Agurin#EUW', 'gameName' => 'Agurin', 'tagLine' => 'EUW', 'region' => 'euw1', 'icon' => 4220, 'level' => 890, 'tier' => 'challenger'],
+            ['riotId' => 'Dopa#KR1', 'gameName' => 'Dopa', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 1, 'level' => 510, 'tier' => 'challenger'],
+            ['riotId' => 'Chovy#KR1', 'gameName' => 'Chovy', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 20, 'level' => 840, 'tier' => 'challenger'],
+            ['riotId' => 'ShowMaker#KR1', 'gameName' => 'ShowMaker', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 45, 'level' => 880, 'tier' => 'challenger'],
+            ['riotId' => 'Zeus#KR1', 'gameName' => 'Zeus', 'tagLine' => 'KR1', 'region' => 'kr', 'icon' => 25, 'level' => 620, 'tier' => 'challenger']
         ];
 
         foreach ($defaultPopular as $dp) {

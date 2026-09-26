@@ -95,11 +95,23 @@ if ($action === 'search') {
         $masteryData = [];
     }
 
-    // Save to local cache for autocomplete
+    // Save to local cache for autocomplete with rank tier
     $fullRiotId = ($accountData['gameName'] ?? $gameName) . '#' . ($accountData['tagLine'] ?? $tagLine);
     $iconId = (int)($summonerData['profileIconId'] ?? 1);
     $level = (int)($summonerData['summonerLevel'] ?? 30);
-    $api->recordPlayerSearch($fullRiotId, $region, $iconId, $level);
+    $playerTier = 'unranked';
+    if (is_array($leagueData)) {
+        foreach ($leagueData as $entry) {
+            if (($entry['queueType'] ?? '') === 'RANKED_SOLO_5x5') {
+                $playerTier = strtolower($entry['tier'] ?? 'unranked');
+                break;
+            }
+        }
+        if ($playerTier === 'unranked' && !empty($leagueData[0]['tier'])) {
+            $playerTier = strtolower($leagueData[0]['tier']);
+        }
+    }
+    $api->recordPlayerSearch($fullRiotId, $region, $iconId, $level, $playerTier);
 
     $response = [
         "status" => "success",

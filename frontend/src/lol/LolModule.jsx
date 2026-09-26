@@ -33,18 +33,18 @@ const QUEUE_MAP = {
 };
 
 const POPULAR_PLAYERS_FALLBACK = [
-  { riotId: 'Hide on bush#KR1', region: 'kr', icon: 6, level: 940 },
-  { riotId: 'Thebausffs#EUW', region: 'euw1', icon: 4568, level: 820 },
-  { riotId: 'Caps#EUW', region: 'euw1', icon: 3200, level: 650 },
-  { riotId: 'ca koi#vn444', region: 'vn2', icon: 54, level: 320 },
-  { riotId: 'CA HUYEN#1315', region: 'euw1', icon: 29, level: 210 },
-  { riotId: 'CaitlyneAşığım#CAIT', region: 'tr1', icon: 3460, level: 420 },
-  { riotId: 'HolyPhoenix#TR1', region: 'tr1', icon: 580, level: 640 },
-  { riotId: 'Elwind#TR1', region: 'tr1', icon: 4500, level: 530 },
-  { riotId: 'Doublelift#NA1', region: 'na1', icon: 512, level: 710 },
-  { riotId: 'Nemesis#KR1', region: 'kr', icon: 77, level: 490 },
-  { riotId: 'Agurin#EUW', region: 'euw1', icon: 4220, level: 890 },
-  { riotId: 'Dopa#KR1', region: 'kr', icon: 1, level: 510 }
+  { riotId: 'Hide on bush#KR1', region: 'kr', icon: 6, level: 940, tier: 'challenger' },
+  { riotId: 'Thebausffs#EUW', region: 'euw1', icon: 4568, level: 820, tier: 'challenger' },
+  { riotId: 'Caps#EUW', region: 'euw1', icon: 3200, level: 650, tier: 'challenger' },
+  { riotId: 'ca koi#vn444', region: 'vn2', icon: 54, level: 320, tier: 'challenger' },
+  { riotId: 'CA HUYEN#1315', region: 'euw1', icon: 29, level: 210, tier: 'master' },
+  { riotId: 'CaitlyneAşığım#CAIT', region: 'tr1', icon: 3460, level: 420, tier: 'emerald' },
+  { riotId: 'HolyPhoenix#TR1', region: 'tr1', icon: 580, level: 640, tier: 'challenger' },
+  { riotId: 'Elwind#TR1', region: 'tr1', icon: 4500, level: 530, tier: 'grandmaster' },
+  { riotId: 'Doublelift#NA1', region: 'na1', icon: 512, level: 710, tier: 'challenger' },
+  { riotId: 'Nemesis#KR1', region: 'kr', icon: 77, level: 490, tier: 'challenger' },
+  { riotId: 'Agurin#EUW', region: 'euw1', icon: 4220, level: 890, tier: 'challenger' },
+  { riotId: 'Dopa#KR1', region: 'kr', icon: 1, level: 510, tier: 'challenger' }
 ];
 
 export default function LolModule({ onBack }) {
@@ -361,6 +361,17 @@ export default function LolModule({ onBack }) {
                                 <span className="player-level-text">Seviye {player.level || 30}</span>
                               </div>
                             </div>
+
+                            {player.tier && player.tier !== 'unranked' && (
+                              <div className="autocomplete-tier-box" title={LolAssets.getTierName(player.tier)}>
+                                <img 
+                                  src={LolAssets.getRankEmblem(player.tier)} 
+                                  alt={player.tier} 
+                                  className="autocomplete-tier-emblem" 
+                                  style={{ width: '22px', height: '22px', maxWidth: '22px', maxHeight: '22px', objectFit: 'contain' }}
+                                />
+                              </div>
+                            )}
                           </div>
                         );
                       })}
@@ -423,6 +434,15 @@ function PlayerProfile({ data, championsMap, region }) {
             <div className="lol-profile-icon-wrapper-large">
               <img src={profileIconUrl} alt="Profil Simgesi" className="lol-profile-icon-large" />
               <span className="lol-profile-level-large">{summoner.summonerLevel}</span>
+              {(soloQ?.tier || flexQ?.tier) && (
+                <img 
+                  src={LolAssets.getRankEmblem(soloQ?.tier || flexQ?.tier)} 
+                  alt="Rank" 
+                  className="lol-profile-rank-crest-floating" 
+                  title={`${LolAssets.getTierName(soloQ?.tier || flexQ?.tier)} ${soloQ?.rank || flexQ?.rank || ''}`}
+                  style={{ width: '38px', height: '38px', maxWidth: '38px', maxHeight: '38px', objectFit: 'contain' }}
+                />
+              )}
             </div>
             <div className="lol-profile-names-large">
               <h2>
@@ -488,10 +508,19 @@ function PlayerProfile({ data, championsMap, region }) {
             <h3>Ortalama Düşman Derecesi</h3>
             <div className="enemy-mmr-content">
               <div className="mmr-icon-badge">
-                <span className="mmr-tier-icon">⚔️</span>
+                <img 
+                  src={LolAssets.getRankEmblem(soloQ?.tier || flexQ?.tier || 'silver')} 
+                  alt="MMR" 
+                  className="mmr-emblem-img" 
+                  style={{ width: '36px', height: '36px', maxWidth: '36px', maxHeight: '36px', objectFit: 'contain' }}
+                />
               </div>
               <div className="mmr-text">
-                <span className="mmr-tier-title">{soloQ ? `${soloQ.tier} ${soloQ.rank}` : (flexQ ? `${flexQ.tier} ${flexQ.rank}` : 'Gümüş IV')}</span>
+                <span className="mmr-tier-title">
+                  {soloQ 
+                    ? `${LolAssets.getTierName(soloQ.tier)} ${soloQ.rank}` 
+                    : (flexQ ? `${LolAssets.getTierName(flexQ.tier)} ${flexQ.rank}` : 'Gümüş IV')}
+                </span>
                 <span className="mmr-sub">Ortalama Düşman Derecesi (Son Maçlar)</span>
               </div>
             </div>
@@ -499,7 +528,7 @@ function PlayerProfile({ data, championsMap, region }) {
 
           {/* Badges / Playstyle Tags */}
           <div className="lol-badges-container">
-            <span className="style-badge gold">S2025 {soloQ?.tier || 'Dereceli'}</span>
+            <span className="style-badge gold">S2025 {soloQ?.tier ? LolAssets.getTierName(soloQ.tier) : 'Dereceli'}</span>
             <span className="style-badge green">Art arda kazanan</span>
             <span className="style-badge teal">{topChampName} Bağımlısı</span>
             <span className="style-badge blue">Kartopları</span>
@@ -634,11 +663,23 @@ function RankDetailedRow({ title, stats, isPrimary }) {
   if (!stats) {
     return (
       <div className={`rank-row-box unranked ${isPrimary ? 'primary' : 'secondary'}`}>
-        <div className="tier-emblem unranked">⚪</div>
+        <div className="tier-emblem-badge unranked">
+          <img 
+            src={LolAssets.getRankEmblem('iron')} 
+            alt="Derecesiz" 
+            className="tier-emblem-img unranked-dim" 
+            style={{ width: '46px', height: '46px', maxWidth: '46px', maxHeight: '46px', objectFit: 'contain' }}
+          />
+        </div>
         <div className="rank-info-block">
-          <span className="tier-label">{isPrimary ? 'Iron I' : 'Derecesiz'}</span>
-          <span className="queue-label">{title}</span>
-          <span className="lp-status">LP: 0 • Zafer: 0 - Kayıplar: 0</span>
+          <div className="tier-head">
+            <span className="tier-label">Derecesiz</span>
+            <span className="queue-label">{title}</span>
+          </div>
+          <div className="tier-stats-line">
+            <span className="lp-val">LP: 0</span>
+            <span className="wl-val">Zafer: <b className="win-c">0</b> - Kayıplar: <b className="loss-c">0</b></span>
+          </div>
         </div>
       </div>
     );
@@ -647,15 +688,21 @@ function RankDetailedRow({ title, stats, isPrimary }) {
   const totalGames = stats.wins + stats.losses;
   const winrate = totalGames > 0 ? ((stats.wins / totalGames) * 100).toFixed(1) : 0;
   const tierLower = (stats.tier || 'unranked').toLowerCase();
+  const turkishTier = LolAssets.getTierName(stats.tier);
 
   return (
     <div className={`rank-row-box tier-${tierLower} ${isPrimary ? 'primary' : 'secondary'}`}>
       <div className={`tier-emblem-badge ${tierLower}`}>
-        {stats.tier.charAt(0)}
+        <img 
+          src={LolAssets.getRankEmblem(stats.tier)} 
+          alt={stats.tier} 
+          className="tier-emblem-img" 
+          style={{ width: '46px', height: '46px', maxWidth: '46px', maxHeight: '46px', objectFit: 'contain' }}
+        />
       </div>
       <div className="rank-info-block">
         <div className="tier-head">
-          <span className="tier-label">{stats.tier} {stats.rank}</span>
+          <span className="tier-label">{turkishTier} {stats.rank}</span>
           <span className="queue-label">{title}</span>
         </div>
         <div className="tier-stats-line">
@@ -999,7 +1046,12 @@ function LolLeaderboard({ onSelectPlayer }) {
                     </td>
                     <td className="col-tier">
                       <div className="tier-cell-box">
-                        <span className="tier-icon-gold">🏆</span>
+                        <img 
+                          src={LolAssets.getRankEmblem('challenger')} 
+                          alt="Şampiyonluk" 
+                          className="leaderboard-tier-icon-img" 
+                          style={{ width: '24px', height: '24px', maxWidth: '24px', maxHeight: '24px', objectFit: 'contain' }}
+                        />
                         <span className="tier-name-text">Şampiyonluk</span>
                       </div>
                     </td>
