@@ -23,8 +23,12 @@ $adminPassword = "123"; // Very simple password for testing
 $validToken = "geovalo_admin_token_2026";
 
 function checkToken($validToken) {
-    $headers = getallheaders();
-    $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+    $authHeader = isset($_SERVER['HTTP_AUTHORIZATION']) ? $_SERVER['HTTP_AUTHORIZATION'] : '';
+    if (empty($authHeader) && function_exists('getallheaders')) {
+        $headers = getallheaders();
+        $authHeader = isset($headers['Authorization']) ? $headers['Authorization'] : '';
+    }
+    
     if ($authHeader === "Bearer " . $validToken) {
         return true;
     }

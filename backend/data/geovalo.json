@@ -278,5 +278,635 @@
         "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7987b9fbb2.png",
         "correctX": 89.66,
         "correctY": 64.52
+    },
+    {
+        "id": "6ab799c90cc08",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab799c900b29.png",
+        "correctX": 29.57,
+        "correctY": 8.75
+    },
+    {
+        "id": "6ab79a3c192a5",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79a3c13add.png",
+        "correctX": 74.04,
+        "correctY": 31.83
+    },
+    {
+        "id": "6ab79a48959b6",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79a488fb8a.png",
+        "correctX": 72.36,
+        "correctY": 66.92
+    },
+    {
+        "id": "6ab79a56b2b88",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79a56ad883.png",
+        "correctX": 48.32,
+        "correctY": 55.63
+    },
+    {
+        "id": "6ab79a62eac05",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79a62e581d.png",
+        "correctX": 30.05,
+        "correctY": 70.29
+    },
+    {
+        "id": "6ab79a766ed92",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79a7667fc6.png",
+        "correctX": 26.2,
+        "correctY": 90.24
+    },
+    {
+        "id": "6ab79a86696fe",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79a8664fe3.png",
+        "correctX": 14.42,
+        "correctY": 73.17
+    },
+    {
+        "id": "6ab79a9bab93c",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79a9ba71ab.png",
+        "correctX": 24.28,
+        "correctY": 62.84
+    },
+    {
+        "id": "6ab7a4b87f7cc",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a4b87c089.png",
+        "correctX": 36.78,
+        "correctY": 60.43
+    },
+    {
+        "id": "6ab7a4c62aaf3",
+        "mapName": "Corrode",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a4c627de6.png",
+        "correctX": 50.48,
+        "correctY": 86.64
+    },
+    {
+        "id": "6ab7a4e03ac62",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a4e0381ab.png",
+        "correctX": 72.36,
+        "correctY": 16.68
+    },
+    {
+        "id": "6ab7a4fc48d22",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a4fc45535.png",
+        "correctX": 44.71,
+        "correctY": 16.92
+    },
+    {
+        "id": "6ab7a5ec52f74",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a5ec50d5a.png",
+        "correctX": 9.86,
+        "correctY": 44.09
+    },
+    {
+        "id": "6ab7a5ff2acb4",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a5ff28b13.png",
+        "correctX": 60.1,
+        "correctY": 52.98
+    },
+    {
+        "id": "6ab7a62e55ef0",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a62e5329c.png",
+        "correctX": 84.13,
+        "correctY": 75.58
+    },
+    {
+        "id": "6ab7a64260d7a",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a6425ecf7.png",
+        "correctX": 44.23,
+        "correctY": 89.76
+    },
+    {
+        "id": "6ab7a65c10445",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a65c0c980.png",
+        "correctX": 31.25,
+        "correctY": 63.32
+    },
+    {
+        "id": "6ab7a67251d0f",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a6724ed78.png",
+        "correctX": 91.11,
+        "correctY": 49.38
+    },
+    {
+        "id": "6ab7a685ad562",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a685a93ec.png",
+        "correctX": 56.97,
+        "correctY": 64.28
+    },
+    {
+        "id": "6ab7a6a45b10d",
+        "mapName": "Fracture",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a6a4586f2.png",
+        "correctX": 29.09,
+        "correctY": 52.5
+    },
+    {
+        "id": "6ab7a6d7e4718",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a6d7e132f.png",
+        "correctX": 10.82,
+        "correctY": 35.19
+    },
+    {
+        "id": "6ab7a6e49ba3f",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a6e497628.png",
+        "correctX": 41.59,
+        "correctY": 60.19
+    },
+    {
+        "id": "6ab7a6f86bc50",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a6f869ba6.png",
+        "correctX": 29.33,
+        "correctY": 63.32
+    },
+    {
+        "id": "6ab7a70ba7980",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a70ba40c4.png",
+        "correctX": 85.58,
+        "correctY": 54.18
+    },
+    {
+        "id": "6ab7a71bdd994",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a71bd9950.png",
+        "correctX": 78.85,
+        "correctY": 77.98
+    },
+    {
+        "id": "6ab7a7319f1d9",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7319b741.png",
+        "correctX": 60.1,
+        "correctY": 78.22
+    },
+    {
+        "id": "6ab7a7413940d",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a74137183.png",
+        "correctX": 45.43,
+        "correctY": 40.24
+    },
+    {
+        "id": "6ab7a7542b1b8",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7541c802.png",
+        "correctX": 22.36,
+        "correctY": 16.92
+    },
+    {
+        "id": "6ab7a767eafe6",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a767e7a13.png",
+        "correctX": 41.59,
+        "correctY": 30.15
+    },
+    {
+        "id": "6ab7a778a43e2",
+        "mapName": "Haven",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a778a1088.png",
+        "correctX": 70.67,
+        "correctY": 66.44
+    },
+    {
+        "id": "6ab7a78973767",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a78971122.png",
+        "correctX": 84.38,
+        "correctY": 78.46
+    },
+    {
+        "id": "6ab7a796777b0",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7967404a.png",
+        "correctX": 55.29,
+        "correctY": 67.89
+    },
+    {
+        "id": "6ab7a7a35dc10",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7a35b69b.png",
+        "correctX": 41.83,
+        "correctY": 89.28
+    },
+    {
+        "id": "6ab7a7b28e1c0",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7b28aa30.png",
+        "correctX": 11.3,
+        "correctY": 63.8
+    },
+    {
+        "id": "6ab7a7bd3d9a2",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7bd39d3c.png",
+        "correctX": 18.51,
+        "correctY": 43.37
+    },
+    {
+        "id": "6ab7a7c91c17e",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7c919aac.png",
+        "correctX": 72.84,
+        "correctY": 47.93
+    },
+    {
+        "id": "6ab7a7e134b4a",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7e1317ab.png",
+        "correctX": 76.44,
+        "correctY": 39.52
+    },
+    {
+        "id": "6ab7a7f273c24",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a7f26ef7d.png",
+        "correctX": 57.69,
+        "correctY": 63.32
+    },
+    {
+        "id": "6ab7a81540089",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a8153d5d8.png",
+        "correctX": 46.63,
+        "correctY": 81.35
+    },
+    {
+        "id": "6ab7a81ee830c",
+        "mapName": "Icebox",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7a81ee4d11.png",
+        "correctX": 54.33,
+        "correctY": 36.64
+    },
+    {
+        "id": "6ab7ae40c6456",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7ae40c3014.png",
+        "correctX": 70.91,
+        "correctY": 65.48
+    },
+    {
+        "id": "6ab7ae5203b4b",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7ae5201f59.png",
+        "correctX": 71.15,
+        "correctY": 72.93
+    },
+    {
+        "id": "6ab7ae902815e",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7ae9021bc1.png",
+        "correctX": 50.48,
+        "correctY": 34.95
+    },
+    {
+        "id": "6ab7aea0dd64a",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7aea0da735.png",
+        "correctX": 30.77,
+        "correctY": 47.93
+    },
+    {
+        "id": "6ab7aeb01bc16",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7aeb0171ca.png",
+        "correctX": 7.21,
+        "correctY": 45.29
+    },
+    {
+        "id": "6ab7aec043fd2",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7aec040e12.png",
+        "correctX": 27.64,
+        "correctY": 50.82
+    },
+    {
+        "id": "6ab7aecdde318",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7aecddc021.png",
+        "correctX": 58.65,
+        "correctY": 44.09
+    },
+    {
+        "id": "6ab7aee16a40a",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7aee167738.png",
+        "correctX": 72.36,
+        "correctY": 33.27
+    },
+    {
+        "id": "6ab7aef046258",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7aef0434e2.png",
+        "correctX": 90.38,
+        "correctY": 47.93
+    },
+    {
+        "id": "6ab7af032df16",
+        "mapName": "Lotus",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af032b909.png",
+        "correctX": 33.89,
+        "correctY": 28.46
+    },
+    {
+        "id": "6ab7af19e4b6a",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af19e1175.png",
+        "correctX": 75.24,
+        "correctY": 16.44
+    },
+    {
+        "id": "6ab7af2bdaf40",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af2bd8382.png",
+        "correctX": 83.89,
+        "correctY": 31.83
+    },
+    {
+        "id": "6ab7af3dd2a54",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af3dcff61.png",
+        "correctX": 63.46,
+        "correctY": 63.08
+    },
+    {
+        "id": "6ab7af51b1d16",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af51ae809.png",
+        "correctX": 56.97,
+        "correctY": 73.66
+    },
+    {
+        "id": "6ab7af6ec93ae",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af6ec64cb.png",
+        "correctX": 20.43,
+        "correctY": 30.39
+    },
+    {
+        "id": "6ab7af7f355dd",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af7f313b8.png",
+        "correctX": 45.43,
+        "correctY": 35.91
+    },
+    {
+        "id": "6ab7af94acf72",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7af94a9ff0.png",
+        "correctX": 74.04,
+        "correctY": 51.54
+    },
+    {
+        "id": "6ab7afb6849ab",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7afb642801.png",
+        "correctX": 46.88,
+        "correctY": 28.94
+    },
+    {
+        "id": "6ab7afc520f9c",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7afc51eb72.png",
+        "correctX": 35.34,
+        "correctY": 37.12
+    },
+    {
+        "id": "6ab7afdf1c8bc",
+        "mapName": "Pearl",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7afdf19d31.png",
+        "correctX": 31.73,
+        "correctY": 70.77
+    },
+    {
+        "id": "6ab7b0053c215",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b0053977d.png",
+        "correctX": 7.45,
+        "correctY": 49.38
+    },
+    {
+        "id": "6ab7b01492233",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b0148e597.png",
+        "correctX": 21.39,
+        "correctY": 82.31
+    },
+    {
+        "id": "6ab7b029e313c",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b029e0eeb.png",
+        "correctX": 51.44,
+        "correctY": 78.46
+    },
+    {
+        "id": "6ab7b04215c5f",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b042119f1.png",
+        "correctX": 59.62,
+        "correctY": 70.77
+    },
+    {
+        "id": "6ab7b0539e859",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b0539b612.png",
+        "correctX": 66.83,
+        "correctY": 50.82
+    },
+    {
+        "id": "6ab7b07c1d599",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b07c1ac0c.png",
+        "correctX": 58.17,
+        "correctY": 8.99
+    },
+    {
+        "id": "6ab7b09042bb1",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b0903e4f5.png",
+        "correctX": 24.76,
+        "correctY": 7.31
+    },
+    {
+        "id": "6ab7b0c826ce0",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b0c824059.png",
+        "correctX": 52.64,
+        "correctY": 36.64
+    },
+    {
+        "id": "6ab7b0e168591",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b0e1652cc.png",
+        "correctX": 73.8,
+        "correctY": 70.29
+    },
+    {
+        "id": "6ab7b0f75c791",
+        "mapName": "Split",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b0f75a221.png",
+        "correctX": 23.56,
+        "correctY": 94.09
+    },
+    {
+        "id": "6ab7b12106e1a",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b12103caf.png",
+        "correctX": 46.15,
+        "correctY": 8.75
+    },
+    {
+        "id": "6ab7b13451f38",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b1344f98d.png",
+        "correctX": 5.53,
+        "correctY": 28.22
+    },
+    {
+        "id": "6ab7b141b3118",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b141b048e.png",
+        "correctX": 22.36,
+        "correctY": 60.19
+    },
+    {
+        "id": "6ab7b166d44e8",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b166d07f7.png",
+        "correctX": 72.12,
+        "correctY": 63.32
+    },
+    {
+        "id": "6ab7b17741d51",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b1773f9a5.png",
+        "correctX": 99.04,
+        "correctY": 27.74
+    },
+    {
+        "id": "6ab7b1895bf67",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b189588af.png",
+        "correctX": 70.43,
+        "correctY": 22.69
+    },
+    {
+        "id": "6ab7b1a88e829",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b1a88bda1.png",
+        "correctX": 50.96,
+        "correctY": 38.08
+    },
+    {
+        "id": "6ab7b1bc9e71b",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b1bc9a973.png",
+        "correctX": 57.45,
+        "correctY": 58.27
+    },
+    {
+        "id": "6ab7b1c967d5f",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b1c963bd6.png",
+        "correctX": 36.3,
+        "correctY": 57.55
+    },
+    {
+        "id": "6ab7b1db3b164",
+        "mapName": "Summit",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b1db30394.png",
+        "correctX": 31.97,
+        "correctY": 25.34
+    },
+    {
+        "id": "6ab7b1f05ec19",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b1f05b7af.png",
+        "correctX": 95.67,
+        "correctY": 37.36
+    },
+    {
+        "id": "6ab7b202db980",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b202d9323.png",
+        "correctX": 73.32,
+        "correctY": 77.02
+    },
+    {
+        "id": "6ab7b2172a64c",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b21728778.png",
+        "correctX": 43.27,
+        "correctY": 54.91
+    },
+    {
+        "id": "6ab7b2290d287",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b22909cb9.png",
+        "correctX": 37.26,
+        "correctY": 77.26
+    },
+    {
+        "id": "6ab7b2342c588",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b234290e8.png",
+        "correctX": 50.96,
+        "correctY": 72.45
+    },
+    {
+        "id": "6ab7b2443e36c",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b2443a4ba.png",
+        "correctX": 34.13,
+        "correctY": 52.98
+    },
+    {
+        "id": "6ab7b25417ded",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b25416191.png",
+        "correctX": 72.12,
+        "correctY": 27.98
+    },
+    {
+        "id": "6ab7b26351593",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b2634d2d5.png",
+        "correctX": 60.82,
+        "correctY": 64.52
+    },
+    {
+        "id": "6ab7b26ea460c",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b26ea29f9.png",
+        "correctX": 67.79,
+        "correctY": 40.96
+    },
+    {
+        "id": "6ab7b279439de",
+        "mapName": "Sunset",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7b27941aa1.png",
+        "correctX": 35.34,
+        "correctY": 33.75
     }
 ]

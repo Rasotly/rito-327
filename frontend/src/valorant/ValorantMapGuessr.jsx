@@ -16,7 +16,8 @@ export default function ValorantMapGuessr() {
       .then(res => res.json())
       .then(json => {
         if (json.status === 'success') {
-          setQuestions(json.data);
+          const shuffled = [...json.data].sort(() => Math.random() - 0.5);
+          setQuestions(shuffled);
         } else {
           setError(json.message);
         }
@@ -63,7 +64,7 @@ export default function ValorantMapGuessr() {
     setHasGuessed(false);
   };
 
-  const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset', 'Abyss'];
+  const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Summit', 'Sunset', 'Abyss'];
 
   if (loading) return <div style={{ color: 'white', textAlign: 'center', padding: '2rem' }}>Sorular Yükleniyor...</div>;
   if (error) return <div style={{ color: '#ff4655', textAlign: 'center', padding: '2rem' }}>Hata: {error}</div>;
@@ -269,6 +270,7 @@ function getMapId(name) {
     'Lotus': '2fe4ed3a-450a-948b-6d6b-e89a78e680a9',
     'Pearl': 'fd267378-4d1d-484f-ff52-77821ed10dc2',
     'Split': 'd960549e-485c-e861-8d71-aa9d1aed12a2',
+    'Summit': '756da597-416b-c0f2-f47b-afbdf28670bc',
     'Sunset': '92584fbe-486a-b1b2-9faa-39b0f486b498',
     'Abyss': '224b0a95-48b9-f703-1bd8-67aca101a61f'
   };

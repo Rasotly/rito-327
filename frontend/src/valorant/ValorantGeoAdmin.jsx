@@ -6,6 +6,7 @@ export default function ValorantGeoAdmin() {
   const [loginError, setLoginError] = useState('');
 
   const [questions, setQuestions] = useState([]);
+  const [filterMap, setFilterMap] = useState('All');
   
   // Form states
   const [selectedImage, setSelectedImage] = useState(null);
@@ -13,7 +14,7 @@ export default function ValorantGeoAdmin() {
   const [marker, setMarker] = useState(null); // {x, y}
   const [uploading, setUploading] = useState(false);
 
-  const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset', 'Abyss'];
+  const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Summit', 'Sunset', 'Abyss'];
 
   useEffect(() => {
     if (token) {
@@ -131,6 +132,7 @@ export default function ValorantGeoAdmin() {
       'Lotus': '2fe4ed3a-450a-948b-6d6b-e89a78e680a9',
       'Pearl': 'fd267378-4d1d-484f-ff52-77821ed10dc2',
       'Split': 'd960549e-485c-e861-8d71-aa9d1aed12a2',
+      'Summit': '756da597-416b-c0f2-f47b-afbdf28670bc',
       'Sunset': '92584fbe-486a-b1b2-9faa-39b0f486b498',
       'Abyss': '224b0a95-48b9-f703-1bd8-67aca101a61f'
     };
@@ -157,6 +159,8 @@ export default function ValorantGeoAdmin() {
       </div>
     );
   }
+
+  const filteredQuestions = questions.filter(q => filterMap === 'All' || q.mapName === filterMap);
 
   return (
     <div style={{ color: 'white', maxWidth: '1000px', margin: '0 auto', fontFamily: 'sans-serif', paddingBottom: '4rem' }}>
@@ -247,12 +251,25 @@ export default function ValorantGeoAdmin() {
 
         {/* Sorular Listesi */}
         <div style={{ flex: '1 1 400px' }}>
-          <h3 style={{ marginBottom: '1.5rem', color: '#aaa' }}>Mevcut Sorular ({questions.length})</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+            <h3 style={{ margin: 0, color: '#aaa' }}>
+              {filterMap === 'All' ? `Tüm Sorular (${filteredQuestions.length})` : `${filterMap} (${filteredQuestions.length} soru)`}
+            </h3>
+            <select 
+              value={filterMap}
+              onChange={(e) => setFilterMap(e.target.value)}
+              style={{ padding: '0.5rem', backgroundColor: '#222', border: '1px solid #444', color: 'white', borderRadius: '4px' }}
+            >
+              <option value="All">Tüm Haritalar</option>
+              {MAP_OPTIONS.map(m => <option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            {questions.length === 0 ? (
-              <p style={{ color: '#555' }}>Henüz soru eklenmemiş.</p>
+            {filteredQuestions.length === 0 ? (
+              <p style={{ color: '#555' }}>Bu harita için henüz soru eklenmemiş.</p>
             ) : (
-              questions.map(q => (
+              filteredQuestions.map(q => (
                 <div key={q.id} style={{ display: 'flex', backgroundColor: '#111', padding: '1rem', borderRadius: '8px', border: '1px solid #333', alignItems: 'center', gap: '1rem' }}>
                   <img src={q.wallImage} alt="soru" style={{ width: '80px', height: '80px', objectFit: 'cover', borderRadius: '4px' }} />
                   <div style={{ flex: 1 }}>
