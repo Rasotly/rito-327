@@ -12,5 +12,271 @@
         "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7944855da0.png",
         "correctX": 72.36,
         "correctY": 49.14
+    },
+    {
+        "id": "6ab794a5b98c2",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab794a5b28ec.png",
+        "correctX": 21.88,
+        "correctY": 64.28
+    },
+    {
+        "id": "6ab794bb75b83",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab794bb70adc.png",
+        "correctX": 21.15,
+        "correctY": 49.38
+    },
+    {
+        "id": "6ab794d31617b",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab794d311718.png",
+        "correctX": 31.01,
+        "correctY": 25.82
+    },
+    {
+        "id": "6ab79516a4d55",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79516a1588.png",
+        "correctX": 61.54,
+        "correctY": 45.53
+    },
+    {
+        "id": "6ab79535948a4",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7953590b6d.png",
+        "correctX": 37.98,
+        "correctY": 44.57
+    },
+    {
+        "id": "6ab79547603b9",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab795475be0e.png",
+        "correctX": 43.99,
+        "correctY": 68.13
+    },
+    {
+        "id": "6ab7957776bcd",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7957772d10.png",
+        "correctX": 59.86,
+        "correctY": 64.28
+    },
+    {
+        "id": "6ab7958aeef37",
+        "mapName": "Ascent",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7958aeb2aa.png",
+        "correctX": 25.96,
+        "correctY": 10.19
+    },
+    {
+        "id": "6ab795ced54ed",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab795ced01f7.png",
+        "correctX": 28.13,
+        "correctY": 61.88
+    },
+    {
+        "id": "6ab795ec42330",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab795ec3d394.png",
+        "correctX": 79.81,
+        "correctY": 83.03
+    },
+    {
+        "id": "6ab796003fbca",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7960038ec9.png",
+        "correctX": 77.64,
+        "correctY": 56.11
+    },
+    {
+        "id": "6ab796109b847",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7961095e32.png",
+        "correctX": 48.56,
+        "correctY": 34.23
+    },
+    {
+        "id": "6ab796212e73c",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7962128fda.png",
+        "correctX": 60.34,
+        "correctY": 5.63
+    },
+    {
+        "id": "6ab796368f206",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab796368a82c.png",
+        "correctX": 85.34,
+        "correctY": 30.39
+    },
+    {
+        "id": "6ab7964ddd90b",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7964dd78d9.png",
+        "correctX": 31.97,
+        "correctY": 95.77
+    },
+    {
+        "id": "6ab7966250362",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab796624c8b1.png",
+        "correctX": 42.55,
+        "correctY": 94.57
+    },
+    {
+        "id": "6ab79677781fb",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79677736fc.png",
+        "correctX": 62.98,
+        "correctY": 63.08
+    },
+    {
+        "id": "6ab796892093f",
+        "mapName": "Abyss",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab796891c562.png",
+        "correctX": 23.08,
+        "correctY": 17.41
+    },
+    {
+        "id": "6ab796d93e591",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab796d93a235.png",
+        "correctX": 82.45,
+        "correctY": 50.34
+    },
+    {
+        "id": "6ab797027ff7d",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab797027cad5.png",
+        "correctX": 70.43,
+        "correctY": 65.48
+    },
+    {
+        "id": "6ab797123b203",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79712335e9.png",
+        "correctX": 34.38,
+        "correctY": 64.52
+    },
+    {
+        "id": "6ab79720e38ef",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79720dae9e.png",
+        "correctX": 21.63,
+        "correctY": 19.33
+    },
+    {
+        "id": "6ab797320a0dc",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7973207e35.png",
+        "correctX": 14.9,
+        "correctY": 33.27
+    },
+    {
+        "id": "6ab7974018af4",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79740154ca.png",
+        "correctX": 57.21,
+        "correctY": 37.36
+    },
+    {
+        "id": "6ab7974c20d32",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7974c1da0f.png",
+        "correctX": 45.67,
+        "correctY": 44.09
+    },
+    {
+        "id": "6ab797636c24c",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab797636a16f.png",
+        "correctX": 42.31,
+        "correctY": 56.11
+    },
+    {
+        "id": "6ab79772173e3",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7977214261.png",
+        "correctX": 24.04,
+        "correctY": 23.9
+    },
+    {
+        "id": "6ab79785afb35",
+        "mapName": "Bind",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79785adf4e.png",
+        "correctX": 86.54,
+        "correctY": 62.36
+    },
+    {
+        "id": "6ab797d13cbf7",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab797d139e80.png",
+        "correctX": 73.8,
+        "correctY": 13.56
+    },
+    {
+        "id": "6ab797e539631",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab797e537a73.png",
+        "correctX": 39.9,
+        "correctY": 15.96
+    },
+    {
+        "id": "6ab797f692250",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab797f68b232.png",
+        "correctX": 7.93,
+        "correctY": 29.66
+    },
+    {
+        "id": "6ab79806447d7",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79806415a2.png",
+        "correctX": 56.25,
+        "correctY": 64.04
+    },
+    {
+        "id": "6ab7981465ee2",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab798146239e.png",
+        "correctX": 64.66,
+        "correctY": 57.55
+    },
+    {
+        "id": "6ab79826b658a",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79826b3276.png",
+        "correctX": 48.32,
+        "correctY": 32.07
+    },
+    {
+        "id": "6ab79838d56aa",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79838d00f4.png",
+        "correctX": 40.38,
+        "correctY": 21.73
+    },
+    {
+        "id": "6ab798550b8df",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7985502aad.png",
+        "correctX": 58.41,
+        "correctY": 24.86
+    },
+    {
+        "id": "6ab79862a8a9a",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab79862a5c8e.png",
+        "correctX": 63.22,
+        "correctY": 35.43
+    },
+    {
+        "id": "6ab7987ba2d1a",
+        "mapName": "Breeze",
+        "wallImage": "http:\/\/localhost:8081\/uploads\/6ab7987b9fbb2.png",
+        "correctX": 89.66,
+        "correctY": 64.52
     }
 ]
