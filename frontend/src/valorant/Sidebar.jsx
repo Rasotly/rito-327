@@ -86,6 +86,13 @@ const SoundIcon = () => (
   </svg>
 );
 
+const HeadphoneIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+  </svg>
+);
+
 const LocationIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
@@ -114,6 +121,7 @@ const NAV_ITEMS = [
   { id: 'maps', label: 'Haritalar', icon: <MapIcon /> },
   { id: 'game', label: 'Vufufu', icon: <GameIcon /> },
   { id: 'heardle', label: 'V-sense', icon: <SoundIcon /> },
+  { id: 'vsenset', label: 'HearTheSkin', icon: <HeadphoneIcon /> },
   { id: 'mapguessr', label: 'GeoValo', icon: <LocationIcon /> },
   { id: 'higherlower', label: 'Alt mı Üst mü?', icon: <TrendingIcon /> },
   { id: 'geoadmin', label: 'Riot Yönetimi', icon: <AdminIcon /> },
