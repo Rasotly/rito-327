@@ -2002,9 +2002,6 @@ function ValorantHeardle({ onBack }) {
                 }
             `}</style>
 
-            <button className="back-btn" onClick={onBack} style={{ position: 'absolute', right: '2rem', top: '2rem' }}>
-                <BackArrow /> Geri Dön
-            </button>
 
             <div style={{textAlign: 'center', marginBottom: '3rem'}}>
                 <h1 style={{fontFamily: "'Teko', sans-serif", fontSize: '4rem', marginBottom: '1rem', letterSpacing: '1px'}}>What's The Ability?</h1>
