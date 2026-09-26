@@ -10,6 +10,7 @@ export default function ValorantMapGuessr() {
   const [marker, setMarker] = useState(null);
   const [hasGuessed, setHasGuessed] = useState(false);
   const [score, setScore] = useState(0);
+  const [guessResult, setGuessResult] = useState(null);
 
   useEffect(() => {
     fetch('http://localhost:8081/geovalo.php?action=get_questions')
@@ -47,13 +48,15 @@ export default function ValorantMapGuessr() {
         const dx = marker.x - currentChallenge.correctX;
         const dy = marker.y - currentChallenge.correctY;
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 5) {
-            setScore(s => s + 100);
-        } else if (distance < 15) {
-            setScore(s => s + 50);
-        } else {
-            setScore(s => s + 10);
-        }
+        
+        // Üstel düşüş (Exponential decay) ile GeoGuessr benzeri puanlama
+        let roundScore = Math.floor(100 * Math.pow(Math.E, -distance / 15));
+        if (distance <= 2) roundScore = 100; // 2 birimden yakınsa tam puan!
+        
+        setScore(s => s + roundScore);
+        setGuessResult({ correctMap: true, score: roundScore, distance: distance.toFixed(1) });
+    } else {
+        setGuessResult({ correctMap: false, score: 0 });
     }
   };
 
@@ -62,6 +65,7 @@ export default function ValorantMapGuessr() {
     setSelectedMap(null);
     setMarker(null);
     setHasGuessed(false);
+    setGuessResult(null);
   };
 
   const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Summit', 'Sunset', 'Abyss'];
@@ -201,6 +205,20 @@ export default function ValorantMapGuessr() {
                   }}></div>
                 )}
              </div>
+          )}
+
+          {hasGuessed && guessResult && (
+            <div style={{ marginTop: '1.5rem', padding: '1rem', backgroundColor: '#111', border: `2px solid ${guessResult.correctMap ? '#00ff00' : '#ff4655'}`, borderRadius: '8px', textAlign: 'center' }}>
+              <h3 style={{ color: guessResult.correctMap ? '#00ff00' : '#ff4655', margin: '0 0 0.5rem 0' }}>
+                {guessResult.correctMap ? 'Doğru Harita!' : 'Yanlış Harita!'}
+              </h3>
+              {guessResult.correctMap && (
+                <p style={{ margin: '0 0 0.5rem 0', color: '#aaa' }}>Hedefe Uzaklık: {guessResult.distance} birim</p>
+              )}
+              <p style={{ fontSize: '1.5rem', fontWeight: 'bold', margin: 0, color: 'white' }}>
+                +{guessResult.score} Puan
+              </p>
+            </div>
           )}
 
           <div style={{ marginTop: 'auto', paddingTop: '1.5rem', display: 'flex', gap: '1rem' }}>
