@@ -497,10 +497,45 @@ button.nav-item.active, .nav-item.active {
   margin-left: 0.5rem;
 }
 
+.lol-profile-meta-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin-top: 0.4rem;
+}
+
+.ladder-pill-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: rgba(229, 185, 90, 0.12);
+  border: 1px solid rgba(229, 185, 90, 0.35);
+  color: #e2e8f0;
+  font-size: 0.85rem;
+  padding: 0.3rem 0.85rem;
+  border-radius: 6px;
+  width: fit-content;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+.ladder-pill-badge b {
+  color: var(--gold-accent);
+}
+
+.ladder-sep {
+  color: var(--text-muted);
+}
+
+.ladder-top-pct {
+  color: var(--teal-accent);
+  font-weight: 700;
+  margin-left: 0.2rem;
+}
+
 .lol-profile-subtitle {
   color: var(--text-muted);
-  margin-top: 0.4rem;
   font-size: 0.95rem;
+  margin: 0;
 }
 
 .highlight-champ {
@@ -607,11 +642,28 @@ button.nav-item.active, .nav-item.active {
   padding: 1.5rem;
 }
 
+.card-header-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
 .card-header-line h3 {
-  margin: 0 0 1rem 0;
+  margin: 0;
   font-size: 1.1rem;
   font-weight: 700;
   color: #fff;
+}
+
+.ranks-card-ranking-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gold-accent);
+  background: rgba(229, 185, 90, 0.1);
+  padding: 0.25rem 0.65rem;
+  border-radius: 4px;
+  border: 1px solid rgba(229, 185, 90, 0.3);
 }
 
 .rank-row-box {
@@ -1190,8 +1242,11 @@ button.nav-item.active, .nav-item.active {
 }
 
 .champ-sub-rank {
-  color: var(--text-muted);
-  font-size: 0.75rem;
+  color: #38bdf8;
+  font-size: 0.74rem;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
 }
 
 .champ-points-text {
