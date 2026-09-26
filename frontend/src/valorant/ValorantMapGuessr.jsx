@@ -63,7 +63,7 @@ export default function ValorantMapGuessr() {
     setHasGuessed(false);
   };
 
-  const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset', 'Abyss'];
+  const MAP_OPTIONS = ['Ascent', 'Bind', 'Breeze', 'Corrode', 'Fracture', 'Haven', 'Icebox', 'Lotus', 'Pearl', 'Split', 'Sunset', 'Abyss'];
 
   if (loading) return <div style={{ color: 'white', textAlign: 'center', padding: '2rem' }}>Sorular Yükleniyor...</div>;
   if (error) return <div style={{ color: '#ff4655', textAlign: 'center', padding: '2rem' }}>Hata: {error}</div>;
@@ -262,6 +262,7 @@ function getMapId(name) {
     'Ascent': '7eaecc1b-4337-bbf6-6ab9-04b8f06b3319',
     'Bind': '2c9d57ec-4431-9c5e-2939-8f9ef6dd5cba',
     'Breeze': '2fb9a4fd-47b8-4e7d-a969-74b4046ebd53',
+    'Corrode': '1c18ab1f-420d-0d8b-71d0-77ad3c439115',
     'Fracture': 'b529448b-4d60-346e-e89e-00a4c527a405',
     'Haven': '2bee0dc9-4ffe-519b-1cbd-7fbe763a6047',
     'Icebox': 'e2ad5c54-4114-a870-9641-8ea21279579a',
