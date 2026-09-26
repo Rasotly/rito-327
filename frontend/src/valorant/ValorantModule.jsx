@@ -6,7 +6,29 @@ import ValorantHigherLower from './ValorantHigherLower';
 import ValorantPatchNotes from './ValorantPatchNotes';
 import ValorantVSenset from './ValorantVSenset';
 
-const BackArrow = () => (
+
+const PlayIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M8 5v14l11-7z" />
+    </svg>
+  );
+const PauseIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+    </svg>
+  );
+const RestartIcon = () => (
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </svg>
+  );
+const HeartIcon = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" color="#ddd" stroke="none">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+    </svg>
+  );
+\nconst BackArrow = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
     <line x1="19" y1="12" x2="5" y2="12"></line>
     <polyline points="12 19 5 12 12 5"></polyline>
@@ -1773,7 +1795,7 @@ if (typeof OFFICIAL_AGENTS !== 'undefined') {
 
 function ValorantHeardle({ onBack }) {
     const [currentSound, setCurrentSound] = useState(HEARDLE_DATA[Math.floor(Math.random() * HEARDLE_DATA.length)]);
-    const [lives, setLives] = useState(3);
+    const [lives, setLives] = useState(3);\n      const [currentTime, setCurrentTime] = useState(0);
     const [wrongGuesses, setWrongGuesses] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [gameStatus, setGameStatus] = useState('playing');
@@ -2003,44 +2025,43 @@ function ValorantHeardle({ onBack }) {
             `}</style>
 
 
-            <div style={{textAlign: 'center', marginBottom: '3rem'}}>
-                <h1 style={{fontFamily: "'Teko', sans-serif", fontSize: '4rem', marginBottom: '1rem', letterSpacing: '1px'}}>What's The Ability?</h1>
-                <p style={{color: 'var(--text-secondary)', fontSize: '1.2rem', maxWidth: '800px', margin: '0 auto', lineHeight: '1.6'}}>
-                    Each agent in the game has 4 unique abilities that produce distinct sounds. You have 3 attempts to find the ability that matches the sound.
-                </p>
-                
-                <div style={{marginTop: '2rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem'}}>
-                    <span style={{color: '#fff', fontWeight: 'bold'}}>Difficulty:</span>
-                    <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} style={{background: 'rgba(255,255,255,0.1)', color: '#fff', border: '1px solid rgba(255,255,255,0.2)', padding: '0.5rem 1rem', borderRadius: '4px', outline: 'none'}}>
-                        <option value="Normal" style={{ background: '#222', color: '#fff' }}>Normal</option>
-                        <option value="Hard" style={{ background: '#222', color: '#fff' }}>Hard</option>
-                    </select>
-                </div>
-            </div>
-
-            <div style={{background: 'rgba(17,17,17,0.5)', padding: '2rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)', marginBottom: '3rem'}}>
-                <div ref={waveContainerRef} style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '4px', height: '60px', margin: '0 auto 2rem'}}>
-                    {Array.from({length: 40}).map((_, i) => (
-                        <div key={i} className="wave-bar" style={{height: '15px'}}></div>
-                    ))}
-                </div>
-
-                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem'}}>
-                    <span style={{color: 'var(--text-secondary)', fontFamily: "'Teko', sans-serif", fontSize: '1.5rem'}}>0.0s</span>
-                    
-                    <button onClick={playAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d={isPlaying ? "M6 19h4V5H6v14zm8-14v14h4V5h-4z" : "M8 5v14l11-7z"}/></svg>
-                    </button>
-                    
-                    <button onClick={replayAudio} style={{width: '50px', height: '50px', borderRadius: '8px', background: 'var(--text-secondary)', color: '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
-                    </button>
-                    
-                    <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', marginLeft: '1rem'}}>
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path></svg>
-                        <input type="range" min="0" max="1" step="0.01" value={volume} onChange={(e) => setVolume(parseFloat(e.target.value))} style={{width: '100px'}} />
-                    </div>
-                </div>
+            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+                  <h1 style={{ fontSize: '2.5rem', margin: '0 0 1rem 0', fontWeight: 'bold' }}>What's The Ability?</h1>
+                  <p style={{ color: '#ccc', fontSize: '1rem', lineHeight: '1.5', maxWidth: '700px', margin: '0 auto' }}>
+                      Each agent in the game has 4 unique abilities that produce distinct sounds. <br/>
+                      You have 3 attempts to find the ability that matches the sound.
+                  </p>
+              </div>
+              
+              <div style={{ marginBottom: '2rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '2rem' }}>
+                      <span style={{ fontSize: '0.9rem', color: '#aaa', fontWeight: 'bold', fontFamily: 'monospace' }}>Difficulty:</span>
+                      <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)} style={{ background: '#333', color: '#fff', border: 'none', padding: '0.5rem 1rem', borderRadius: '8px', outline: 'none' }}>
+                          <option value="Normal">Normal</option>
+                          <option value="Hard">Hard</option>
+                      </select>
+                  </div>
+                  
+                  <div ref={waveContainerRef} style={{ display: 'flex', alignItems: 'center', gap: '4px', height: '60px', margin: '2rem auto', justifyContent: 'center' }}>
+                      {Array.from({ length: 40 }).map((_, i) => {
+                          const height = isPlaying 
+                              ? Math.random() * 40 + 10 
+                              : Math.sin(i * 0.3) * 20 + 25;
+                          
+                          return (
+                              <div 
+                                  key={i} 
+                                  style={{ 
+                                      width: '4px', 
+                                      height: `${height}px`, 
+                                      backgroundColor: i < (currentTime / (audioRef.current?.duration || 1)) * 40 ? '#fff' : '#555',
+                                      borderRadius: '2px',
+                                      transition: 'height 0.1s ease'
+                                  }}
+                              />
+                          );
+                      })}
+                  </div>
 
                 {wrongGuesses.length > 0 && (
                     <div style={{display: 'flex', gap: '1rem', justifyContent: 'center', marginTop: '2.5rem', flexWrap: 'wrap'}}>
@@ -2133,12 +2154,12 @@ function ValorantHeardle({ onBack }) {
                 </div>
             )}
 
-            <div style={{display: 'flex', justifyContent: 'center', position: 'sticky', top: '20px', zIndex: 10}}>
-                <div style={{display: 'flex', alignItems: 'center', background: 'rgba(20,20,20,0.9)', padding: '0.5rem 1.5rem', borderRadius: '30px', border: '1px solid rgba(255,255,255,0.1)', width: '400px', boxShadow: '0 4px 20px rgba(0,0,0,0.5)'}}>
+                          <div style={{display: 'flex', justifyContent: 'center', position: 'sticky', top: '20px', zIndex: 10}}>
+                  <div style={{display: 'flex', alignItems: 'center', backgroundColor: '#2a2a2a', borderRadius: '8px', padding: '0.5rem 1rem', width: '100%', maxWidth: '400px', border: '1px solid #444'}}>
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{marginRight: '1rem'}}><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
                     <input type="text" value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Search..." style={{flex: 1, background: 'transparent', border: 'none', color: '#fff', outline: 'none', fontSize: '1.1rem'}} />
                     <div style={{display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#fff', fontWeight: 'bold'}}>
-                        {lives} <span style={{color: 'var(--valorant-red)'}}>❤️</span>
+                        {lives} <HeartIcon />
                     </div>
                 </div>
             </div>
@@ -2161,7 +2182,7 @@ function ValorantHeardle({ onBack }) {
                     </div>
                 ))}
             </div>
-            <audio ref={audioRef} style={{display: 'none'}} />
+            <audio ref={audioRef} style={{display: 'none'}} onTimeUpdate={(e) => setCurrentTime(e.target.currentTime)} />
         </div>
     );
 }
