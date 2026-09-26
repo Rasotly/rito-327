@@ -3,6 +3,7 @@ import Sidebar from './Sidebar';
 import ValorantMapGuessr from './ValorantMapGuessr';
 import ValorantAdmin from './ValorantAdmin';
 import ValorantHigherLower from './ValorantHigherLower';
+import ValorantPatchNotes from './ValorantPatchNotes';
 
 const BackArrow = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -114,6 +115,11 @@ function ValorantModule({ onBack }) {
       {activeTab === 'higherlower' && (
         <div style={{ width: '100%', padding: '2rem', boxSizing: 'border-box' }}>
             <ValorantHigherLower onBack={() => setActiveTab('home')} />
+        </div>
+      )}
+      {activeTab === 'patch-notes' && (
+        <div style={{ width: '100%', padding: '2rem', boxSizing: 'border-box' }}>
+            <ValorantPatchNotes />
         </div>
       )}
       {activeTab === 'geoadmin' && (
