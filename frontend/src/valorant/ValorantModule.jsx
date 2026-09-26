@@ -34,6 +34,12 @@ const BackArrow = () => (
     <polyline points="12 19 5 12 12 5"></polyline>
   </svg>
 );
+const VolumeIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+    <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+  </svg>
+);
 
 function ValorantModule({ onBack }) {
   const [data, setData] = useState(null);
@@ -2062,6 +2068,36 @@ function ValorantHeardle({ onBack }) {
                               />
                           );
                       })}
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1.5rem', marginBottom: '2rem' }}>
+                    <span style={{ fontSize: '0.9rem', color: '#aaa', fontWeight: 'bold', fontFamily: 'monospace' }}>
+                      {currentTime.toFixed(1)}s
+                    </span>
+                    <button 
+                      onClick={playAudio}
+                      style={{ width: '40px', height: '40px', borderRadius: '8px', backgroundColor: '#ddd', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}
+                    >
+                      <div style={{ filter: 'invert(1)' }}>
+                        {isPlaying ? <PauseIcon /> : <PlayIcon />}
+                      </div>
+                    </button>
+                    <button 
+                      onClick={replayAudio}
+                      style={{ width: '40px', height: '40px', borderRadius: '8px', backgroundColor: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', border: 'none', cursor: 'pointer' }}
+                    >
+                      <RestartIcon />
+                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', backgroundColor: '#333', padding: '0 1rem', height: '40px', borderRadius: '8px' }}>
+                      <VolumeIcon />
+                      <input 
+                        type="range" 
+                        min="0" max="1" step="0.01" 
+                        value={volume} 
+                        onChange={(e) => setVolume(parseFloat(e.target.value))}
+                        style={{ width: '80px', cursor: 'pointer', accentColor: '#ff4655' }}
+                      />
+                    </div>
                   </div>
 
                 {wrongGuesses.length > 0 && (
