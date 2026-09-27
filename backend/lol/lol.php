@@ -83,8 +83,8 @@ if ($action === 'search') {
         $leagueData = [];
     }
 
-    // 4. Fetch Match IDs (Top 20)
-    $matchIds = $api->getMatchIdsByPuuid($puuid, $region, 20);
+    // 4. Fetch Match IDs (Top 25)
+    $matchIds = $api->getMatchIdsByPuuid($puuid, $region, 25);
     if (!is_array($matchIds) || isset($matchIds['status'])) {
         $matchIds = [];
     }
@@ -114,10 +114,16 @@ if ($action === 'search') {
     $api->recordPlayerSearch($fullRiotId, $region, $iconId, $level, $playerTier);
 
     // Calculate dynamic precision server and world ladder rankings
-    $rankings = $api->calculatePlayerRankings($puuid, $region, $leagueData, $masteryData, $fullRiotId);
+    $rankings = $api->calculatePlayerRankings($puuid, $region, $leagueData, $masteryData, $fullRiotId, $level);
 
     // Calculate real season played champions using League of Graphs formula
-    $playedChampions = $api->getSeasonPlayedChampions($puuid, $region, $matchIds, $leagueData, $masteryData, $fullRiotId);
+    $playedChampions = $api->getSeasonPlayedChampions($puuid, $region, $matchIds, $leagueData, $masteryData, $fullRiotId, $level);
+
+    // Fetch real Riot challenges data (tiers, points, categories)
+    $challengesData = $api->getChallengesByPuuid($puuid, $region);
+
+    // Compute player analytics, patterns, roles, benchmarks, records, and map heatmap
+    $patternsData = $api->getPlayerAnalyticsAndPatterns($puuid, $region, $matchIds, $playerTier, $masteryData);
 
     $response = [
         "status" => "success",
@@ -129,7 +135,9 @@ if ($action === 'search') {
         "mastery" => $masteryData,
         "playedChampions" => $playedChampions,
         "seasonSummary" => $rankings['seasonSummary'] ?? null,
-        "rankings" => $rankings
+        "rankings" => $rankings,
+        "challenges" => $challengesData,
+        "patterns" => $patternsData
     ];
 
 } elseif ($action === 'match') {

@@ -13,20 +13,83 @@ fetch('https://ddragon.leagueoflegends.com/api/versions.json')
   })
   .catch(() => {});
 
+export function normalizeChampionKey(champName) {
+  if (!champName) return 'Caitlyn';
+  const clean = String(champName).trim();
+  const lower = clean.toLowerCase();
+
+  const specialMap = {
+    'wukong': 'MonkeyKing',
+    'monkeyking': 'MonkeyKing',
+    'renata glasc': 'Renata',
+    'renata': 'Renata',
+    'nunu & willump': 'Nunu',
+    'nunu': 'Nunu',
+    'leblanc': 'Leblanc',
+    "cho'gath": 'Chogath',
+    'chogath': 'Chogath',
+    "kai'sa": 'Kaisa',
+    'kaisa': 'Kaisa',
+    "kha'zix": 'Khazix',
+    'khazix': 'Khazix',
+    "vel'koz": 'Velkoz',
+    'velkoz': 'Velkoz',
+    "k'sante": 'KSante',
+    'ksante': 'KSante',
+    'dr. mundo': 'DrMundo',
+    'drmundo': 'DrMundo',
+    'jarvan iv': 'JarvanIV',
+    'jarvaniv': 'JarvanIV',
+    'miss fortune': 'MissFortune',
+    'missfortune': 'MissFortune',
+    'master yi': 'MasterYi',
+    'masteryi': 'MasterYi',
+    'lee sin': 'LeeSin',
+    'leesin': 'LeeSin',
+    'tahm kench': 'TahmKench',
+    'tahmkench': 'TahmKench',
+    'twisted fate': 'TwistedFate',
+    'twistedfate': 'TwistedFate',
+    'xin zhao': 'XinZhao',
+    'xinzhao': 'XinZhao',
+    'aurelion sol': 'AurelionSol',
+    'aurelionsol': 'AurelionSol',
+    "kog'maw": 'KogMaw',
+    'kogmaw': 'KogMaw',
+    "rek'sai": 'RekSai',
+    'reksai': 'RekSai',
+    "bel'veth": 'Belveth',
+    'belveth': 'Belveth'
+  };
+
+  if (specialMap[lower]) {
+    return specialMap[lower];
+  }
+
+  // Strip apostrophes, spaces, periods, ampersands
+  return clean.replace(/['\s\.\&]/g, '');
+}
+
 export const LolAssets = {
   getVersion: () => ddragonVersion,
   
   getProfileIcon: (iconId = 1) => 
     `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/profileicon/${iconId}.png`,
 
-  getChampionIcon: (champName) => 
-    `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/${champName}.png`,
+  getChampionIcon: (champName) => {
+    const key = normalizeChampionKey(champName);
+    return `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/champion/${key}.png`;
+  },
 
-  getChampionSplash: (champName, skin = 0) => 
-    `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${champName}_${skin}.jpg`,
+  getChampionSplash: (champName, skin = 0) => {
+    const key = normalizeChampionKey(champName);
+    return `https://ddragon.leagueoflegends.com/cdn/img/champion/splash/${key}_${skin}.jpg`;
+  },
 
-  getChampionLoading: (champName, skin = 0) => 
-    `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${champName}_${skin}.jpg`,
+  getChampionLoading: (champName, skin = 0) => {
+    const key = normalizeChampionKey(champName);
+    return `https://ddragon.leagueoflegends.com/cdn/img/champion/loading/${key}_${skin}.jpg`;
+  },
 
   getItemIcon: (itemId) => 
     `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/item/${itemId}.png`,
@@ -100,3 +163,5 @@ export const LolLogoIcon = ({ size = 28, className = "" }) => (
     />
   </svg>
 );
+
+export default LolAssets;

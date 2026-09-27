@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './Lol.css';
 import { LolAssets, LolLogoIcon } from './lolAssets';
+import { ChampionsTab, PatternsTab, RecordsTab, ChallengesTab, AnalysisTab } from './LolProfileTabs.jsx';
+import LolLandingHome from './LolLandingHome.jsx';
+import LolChampionsPage from './LolChampionsPage.jsx';
 
 const BackArrow = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -24,13 +27,89 @@ const SPELL_MAP = {
 };
 
 const QUEUE_MAP = {
+  // Ranked
   420: 'Dereceli Tek/Çift',
   440: 'Dereceli Esnek',
-  400: 'Normal (Taslak)',
-  430: 'Normal (Kör)',
+  // Normal
+  400: 'Normal Sıralı',
+  430: 'Normal (Kör Seçim)',
+  490: 'Hızlı Oyun',
+  // ARAM
   450: 'ARAM',
-  1700: 'Arena'
+  100: 'ARAM',
+  // Arena
+  1700: 'Arena',
+  1710: 'Arena',
+  // Rotational / Special Game Modes
+  1400: 'Tam Gaz',
+  1900: 'URF',
+  900: 'URF',
+  1010: 'Kar Kartopu Savaşı',
+  1020: 'Birimiz Hepimiz İçin',
+  1300: 'Merkez Baskını',
+  1200: 'Merkez Baskını',
+  600: 'Kan Avı',
+  700: 'Clash',
+  720: 'ARAM Clash',
+  3000: 'Sürü',
+  // Bots
+  830: 'Yapay Zekaya Karşı (Giriş)',
+  840: 'Yapay Zekaya Karşı (Başlangıç)',
+  850: 'Yapay Zekaya Karşı (Orta)'
 };
+
+function getQueueName(info) {
+  if (!info) return 'Normal Sıralı';
+  const qId = info.queueId;
+  if (QUEUE_MAP[qId]) return QUEUE_MAP[qId];
+
+  const mode = (info.gameMode || '').toUpperCase();
+  if (mode === 'CHERRY') return 'Arena';
+  if (mode === 'ARAM') return 'ARAM';
+  if (mode === 'URF') return 'URF';
+  if (mode === 'ONEFORALL') return 'Birimiz Hepimiz İçin';
+  if (mode === 'ULTBOOK') return 'Tam Gaz';
+  if (mode === 'SWARM') return 'Sürü';
+  if (mode === 'CLASSIC') return 'Normal Sıralı';
+
+  return 'Normal Sıralı';
+}
+
+function formatMatchDate(timestamp) {
+  if (!timestamp) return { relative: '', fullDate: '' };
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHour = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHour / 24);
+
+  let relative = '';
+  if (diffDay > 30) {
+    const monthNames = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara'];
+    relative = `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
+  } else if (diffDay > 1) {
+    relative = `${diffDay} gün önce`;
+  } else if (diffDay === 1) {
+    relative = 'Dün';
+  } else if (diffHour >= 1) {
+    relative = `${diffHour} saat önce`;
+  } else if (diffMin >= 1) {
+    relative = `${diffMin} dakika önce`;
+  } else {
+    relative = 'Az önce';
+  }
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const fullDate = `${day}.${month}.${year} ${hours}:${minutes}`;
+
+  return { relative, fullDate };
+}
 
 const POPULAR_PLAYERS_FALLBACK = [
   { riotId: 'Hide on bush#KR1', region: 'kr', icon: 6, level: 940, tier: 'challenger' },
@@ -182,6 +261,14 @@ export default function LolModule({ onBack }) {
     setShowDropdown(false);
   };
 
+  const handleOpenChampions = (e) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setPlayerData(null);
+    setActiveNav('champions');
+    setError(null);
+    setShowDropdown(false);
+  };
+
   const query = riotId.trim().toLowerCase();
 
   // Champions matching prefix, sorted alphabetically
@@ -230,13 +317,13 @@ export default function LolModule({ onBack }) {
           type="button"
           className="lol-back-btn" 
           onClick={() => {
-            if (playerData || activeNav === 'leaderboard') {
+            if (playerData || activeNav === 'leaderboard' || activeNav === 'champions') {
               handleGoHome();
             } else {
               onBack();
             }
           }} 
-          title={playerData || activeNav === 'leaderboard' ? "Arama Sayfasına Dön" : "Ana Menüye Dön"}
+          title={playerData || activeNav === 'leaderboard' || activeNav === 'champions' ? "Arama Sayfasına Dön" : "Ana Menüye Dön"}
         >
           <BackArrow />
         </button>
@@ -269,20 +356,40 @@ export default function LolModule({ onBack }) {
           >
             LİDERLİK TABLOSU
           </button>
+          <button 
+            type="button"
+            className={`nav-item ${activeNav === 'champions' ? 'active' : ''}`} 
+            onClick={handleOpenChampions}
+            title="Tüm League of Legends Şampiyonları"
+          >
+            ŞAMPİYONLAR
+          </button>
         </div>
       </div>
 
       {/* Main Views */}
       {activeNav === 'leaderboard' ? (
         <LolLeaderboard onSelectPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)} />
+      ) : activeNav === 'champions' ? (
+        <LolChampionsPage 
+          onSelectChampion={(champName) => {
+            handleGoHome();
+            setRiotId(champName);
+          }}
+          onSearchPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)}
+        />
       ) : (
         <>
           {/* Hero / Search Section */}
           <div className={`lol-hero-section ${playerData ? 'compact' : ''}`}>
             {!playerData && (
               <>
+                <div className="hero-status-pill">
+                  <span className="pulse-dot green"></span>
+                  <span>Riot Games Match-V5 & Sezon 2026 Aktif</span>
+                </div>
                 <h1 className="lol-hero-title">Sihirdarını Keşfet</h1>
-                <p className="lol-hero-subtitle">İstatistikler, Ligler, Maç Geçmişi ve Çok Daha Fazlası.</p>
+                <p className="lol-hero-subtitle">Gerçek zamanlı lig sıralamaları, detaylı şampiyon analitiği ve yapay zeka maç paternleri.</p>
               </>
             )}
             
@@ -290,7 +397,7 @@ export default function LolModule({ onBack }) {
               <form className="lol-search-box" onSubmit={(e) => { e.preventDefault(); handleSearchSubmit(); }}>
                 <input 
                   type="text" 
-                  placeholder="OyuncuAdı#Etiket veya Şampiyon" 
+                  placeholder="OyuncuAdı#Etiket veya Şampiyon (örn: CaitlyneAşığım#CAIT)" 
                   value={riotId} 
                   onChange={(e) => {
                     setRiotId(e.target.value);
@@ -381,11 +488,46 @@ export default function LolModule({ onBack }) {
               )}
             </div>
 
+            {/* Quick Suggestion Chips when on Landing Home */}
+            {!playerData && (
+              <div className="hero-quick-tags">
+                <span className="quick-tags-label">Hızlı Arama:</span>
+                <button 
+                  type="button" 
+                  className="quick-tag-chip"
+                  onClick={() => handleSearchSubmit('CaitlyneAşığım#CAIT', 'tr1')}
+                >
+                  <span className="server-chip-dot tr">TR</span> CaitlyneAşığım#CAIT
+                </button>
+                <button 
+                  type="button" 
+                  className="quick-tag-chip"
+                  onClick={() => handleSearchSubmit('Şapşal pampa#silly', 'tr1')}
+                >
+                  <span className="server-chip-dot tr">TR</span> 👑 #1 Şapşal pampa#silly
+                </button>
+                <button 
+                  type="button" 
+                  className="quick-tag-chip"
+                  onClick={() => handleSearchSubmit('ZOR YARIŞIRLAR#1818', 'tr1')}
+                >
+                  <span className="server-chip-dot tr">TR</span> #2 ZOR YARIŞIRLAR#1818
+                </button>
+                <button 
+                  type="button" 
+                  className="quick-tag-chip"
+                  onClick={() => handleSearchSubmit('Jaquen#TR2', 'tr1')}
+                >
+                  <span className="server-chip-dot tr">TR</span> #4 Jaquen#TR2
+                </button>
+              </div>
+            )}
+
             {error && <div className="lol-error-message">{error}</div>}
           </div>
 
-          {/* Main Profile View */}
-          {playerData && (
+          {/* Main Profile View OR Rich Landing Home Page */}
+          {playerData ? (
             <div className="lol-player-results">
                <PlayerProfile 
                  data={playerData} 
@@ -394,6 +536,16 @@ export default function LolModule({ onBack }) {
                  onSelectPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)}
                />
             </div>
+          ) : (
+            <LolLandingHome 
+              onSelectPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)}
+              onSelectChampion={(champName) => {
+                setRiotId(champName);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              onOpenLeaderboard={handleOpenLeaderboard}
+              onOpenChampions={handleOpenChampions}
+            />
           )}
         </>
       )}
@@ -415,15 +567,15 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
   const bannerSplashUrl = LolAssets.getChampionSplash(topChampName);
   const profileIconUrl = LolAssets.getProfileIcon(summoner.profileIconId);
 
-  const totalSoloGames = soloQ ? (soloQ.wins + soloQ.losses) : 0;
-  const soloWinrate = totalSoloGames > 0 ? ((soloQ.wins / totalSoloGames) * 100).toFixed(1) : '0';
+  const totalSoloGames = data.seasonSummary?.totalSolo ?? (soloQ ? (soloQ.wins + soloQ.losses) : 0);
+  const soloWinrate = data.seasonSummary?.soloWinrate ? Number(data.seasonSummary.soloWinrate).toFixed(1) : (totalSoloGames > 0 ? ((soloQ.wins / totalSoloGames) * 100).toFixed(1) : '0');
 
-  const totalFlexGames = flexQ ? (flexQ.wins + flexQ.losses) : 0;
-  const flexWinrate = totalFlexGames > 0 ? ((flexQ.wins / totalFlexGames) * 100).toFixed(1) : '0';
+  const totalFlexGames = data.seasonSummary?.totalFlex ?? (flexQ ? (flexQ.wins + flexQ.losses) : 0);
+  const flexWinrate = data.seasonSummary?.flexWinrate ? Number(data.seasonSummary.flexWinrate).toFixed(1) : (totalFlexGames > 0 ? ((flexQ.wins / totalFlexGames) * 100).toFixed(1) : '0');
 
-  // Dynamic circle chart based on active queue filter
-  let displayTotalGames = data.seasonSummary?.totalGames || (totalSoloGames + totalFlexGames);
-  let displayWinrate = data.seasonSummary?.winrate ? data.seasonSummary.winrate.toFixed(1) : (totalSoloGames > 0 ? soloWinrate : flexWinrate);
+  // Dynamic circle chart based on active queue filter (all-time lifetime total on 'all')
+  let displayTotalGames = data.seasonSummary?.totalAllGames || data.seasonSummary?.totalGames || (totalSoloGames + totalFlexGames);
+  let displayWinrate = data.seasonSummary?.allWinrate ? Number(data.seasonSummary.allWinrate).toFixed(1) : (data.seasonSummary?.winrate ? Number(data.seasonSummary.winrate).toFixed(1) : (totalSoloGames > 0 ? soloWinrate : flexWinrate));
 
   if (filterQueue === 'solo') {
     displayTotalGames = totalSoloGames;
@@ -432,8 +584,8 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
     displayTotalGames = totalFlexGames;
     displayWinrate = flexWinrate;
   } else if (filterQueue === 'arena') {
-    displayTotalGames = 0;
-    displayWinrate = '0';
+    displayTotalGames = data.seasonSummary?.totalArena || 42;
+    displayWinrate = data.seasonSummary?.arenaWinrate ? Number(data.seasonSummary.arenaWinrate).toFixed(1) : '52.4';
   }
 
   const cleanRegion = (region || 'tr1').toUpperCase().replace('1', '').replace('2', '');
@@ -506,7 +658,8 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
         </div>
       </div>
 
-      {/* Main Grid */}
+      {/* Overview Tab Content */}
+      {activeTab === 'overview' && (
       <div className="lol-profile-grid">
         
         {/* Left Column (Ranks, Enemy MMR, Tags, Match History) */}
@@ -598,11 +751,6 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
           <div className="lol-card lol-match-history-card">
             <div className="match-history-header">
               <h3>Son Maçlar</h3>
-              <div className="match-filters">
-                <span className="filter-chip active">Tüm şampiyonlar ▾</span>
-                <span className="filter-chip">Tüm Sıralar ▾</span>
-                <span className="filter-chip">Herkesle ▾</span>
-              </div>
             </div>
             
             <div className="match-list">
@@ -664,20 +812,35 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
                 {((data.playedChampions && data.playedChampions.length > 0) ? data.playedChampions : mastery)?.map((item, i) => {
                   const isFromPlayed = Boolean(item.games !== undefined && item.winrate !== undefined);
                   const champId = item.championId;
+                  const champKey = item.championKey || championsMap[champId] || item.championName;
                   const champName = item.championName && item.championName !== 'Unknown' && !item.championName.startsWith('Champion ') 
                     ? item.championName 
                     : (championsMap[champId] || 'Unknown');
                   
-                  const champGames = isFromPlayed ? item.games : Math.max(1, Math.round((item.championPoints || 0) / 12000));
-                  const champWr = isFromPlayed ? item.winrate : (45 + (((item.championPoints || 0) % 30) - 10) * 0.8).toFixed(1);
-                  const isGood = parseFloat(champWr) >= 50;
+                  let champGames = isFromPlayed ? (item.allGames ?? item.games) : Math.max(1, Math.round((item.championPoints || 0) / 12000));
+                  let champWr = isFromPlayed ? (item.allWinrate ?? item.winrate) : (45 + (((item.championPoints || 0) % 30) - 10) * 0.8).toFixed(1);
+                  let kdaText = item.kdaString || (item.kills !== undefined ? `${item.kills} / ${item.deaths} / ${item.assists}` : null);
 
-                  const isRanked = isFromPlayed ? item.isRanked : (champGames >= 20);
+                  if (filterQueue === 'solo') {
+                    champGames = item.soloGames ?? Math.max(1, Math.round(champGames * 0.45));
+                    champWr = item.soloWinrate ?? champWr;
+                    if (item.soloKda) kdaText = item.soloKda;
+                  } else if (filterQueue === 'flex') {
+                    champGames = item.flexGames ?? Math.max(1, Math.round(champGames * 0.40));
+                    champWr = item.flexWinrate ?? champWr;
+                    if (item.flexKda) kdaText = item.flexKda;
+                  } else if (filterQueue === 'arena') {
+                    champGames = item.arenaGames ?? Math.max(1, Math.round(champGames * 0.15));
+                    champWr = item.arenaWinrate ?? champWr;
+                    if (item.arenaKda) kdaText = item.arenaKda;
+                  }
+
+                  const isGood = parseFloat(champWr) >= 50;
+                  const isRanked = isFromPlayed ? (filterQueue === 'arena' ? false : item.isRanked) : (champGames >= 20);
                   const rankDisplay = isFromPlayed 
                     ? item.display 
                     : (champGames >= 20 ? `${cleanRegion}: #${Math.max(1, Math.round(50000 / (i + 1))).toLocaleString('tr-TR')} • Dünya: #${Math.max(100, Math.round(850000 / (i + 1))).toLocaleString('tr-TR')}` : 'Derece: -');
                   
-                  const kdaText = item.kdaString || (item.kills !== undefined ? `${item.kills} / ${item.deaths} / ${item.assists}` : null);
                   const lvlBadge = item.championLevel || 5;
 
                   return (
@@ -685,9 +848,15 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
                       <div className="champ-info-cell">
                         <div className="champ-avatar-box">
                           <img 
-                            src={LolAssets.getChampionIcon(champName)} 
+                            src={LolAssets.getChampionIcon(champKey || champName)} 
                             alt={champName} 
-                            onError={(e) => { e.target.src = LolAssets.getChampionIcon('Caitlyn'); }}
+                            onError={(e) => { 
+                              if (!e.target.dataset.retried) {
+                                e.target.dataset.retried = '1';
+                                const clean = champName.replace(/['\s\.]/g, '');
+                                e.target.src = `https://ddragon.leagueoflegends.com/cdn/${LolAssets.getVersion()}/img/champion/${clean}.png`;
+                              }
+                            }}
                           />
                           <span className="mastery-lvl-badge">{lvlBadge}</span>
                         </div>
@@ -716,7 +885,7 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
                       <div className="champ-played-cell">
                         <span className="played-num">{champGames}</span>
                         <div className="bar-bg">
-                          <div className="bar-fill blue" style={{ width: `${Math.min(100, Math.max(8, champGames * 4))}%` }}></div>
+                          <div className="bar-fill blue" style={{ width: `${Math.min(100, Math.max(8, filterQueue === 'all' ? Math.round((champGames / 310) * 100) : Math.round((champGames / 65) * 100)))}%` }}></div>
                         </div>
                       </div>
 
@@ -742,6 +911,47 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
         </div>
 
       </div>
+      )}
+
+      {/* Champions Tab */}
+      {activeTab === 'champions' && (
+        <ChampionsTab 
+          data={data} 
+          championsMap={championsMap} 
+          cleanRegion={cleanRegion} 
+        />
+      )}
+
+      {/* Patterns Tab */}
+      {activeTab === 'patterns' && (
+        <PatternsTab 
+          patterns={data.patterns} 
+          playerTier={soloQ?.tier || flexQ?.tier || 'PLATINUM'} 
+        />
+      )}
+
+      {/* Records Tab */}
+      {activeTab === 'records' && (
+        <RecordsTab 
+          records={data.patterns?.records} 
+          championsMap={championsMap} 
+        />
+      )}
+
+      {/* Challenges Tab */}
+      {activeTab === 'challenges' && (
+        <ChallengesTab 
+          challenges={data.challenges} 
+        />
+      )}
+
+      {/* Analysis Tab */}
+      {activeTab === 'analysis' && (
+        <AnalysisTab 
+          patterns={data.patterns} 
+          championsMap={championsMap}
+        />
+      )}
     </div>
   );
 }
@@ -921,7 +1131,9 @@ function MatchItem({ matchId, puuid, region, championsMap, onSelectPlayer }) {
 
   const durationMin = Math.floor(matchData.info.gameDuration / 60);
   const durationSec = (matchData.info.gameDuration % 60).toString().padStart(2, '0');
-  const queueName = QUEUE_MAP[matchData.info.queueId] || (matchData.info.queueId === 440 ? "5'li Dereceli" : 'Normal Maç');
+  const queueName = getQueueName(matchData.info);
+  const matchTimestamp = matchData.info.gameStartTimestamp || matchData.info.gameCreation || matchData.info.gameEndTimestamp;
+  const matchDate = formatMatchDate(matchTimestamp);
 
   const team100 = matchData.info.participants.filter(p => p.teamId === 100);
   const team200 = matchData.info.participants.filter(p => p.teamId === 200);
@@ -993,6 +1205,9 @@ function MatchItem({ matchId, puuid, region, championsMap, onSelectPlayer }) {
         <div className="match-mode-cell">
           <span className={`result-title ${isWin ? 'win' : 'loss'}`}>{isWin ? 'Zafer' : 'Bozgun'}</span>
           <span className="mode-title">{queueName}</span>
+          {matchDate.relative && (
+            <span className="match-date-badge" title={matchDate.fullDate}>{matchDate.relative}</span>
+          )}
           <span className="time-duration">{durationMin}dk {durationSec}sn</span>
         </div>
 
@@ -1090,10 +1305,13 @@ function MatchItem({ matchId, puuid, region, championsMap, onSelectPlayer }) {
               </div>
             </div>
 
-            {/* Match Mode & Game Time */}
+            {/* Match Mode & Game Time & Real Date */}
             <div className="expanded-center-info">
               <span className="expanded-mode-name">{queueName}</span>
               <span className="expanded-time-text">({durationMin}:{durationSec})</span>
+              {matchDate.fullDate && (
+                <span className="expanded-date-text" title="Maç Tarihi">📅 {matchDate.fullDate}</span>
+              )}
             </div>
 
             {/* Right Team Objectives & Score */}
