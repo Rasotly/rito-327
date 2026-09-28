@@ -371,7 +371,16 @@ export default function LolLandingHome({ onSelectPlayer, onSelectChampion, onOpe
               <div 
                 key={idx} 
                 className="meta-champ-card"
+                role="button"
+                tabIndex={0}
                 onClick={() => onSelectChampion && onSelectChampion(champ.name)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (onSelectChampion) onSelectChampion(champ.name);
+                  }
+                }}
+                title={`${champ.name} Profilini ve Detaylı Şampiyon Rehberini İncele`}
               >
                 {/* Background Splash Overlay */}
                 <div 

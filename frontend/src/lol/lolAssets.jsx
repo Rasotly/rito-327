@@ -98,15 +98,20 @@ export const LolAssets = {
     `https://ddragon.leagueoflegends.com/cdn/${ddragonVersion}/img/spell/${spellName}.png`,
 
   getRankEmblem: (tier = 'unranked') => {
-    const t = (tier || 'unranked').toLowerCase();
+    const raw = (tier || 'unranked').toLowerCase().trim();
+    const base = raw.split(' ')[0] || 'unranked';
     const validTiers = ['iron', 'bronze', 'silver', 'gold', 'platinum', 'emerald', 'diamond', 'master', 'grandmaster', 'challenger'];
-    if (validTiers.includes(t)) {
-      return `https://opgg-static.akamaized.net/images/medals_new/${t}.png`;
+    if (validTiers.includes(base)) {
+      return `https://opgg-static.akamaized.net/images/medals_new/${base}.png`;
     }
     return `https://opgg-static.akamaized.net/images/medals_new/iron.png`;
   },
 
   getTierName: (tier = '') => {
+    const raw = (tier || '').toLowerCase().trim();
+    const parts = raw.split(' ');
+    const base = parts[0] || '';
+    const division = parts[1] ? ` ${parts[1]}` : '';
     const map = {
       'iron': 'Demir',
       'bronze': 'Bronz',
@@ -120,7 +125,10 @@ export const LolAssets = {
       'challenger': 'Şampiyonluk',
       'unranked': 'Derecesiz'
     };
-    return map[(tier || '').toLowerCase()] || tier || 'Derecesiz';
+    if (map[base]) {
+      return `${map[base]}${division}`;
+    }
+    return map[raw] || tier || 'Derecesiz';
   }
 };
 
@@ -163,5 +171,106 @@ export const LolLogoIcon = ({ size = 28, className = "" }) => (
     />
   </svg>
 );
+
+/**
+ * Official Riot Points (RP) currency emblem
+ */
+export const RpIcon = ({ size = 16, className = "" }) => (
+  <svg 
+    width={size} 
+    height={Math.round(size * 14 / 13)} 
+    viewBox="0 0 13 14" 
+    fill="none" 
+    xmlns="http://www.w3.org/2000/svg"
+    className={`rp-currency-icon ${className}`}
+    title="Riot Points (RP)"
+  >
+    <defs>
+      <linearGradient id="rpGoldShineGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stopColor="#fff2a3" />
+        <stop offset="50%" stopColor="#e2ba3d" />
+        <stop offset="100%" stopColor="#9c771c" />
+      </linearGradient>
+    </defs>
+    <path 
+      fillRule="evenodd" 
+      clipRule="evenodd" 
+      d="M8.63343 2.25848L6.5001 0.600098L4.36676 2.25848V8.25781L6.5001 9.7405L8.63343 8.25781V2.25848ZM12.0468 6.1152L12.9001 5.49383L10.3401 3.11553V9.11486L7.35343 11.2575V13.4001L12.9001 9.68479L12.0468 8.68634V6.1152ZM2.6601 3.11553L0.100098 5.49383L0.953431 6.1152V8.68634L0.100098 9.68479L5.64676 13.4001V11.2575L2.6601 9.11486V3.11553Z" 
+      fill="url(#rpGoldShineGrad)"
+    />
+  </svg>
+);
+
+/**
+ * Official League of Legends Mythic Essence (İhtişamlı Öz) crystal icon
+ */
+export const MythicEssenceIcon = ({ size = 16, className = "" }) => (
+  <img 
+    src="/lol/mythic_essence.png" 
+    alt="İhtişamlı Öz" 
+    title="İhtişamlı Öz"
+    width={size} 
+    height={size} 
+    className={`mythic-essence-icon ${className}`}
+    loading="lazy"
+    onError={(e) => {
+      e.target.src = '/lol/mythic.svg';
+    }}
+  />
+);
+
+/**
+ * Official League of Legends in-game skin rarity gem badges:
+ * - Ultimate (Ebedi): Orange fiery gem
+ * - Mythic / Prestige (İhtişamlı / Prestij): Purple crest gem
+ * - Legendary (Efsanevi): Crimson ruby crest gem
+ * - Epic (Destansı): Cyan crystal crest gem
+ * - Transcendent / Exalted (Aşkın / Yüce): Cosmic crest gem
+ * - Legacy (Hatıra): Vaulted Hextech chest badge
+ */
+export const SkinRarityGem = ({ rarity = "standard", size = 18, className = "" }) => {
+  const r = (rarity || '').toLowerCase();
+  let iconSrc = null;
+  let altText = 'Standart';
+
+  if (r === 'ultimate' || r === 'ebedi') {
+    iconSrc = '/lol/rarity/ultimate.png';
+    altText = 'Ebedi Kostüm';
+  } else if (r === 'mythic' || r === 'ihtişamlı' || r === 'prestige' || r === 'prestij') {
+    iconSrc = '/lol/rarity/mythic.png';
+    altText = 'İhtişamlı Kostüm';
+  } else if (r === 'legendary' || r === 'efsanevi') {
+    iconSrc = '/lol/rarity/legendary.png';
+    altText = 'Efsanevi Kostüm';
+  } else if (r === 'epic' || r === 'destansı') {
+    iconSrc = '/lol/rarity/epic.png';
+    altText = 'Destansı Kostüm';
+  } else if (r === 'transcendent' || r === 'aşkın') {
+    iconSrc = '/lol/rarity/transcendent.png';
+    altText = 'Aşkın Kostüm';
+  } else if (r === 'exalted' || r === 'yüce') {
+    iconSrc = '/lol/rarity/exalted.png';
+    altText = 'Yüce Kostüm';
+  } else if (r === 'legacy' || r === 'hatıra') {
+    iconSrc = '/lol/rarity/chest.png';
+    altText = 'Hatıra Kostüm (Sandıkta)';
+  }
+
+  if (!iconSrc) {
+    return <span className={`rarity-symbol-fallback ${className}`}>✦</span>;
+  }
+
+  return (
+    <img 
+      src={iconSrc} 
+      alt={altText} 
+      title={altText}
+      width={size} 
+      height={size} 
+      className={`skin-rarity-gem-img ${r} ${className}`}
+      loading="lazy"
+    />
+  );
+};
 
 export default LolAssets;

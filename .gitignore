@@ -4,7 +4,16 @@
 .env.local
 !.env.example
 *.env
+*.pem
+*.key
+*.cert
+*.crt
+*.pfx
+*.p12
+credentials.json
+service-account*.json
 config.local.php
+config.local.json
 
 # Node & Frontend dependencies
 node_modules/
@@ -33,8 +42,11 @@ pnpm-debug.log*
 lerna-debug.log*
 
 # Scratch & Temporary files
+scratch/
 scratch_*
 temp_*
+*.dump
+*.tmp
 
 # Dynamic API Cache files
 backend/lol/cache/

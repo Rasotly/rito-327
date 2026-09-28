@@ -4,6 +4,7 @@ import { LolAssets, LolLogoIcon } from './lolAssets';
 import { ChampionsTab, PatternsTab, RecordsTab, ChallengesTab, AnalysisTab } from './LolProfileTabs.jsx';
 import LolLandingHome from './LolLandingHome.jsx';
 import LolChampionsPage from './LolChampionsPage.jsx';
+import LolMapsPage from './LolMapsPage.jsx';
 
 const BackArrow = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -128,6 +129,7 @@ const POPULAR_PLAYERS_FALLBACK = [
 
 export default function LolModule({ onBack }) {
   const [activeNav, setActiveNav] = useState('summoners'); // 'summoners' | 'leaderboard' | 'champions'
+  const [targetChampionName, setTargetChampionName] = useState(null);
   const [riotId, setRiotId] = useState('');
   const [region, setRegion] = useState('tr1');
   const [loading, setLoading] = useState(false);
@@ -247,6 +249,7 @@ export default function LolModule({ onBack }) {
   const handleGoHome = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     setPlayerData(null);
+    setTargetChampionName(null);
     setActiveNav('summoners');
     setRiotId('');
     setError(null);
@@ -261,12 +264,24 @@ export default function LolModule({ onBack }) {
     setShowDropdown(false);
   };
 
-  const handleOpenChampions = (e) => {
+  const handleOpenChampions = (champName = null, e = null) => {
     if (e && e.preventDefault) e.preventDefault();
     setPlayerData(null);
+    setTargetChampionName(typeof champName === 'string' ? champName : null);
     setActiveNav('champions');
     setError(null);
     setShowDropdown(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenMaps = (e = null) => {
+    if (e && e.preventDefault) e.preventDefault();
+    setPlayerData(null);
+    setTargetChampionName(null);
+    setActiveNav('maps');
+    setError(null);
+    setShowDropdown(false);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const query = riotId.trim().toLowerCase();
@@ -364,6 +379,14 @@ export default function LolModule({ onBack }) {
           >
             ŞAMPİYONLAR
           </button>
+          <button 
+            type="button"
+            className={`nav-item ${activeNav === 'maps' ? 'active' : ''}`} 
+            onClick={handleOpenMaps}
+            title="League of Legends Haritaları ve Taktik Rehberi"
+          >
+            HARİTALAR
+          </button>
         </div>
       </div>
 
@@ -372,12 +395,16 @@ export default function LolModule({ onBack }) {
         <LolLeaderboard onSelectPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)} />
       ) : activeNav === 'champions' ? (
         <LolChampionsPage 
+          initialChampionName={targetChampionName}
+          onClearInitialChampion={() => setTargetChampionName(null)}
           onSelectChampion={(champName) => {
             handleGoHome();
             setRiotId(champName);
           }}
           onSearchPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)}
         />
+      ) : activeNav === 'maps' ? (
+        <LolMapsPage onSearchPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)} />
       ) : (
         <>
           {/* Hero / Search Section */}
@@ -419,8 +446,7 @@ export default function LolModule({ onBack }) {
                       <div className="lol-autocomplete-header">ŞAMPİYONLAR</div>
                       {filteredChamps.map((champ, idx) => (
                         <div key={idx} className="lol-autocomplete-item champ-item" onClick={() => {
-                            setRiotId(champ.name);
-                            setShowDropdown(false);
+                            handleOpenChampions(champ.name);
                         }}>
                           <img src={champ.image} alt={champ.name} className="autocomplete-icon" />
                           <span className="champ-name-text">{champ.name.toUpperCase()} <span className="sub-text">BUİLDLERİ & REHBER</span></span>
@@ -539,12 +565,9 @@ export default function LolModule({ onBack }) {
           ) : (
             <LolLandingHome 
               onSelectPlayer={(selectedId, selectedReg) => handleSearchSubmit(selectedId, selectedReg)}
-              onSelectChampion={(champName) => {
-                setRiotId(champName);
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onSelectChampion={(champName) => handleOpenChampions(champName)}
               onOpenLeaderboard={handleOpenLeaderboard}
-              onOpenChampions={handleOpenChampions}
+              onOpenChampions={() => handleOpenChampions(null)}
             />
           )}
         </>

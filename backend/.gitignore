@@ -1,0 +1,14 @@
+# Backend Security & Environment rules
+.env
+.env.*
+!.env.example
+*.env
+*.pem
+*.key
+*.cert
+*.crt
+credentials.json
+service-account*.json
+cache/
+*.json.cache
+*.log

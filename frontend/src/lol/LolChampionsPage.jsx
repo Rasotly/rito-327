@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { LolAssets } from './lolAssets';
-import { getChampionBuildData, getSkinMetadata, getSpellKey } from './championBuildService';
+import { LolAssets, RpIcon, MythicEssenceIcon, SkinRarityGem } from './lolAssets';
+import { getChampionBuildData, getSkinMetadata, getSpellKey, getSpellNameById } from './championBuildService';
+import { getChampionAbilitiesData } from './championAbilitiesService';
+import LolAbilitiesView, { AbilityCard } from './LolAbilitiesView';
 
 // Role mappings between Riot Data Dragon tags and Turkish labels
 export const ROLE_DEFINITIONS = [
@@ -22,7 +24,12 @@ export const ROLE_LABELS_TR = {
   Support: 'Destek'
 };
 
-export default function LolChampionsPage({ onSelectChampion, onSearchPlayer }) {
+export default function LolChampionsPage({ 
+  onSelectChampion, 
+  onSearchPlayer, 
+  initialChampionName = null, 
+  onClearInitialChampion = null 
+}) {
   const [champions, setChampions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -32,6 +39,23 @@ export default function LolChampionsPage({ onSelectChampion, onSearchPlayer }) {
 
   // Selected Champion for Full-Page View (Replacing the modal popup)
   const [selectedChampion, setSelectedChampion] = useState(null);
+
+  // If initialChampionName is provided or changes, find and open that champion
+  useEffect(() => {
+    if (initialChampionName && champions.length > 0) {
+      const cleanSearch = String(initialChampionName).trim().toLowerCase();
+      const found = champions.find(c => 
+        c.name.toLowerCase() === cleanSearch ||
+        c.id.toLowerCase() === cleanSearch ||
+        c.name.toLowerCase().replace(/['\s\.]/g, '') === cleanSearch.replace(/['\s\.]/g, '') ||
+        c.id.toLowerCase().replace(/['\s\.]/g, '') === cleanSearch.replace(/['\s\.]/g, '')
+      );
+      if (found) {
+        setSelectedChampion(found);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    }
+  }, [initialChampionName, champions]);
 
   // Fetch all champions from Riot Data Dragon
   useEffect(() => {
@@ -144,10 +168,23 @@ export default function LolChampionsPage({ onSelectChampion, onSearchPlayer }) {
     return (
       <ChampionDetailPage 
         champion={selectedChampion} 
-        onBack={() => setSelectedChampion(null)}
+        onBack={() => {
+          setSelectedChampion(null);
+          if (onClearInitialChampion) onClearInitialChampion();
+        }}
         onSelectChampion={onSelectChampion}
         onSearchPlayer={onSearchPlayer}
       />
+    );
+  }
+
+  // If initialChampionName is requested but champions list is still loading
+  if (initialChampionName && !selectedChampion && loading) {
+    return (
+      <div className="champ-loading-box" style={{ minHeight: '60vh', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="lol-spinner"></div>
+        <p style={{ marginTop: '1rem', color: '#c8aa6e', fontWeight: 600 }}>{initialChampionName} profili ve güncel analitik verileri yükleniyor...</p>
+      </div>
     );
   }
 
@@ -450,8 +487,9 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
   const [champDetail, setChampDetail] = useState(null);
   const [cdSkinsMap, setCdSkinsMap] = useState({});
   const [buildData, setBuildData] = useState(null);
+  const [abilitiesData, setAbilitiesData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'pro_builds' | 'best_players' | 'skins' | 'tips'
+  const [activeTab, setActiveTab] = useState('overview'); // 'overview' | 'abilities' | 'pro_builds' | 'best_players' | 'skins' | 'tips'
   const [activeSkinIdx, setActiveSkinIdx] = useState(0);
   const [activeSpellKey, setActiveSpellKey] = useState('P'); // 'P' | 'Q' | 'W' | 'E' | 'R'
   const [runeMode, setRuneMode] = useState('popular'); // 'popular' | 'situational'
@@ -502,6 +540,16 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
         const builds = await getChampionBuildData(champion);
         if (isMounted) {
           setBuildData(builds);
+        }
+
+        // 4. Fetch official Meraki Wiki abilities with exact damage scalings & ratios
+        try {
+          const abData = await getChampionAbilitiesData(champion.id, fetchedChamp);
+          if (isMounted) {
+            setAbilitiesData(abData);
+          }
+        } catch (abErr) {
+          console.warn('Abilities data load warning:', abErr);
         }
       } catch (err) {
         console.error('Failed to load champion detail & build:', err);
@@ -657,6 +705,13 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
           </button>
           <button 
             type="button" 
+            className={`champ-ribbon-tab ${activeTab === 'abilities' ? 'active' : ''}`}
+            onClick={() => setActiveTab('abilities')}
+          >
+            ⚡ Yetenekler & Tam Hasarlar (Wiki)
+          </button>
+          <button 
+            type="button" 
             className={`champ-ribbon-tab ${activeTab === 'pro_builds' ? 'active' : ''}`}
             onClick={() => setActiveTab('pro_builds')}
           >
@@ -777,7 +832,14 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                           <span className="panel-badge-gold">BECERİ SETİ</span>
                           <h3 className="panel-title">Şampiyon Yetenekleri</h3>
                         </div>
-                        <span className="panel-hint">Detay için tıklayın</span>
+                        <button 
+                          type="button" 
+                          className="panel-view-all-abilities-btn"
+                          onClick={() => setActiveTab('abilities')}
+                          title="Tüm yetenekleri (P, Q, W, E, R) alt alta formülleriyle incele"
+                        >
+                          Tüm Yetenekleri Gör (P, Q, W, E, R) →
+                        </button>
                       </div>
 
                       {/* 5 Ability Quick Selector Strip */}
@@ -820,8 +882,15 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                         })}
                       </div>
 
-                      {/* Active Highlight Box */}
-                      {activeAbility && (
+                      {/* Active Ability View (Wiki Card with Exact Damage Formulas & Scalings) */}
+                      {abilitiesData?.abilities?.[activeSpellKey]?.[0] ? (
+                        <div className="panel-active-wiki-ability">
+                          <AbilityCard 
+                            ability={abilitiesData.abilities[activeSpellKey][0]} 
+                            abilityKey={activeSpellKey} 
+                          />
+                        </div>
+                      ) : activeAbility ? (
                         <div className="active-ability-highlight-card">
                           <div className="highlight-top">
                             <div className="highlight-icon-box">
@@ -850,7 +919,7 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                             <p>{activeAbility.desc}</p>
                           </div>
                         </div>
-                      )}
+                      ) : null}
                     </div>
 
                     {/* Panel B: Skill Order Priority & Level 1-18 Matrix (Matching Screenshot 2) */}
@@ -1195,6 +1264,16 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
               </div>
             )}
 
+            {/* TAB: YETENEKLER & TAM HASARLAR (OFFICIAL LEAGUE WIKI & MERAKI DATA) */}
+            {activeTab === 'abilities' && (
+              <div className="champ-abilities-tab-view">
+                <LolAbilitiesView 
+                  abilitiesData={abilitiesData} 
+                  championName={champion.name} 
+                />
+              </div>
+            )}
+
             {/* TAB 2: PRO OYUNCU YAPILARI (PRO BUILDS - MATCHING SCREENSHOT 3) */}
             {activeTab === 'pro_builds' && buildData && (
               <div className="champ-pro-builds-view">
@@ -1210,16 +1289,46 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
 
                 <div className="pro-matches-list">
                   {buildData.proBuilds.map((match, idx) => (
-                    <div key={idx} className="pro-match-row">
+                    <div 
+                      key={idx} 
+                      className="pro-match-row clickable"
+                      onClick={() => {
+                        if (onSearchPlayer) {
+                          onSearchPlayer(match.riotId || `${match.playerName}#${(match.server || 'EUW').toUpperCase()}`, (match.server || 'euw1').toLowerCase());
+                        }
+                      }}
+                      title={`${match.playerName} (#${match.tagLine || 'PRO'}) sihirdar profilini incelemek için tıkla`}
+                    >
                       
                       {/* Player Col */}
-                      <div className="pro-player-col">
-                        <div className="pro-avatar-circle">
-                          <span>👤</span>
+                      <div 
+                        className="pro-player-col"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (onSearchPlayer) {
+                            onSearchPlayer(match.riotId || `${match.playerName}#${(match.server || 'EUW').toUpperCase()}`, (match.server || 'euw1').toLowerCase());
+                          }
+                        }}
+                      >
+                        <div className="pro-avatar-wrap" title={`${match.playerName} - Seviye ${match.level || 500}`}>
+                          <img 
+                            src={LolAssets.getProfileIcon(match.profileIconId || 1)} 
+                            alt={match.playerName} 
+                            className="pro-avatar-img"
+                            onError={(e) => { e.target.src = LolAssets.getProfileIcon(1); }}
+                          />
+                          <span className="pro-avatar-level">{match.level || 500}</span>
                         </div>
                         <div className="pro-player-meta">
-                          <span className="pro-player-name">{match.playerName}</span>
-                          <span className="pro-match-date">{match.date} • {match.team}</span>
+                          <div className="pro-player-name-row">
+                            <span className="pro-player-name">{match.playerName}</span>
+                            <span className="pro-player-tag">#{match.tagLine}</span>
+                            <span className="pro-inspect-badge">Profili Gör ↗</span>
+                          </div>
+                          <div className="pro-player-sub-row">
+                            <span className="pro-player-level-pill">Seviye {match.level || 500}</span>
+                            <span className="pro-match-date">{match.date} • {match.team}</span>
+                          </div>
                           <span className="pro-kda-badge">
                             KDA: <strong>{match.kda}</strong>
                           </span>
@@ -1237,14 +1346,20 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
 
                       {/* Keystone & Spells */}
                       <div className="pro-runes-spells-col">
-                        <img src={match.keystoneIcon} alt="Rün" className="pro-keystone-img" title="Kilit Rün" />
+                        <img 
+                          src={match.keystoneIcon} 
+                          alt={match.keystoneName || "Kilit Rün"} 
+                          className="pro-keystone-img" 
+                          title={`Kilit Rün: ${match.keystoneName || 'Rün'}`} 
+                        />
                         <div className="pro-spells-vertical">
                           {match.spells.map((spId, sIdx) => (
                             <img 
                               key={sIdx} 
-                              src={LolAssets.getSpellIcon(spId === 4 ? 'SummonerFlash' : spId === 7 ? 'SummonerHeal' : spId === 6 ? 'SummonerHaste' : 'SummonerTeleport')} 
+                              src={LolAssets.getSpellIcon(getSpellKey(spId))} 
                               alt="Spell" 
                               className="pro-spell-img" 
+                              title={getSpellNameById(spId)}
                             />
                           ))}
                         </div>
@@ -1253,11 +1368,20 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                       {/* Skill Priority Badges */}
                       <div className="pro-skill-order-col">
                         <div className="pro-skill-badges">
-                          <span className="pro-skill-badge q">Q</span>
-                          <span className="skill-divider">›</span>
-                          <span className="pro-skill-badge w">W</span>
-                          <span className="skill-divider">›</span>
-                          <span className="pro-skill-badge e">E</span>
+                          {match.skillOrder ? match.skillOrder.map((sk, sIdx) => (
+                            <React.Fragment key={sIdx}>
+                              <span className={`pro-skill-badge ${sk.toLowerCase()}`}>{sk}</span>
+                              {sIdx < match.skillOrder.length - 1 && <span className="skill-divider">›</span>}
+                            </React.Fragment>
+                          )) : (
+                            <>
+                              <span className="pro-skill-badge q">Q</span>
+                              <span className="skill-divider">›</span>
+                              <span className="pro-skill-badge w">W</span>
+                              <span className="skill-divider">›</span>
+                              <span className="pro-skill-badge e">E</span>
+                            </>
+                          )}
                         </div>
                       </div>
 
@@ -1269,7 +1393,7 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                               <img src={LolAssets.getItemIcon(itId)} alt="Item" />
                             </div>
                           ))}
-                          <div className="pro-item-box trinket" title="Mavi Ziynet">
+                          <div className="pro-item-box trinket" title="Ziynet">
                             <img src={LolAssets.getItemIcon(match.trinket)} alt="Trinket" />
                           </div>
                         </div>
@@ -1308,7 +1432,17 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                     </thead>
                     <tbody>
                       {buildData.bestPlayers.map((player) => (
-                        <tr key={player.rank} className="best-player-row">
+                        <tr 
+                          key={player.rank} 
+                          className="best-player-row clickable"
+                          onClick={() => {
+                            if (onSearchPlayer) {
+                              onSearchPlayer(`${player.name}#${player.tag}`, player.server.toLowerCase());
+                            }
+                          }}
+                          style={{ cursor: 'pointer' }}
+                          title={`${player.name}#${player.tag} profilini incele`}
+                        >
                           <td className="td-rank">
                             <span className={`rank-medal rank-${player.rank}`}>
                               {player.rank === 1 ? '🥇 1' : player.rank === 2 ? '🥈 2' : player.rank === 3 ? '🥉 3' : player.rank}
@@ -1386,14 +1520,24 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
 
                       {/* Top-Left Corner: Glowing Rarity / Tier Badge */}
                       <div className={`preview-tier-banner ${activeMeta.tierColor}`}>
-                        <span className="tier-icon">{activeMeta.tierIcon}</span>
+                        <span className="tier-icon">
+                          <SkinRarityGem rarity={activeMeta.tierKey} size={22} />
+                        </span>
                         <span className="tier-text">{activeMeta.tierFullName}</span>
                       </div>
 
                       {/* Top-Right Corner: Price & Availability Chips */}
                       <div className="preview-top-right">
-                        <div className={`preview-price-badge ${activeMeta.tierColor}`}>
-                          <span className="price-tag-icon">💎</span>
+                        <div className={`preview-price-badge ${activeMeta.tierColor} ${activeMeta.currencyType === 'ME' ? 'currency-me' : 'currency-rp'}`}>
+                          <span className="price-tag-icon">
+                            {activeMeta.currencyType === 'ME' ? (
+                              <MythicEssenceIcon size={18} />
+                            ) : activeMeta.currencyType === 'RP' ? (
+                              <RpIcon size={16} />
+                            ) : (
+                              <span className="free-badge-icon">✦</span>
+                            )}
+                          </span>
                           <span className="price-tag-val">{activeMeta.price}</span>
                         </div>
                         <div className={`preview-status-badge ${activeMeta.statusColor}`}>
@@ -1408,10 +1552,16 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                           <div className="caption-title-row">
                             <h3>{activeSkinTitle}</h3>
                             <span className={`caption-tier-pill ${activeMeta.tierColor}`}>
-                              {activeMeta.tierFullName}
+                              <SkinRarityGem rarity={activeMeta.tierKey} size={15} />
+                              <span>{activeMeta.tierFullName}</span>
                             </span>
-                            <span className="caption-price-pill">
-                              {activeMeta.price}
+                            <span className={`caption-price-pill ${activeMeta.currencyType === 'ME' ? 'currency-me' : 'currency-rp'}`}>
+                              {activeMeta.currencyType === 'ME' ? (
+                                <MythicEssenceIcon size={15} />
+                              ) : activeMeta.currencyType === 'RP' ? (
+                                <RpIcon size={14} />
+                              ) : null}
+                              <span>{activeMeta.price}</span>
                             </span>
                             <span className={`caption-avail-pill ${activeMeta.statusColor}`}>
                               <span className={`avail-dot ${activeMeta.statusColor}`}></span>
@@ -1457,14 +1607,16 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                                 <img 
                                   src={thumbUrl} 
                                   alt={skinTitle} 
+                                  className="skin-card-thumb-splash"
                                   loading="lazy"
                                   onError={(e) => {
                                     e.target.src = LolAssets.getChampionIcon(champion.id);
                                   }}
                                 />
-                                {/* Top-Left Corner: Rarity / Tier Badge */}
+                                {/* Top-Left Corner: Rarity / Tier Badge with official in-game gem */}
                                 <span className={`skin-corner-tier ${meta.tierColor}`}>
-                                  {meta.tierLabel}
+                                  <SkinRarityGem rarity={meta.tierKey} size={11} className="corner-gem-img" />
+                                  <span className="corner-tier-text">{meta.tierLabel}</span>
                                 </span>
 
                                 {/* Top-Right Corner: Availability indicator pip */}
@@ -1476,7 +1628,14 @@ function ChampionDetailPage({ champion, onBack, onSelectChampion, onSearchPlayer
                               <div className="skin-card-meta">
                                 <span className="skin-card-label">{skinTitle}</span>
                                 <div className="skin-card-sub-row">
-                                  <span className="skin-card-price-tag">{meta.price}</span>
+                                  <span className={`skin-card-price-tag ${meta.currencyType === 'ME' ? 'currency-me' : 'currency-rp'}`}>
+                                    {meta.currencyType === 'ME' ? (
+                                      <MythicEssenceIcon size={12} className="sub-currency-icon" />
+                                    ) : meta.currencyType === 'RP' ? (
+                                      <RpIcon size={11} className="sub-currency-icon" />
+                                    ) : null}
+                                    <span>{meta.price}</span>
+                                  </span>
                                   <span className={`skin-card-avail-badge ${meta.statusColor}`}>
                                     {meta.availabilityBadge}
                                   </span>

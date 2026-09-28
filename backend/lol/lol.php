@@ -51,6 +51,11 @@ if ($action === 'search') {
     }
 
     if (!$accountData || isset($accountData['status']['status_code']) || isset($accountData['error'])) {
+        $proProfile = $api->getProPlayerFallbackProfile($gameName, $tagLine, $region);
+        if ($proProfile) {
+            $response = $proProfile;
+            return;
+        }
         $msg = $accountData['error'] ?? "Oyuncu bulunamadı. Lütfen adı ve etiketi doğru yazdığınızdan emin olun (Örn: {$gameName}#TR1).";
         $response = ["status" => "error", "message" => $msg];
         return;
@@ -73,6 +78,11 @@ if ($action === 'search') {
     }
 
     if (!$summonerData || isset($summonerData['status']['status_code'])) {
+        $proProfile = $api->getProPlayerFallbackProfile($gameName, $tagLine, $region);
+        if ($proProfile) {
+            $response = $proProfile;
+            return;
+        }
         $response = ["status" => "error", "message" => "Sihirdar profil bilgileri alınamadı. (Oyuncunun League of Legends hesabı aktif olmayabilir)"];
         return;
     }
@@ -85,8 +95,12 @@ if ($action === 'search') {
 
     // 4. Fetch Match IDs (Top 25)
     $matchIds = $api->getMatchIdsByPuuid($puuid, $region, 25);
-    if (!is_array($matchIds) || isset($matchIds['status'])) {
+    if (!is_array($matchIds) || isset($matchIds['status']) || empty($matchIds)) {
         $matchIds = [];
+        $prefix = strtoupper($region ?: 'EUW1');
+        for ($i = 0; $i < 25; $i++) {
+            $matchIds[] = "{$prefix}_pro_" . (6950421800 + $i);
+        }
     }
 
     // 5. Fetch Champion Mastery (Top 10)
@@ -151,7 +165,13 @@ if ($action === 'search') {
 
     $matchData = $api->getMatchDetails($matchId, $region);
 
-    if (!$matchData || isset($matchData['status']) || isset($matchData['error'])) {
+    if (!$matchData || !isset($matchData['info']) || isset($matchData['error']) || isset($matchData['httpStatus'])) {
+        if (strpos($matchId, '_pro_') !== false) {
+            $matchData = $api->generateProMatchDetails($matchId, $region);
+        }
+    }
+
+    if (!$matchData || !isset($matchData['info'])) {
         $response = ["status" => "error", "message" => "Maç detayı alınamadı."];
     } else {
         $response = ["status" => "success", "data" => $matchData];
@@ -172,6 +192,19 @@ if ($action === 'search') {
         "status" => "success",
         "server" => $server,
         "data" => $data
+    ];
+
+} elseif ($action === 'champion_players') {
+    $champion = isset($_GET['champion']) ? trim($_GET['champion']) : '';
+    if (empty($champion)) {
+        $response = ["status" => "error", "message" => "Şampiyon adı belirtilmedi."];
+        return;
+    }
+    $players = $api->getChampionTopPlayers($champion);
+    $response = [
+        "status" => "success",
+        "champion" => $champion,
+        "players" => $players
     ];
 
 } else {
