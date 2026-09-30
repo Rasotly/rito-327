@@ -63,9 +63,32 @@ if ($action === 'search') {
 
     $puuid = $accountData['puuid'] ?? '';
 
+    // Check if tag specifies a server directly (e.g. #EUW, #KR, #NA1, #EUNE)
+    $tagRegionMap = [
+        'EUW' => 'euw1', 'EUW1' => 'euw1',
+        'KR' => 'kr', 'KR1' => 'kr',
+        'NA' => 'na1', 'NA1' => 'na1',
+        'TR' => 'tr1', 'TR1' => 'tr1', 'TR2' => 'tr1',
+        'EUN' => 'eun1', 'EUNE' => 'eun1',
+        'BR' => 'br1', 'BR1' => 'br1',
+        'LAN' => 'la1', 'LA1' => 'la1',
+        'LAS' => 'la2', 'LA2' => 'la2',
+        'OC' => 'oc1', 'OCE' => 'oc1', 'OC1' => 'oc1',
+        'JP' => 'jp1', 'JP1' => 'jp1',
+        'VN' => 'vn2', 'VN2' => 'vn2'
+    ];
+    $upperTag = strtoupper(trim($tagLine));
+    if (isset($tagRegionMap[$upperTag])) {
+        $tagPriorityRegion = $tagRegionMap[$upperTag];
+        $tagSum = $api->getSummonerByPuuid($puuid, $tagPriorityRegion);
+        if ($tagSum && isset($tagSum['summonerLevel']) && !isset($tagSum['status'])) {
+            $region = $tagPriorityRegion;
+            $summonerData = $tagSum;
+        }
+    }
+
     // 2. Fetch Summoner V4 with auto-region detection
-    $summonerData = null;
-    if (!empty($region)) {
+    if (!$summonerData && !empty($region)) {
         $summonerData = $api->getSummonerByPuuid($puuid, $region);
     }
 
@@ -91,6 +114,24 @@ if ($action === 'search') {
     $leagueData = $api->getLeagueByPuuid($puuid, $region);
     if (!is_array($leagueData) || isset($leagueData['status'])) {
         $leagueData = [];
+    }
+
+    // If no ranked entries on detected server, check if summoner has ranked data on other active servers
+    if (empty($leagueData)) {
+        $candidateServers = ['tr1', 'euw1', 'kr', 'na1', 'eun1', 'br1', 'la1', 'la2', 'oc1', 'jp1'];
+        foreach ($candidateServers as $cand) {
+            if ($cand === $region) continue;
+            $candLeague = $api->getLeagueByPuuid($puuid, $cand);
+            if (is_array($candLeague) && !empty($candLeague) && !isset($candLeague['status'])) {
+                $candSum = $api->getSummonerByPuuid($puuid, $cand);
+                if ($candSum && isset($candSum['summonerLevel']) && !isset($candSum['status'])) {
+                    $region = $cand;
+                    $summonerData = $candSum;
+                    $leagueData = $candLeague;
+                    break;
+                }
+            }
+        }
     }
 
     // 4. Fetch Match IDs (Top 25)

@@ -166,11 +166,7 @@ class ChampionRankingCalculator {
         }
 
         // If >= 20 games, map score to global ladder
-        // Top 1 score is ~280.000 pts
-        // High scores (150.000+) map to top 1000
-        // Mid scores (15.000) map to ~150.000
-        $worldRank = (int)round(220000000.0 / max(100, pow($score, 0.74)));
-        $worldRank = max(1, $worldRank);
+        $worldRank = self::scoreToWorldRank($score);
         $serverRank = max(1, (int)round($worldRank / $serverRatio));
 
         return [
@@ -194,6 +190,44 @@ class ChampionRankingCalculator {
             'scoreFormatted'      => number_format($score, 0, ',', '.') . ' Puan',
             'display'             => "{$cleanRegion}: #" . number_format($serverRank, 0, ',', '.') . ' • Dünya: #' . number_format($worldRank, 0, ',', '.')
         ];
+    }
+
+    /**
+     * Maps calculated score to worldwide champion ladder rank:
+     * - Score >= 200,000 (Challenger/GM OTPs) -> Rank 1 - 10
+     * - Score 100,000 - 200,000 (Master OTPs) -> Rank 10 - 250
+     * - Score 40,000 - 100,000 (Diamond OTPs) -> Rank 250 - 3,000
+     * - Score 15,000 - 40,000 (Emerald) -> Rank 3,000 - 30,000
+     * - Score 5,000 - 15,000 (Platinum) -> Rank 30,000 - 200,000
+     * - Score 1,500 - 5,000 (Gold) -> Rank 200,000 - 900,000
+     * - Score < 1,500 (Silver / Bronze / Iron) -> Rank 900,000 - 2,500,000
+     */
+    public static function scoreToWorldRank(int $score): int {
+        if ($score >= 200000) {
+            return max(1, (int)round(1 + (220000 - min(220000, $score)) / 2000));
+        }
+        if ($score >= 100000) {
+            $t = ($score - 100000) / 100000.0;
+            return max(1, (int)round(250 * pow(10.0 / 250.0, $t)));
+        }
+        if ($score >= 40000) {
+            $t = ($score - 40000) / 60000.0;
+            return (int)round(3000 * pow(250.0 / 3000.0, $t));
+        }
+        if ($score >= 15000) {
+            $t = ($score - 15000) / 25000.0;
+            return (int)round(30000 * pow(3000.0 / 30000.0, $t));
+        }
+        if ($score >= 5000) {
+            $t = ($score - 5000) / 10000.0;
+            return (int)round(200000 * pow(30000.0 / 200000.0, $t));
+        }
+        if ($score >= 1500) {
+            $t = ($score - 1500) / 3500.0;
+            return (int)round(900000 * pow(200000.0 / 900000.0, $t));
+        }
+        $t = max(0.0, min(1.0, ($score - 100) / 1400.0));
+        return (int)round(2500000 * pow(900000.0 / 2500000.0, $t));
     }
 
     /**

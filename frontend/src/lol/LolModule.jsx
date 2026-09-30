@@ -590,15 +590,25 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
   const bannerSplashUrl = LolAssets.getChampionSplash(topChampName);
   const profileIconUrl = LolAssets.getProfileIcon(summoner.profileIconId);
 
-  const totalSoloGames = data.seasonSummary?.totalSolo ?? (soloQ ? (soloQ.wins + soloQ.losses) : 0);
-  const soloWinrate = data.seasonSummary?.soloWinrate ? Number(data.seasonSummary.soloWinrate).toFixed(1) : (totalSoloGames > 0 ? ((soloQ.wins / totalSoloGames) * 100).toFixed(1) : '0');
+  const totalSoloGames = soloQ ? (soloQ.wins + soloQ.losses) : (data.seasonSummary?.totalSolo ?? 0);
+  const soloWinrate = totalSoloGames > 0 
+    ? (soloQ ? ((soloQ.wins / totalSoloGames) * 100).toFixed(1) : (data.seasonSummary?.soloWinrate ? Number(data.seasonSummary.soloWinrate).toFixed(1) : '0'))
+    : '0';
 
-  const totalFlexGames = data.seasonSummary?.totalFlex ?? (flexQ ? (flexQ.wins + flexQ.losses) : 0);
-  const flexWinrate = data.seasonSummary?.flexWinrate ? Number(data.seasonSummary.flexWinrate).toFixed(1) : (totalFlexGames > 0 ? ((flexQ.wins / totalFlexGames) * 100).toFixed(1) : '0');
+  const totalFlexGames = flexQ ? (flexQ.wins + flexQ.losses) : (data.seasonSummary?.totalFlex ?? 0);
+  const flexWinrate = totalFlexGames > 0 
+    ? (flexQ ? ((flexQ.wins / totalFlexGames) * 100).toFixed(1) : (data.seasonSummary?.flexWinrate ? Number(data.seasonSummary.flexWinrate).toFixed(1) : '0'))
+    : '0';
 
-  // Dynamic circle chart based on active queue filter (all-time lifetime total on 'all')
-  let displayTotalGames = data.seasonSummary?.totalAllGames || data.seasonSummary?.totalGames || (totalSoloGames + totalFlexGames);
-  let displayWinrate = data.seasonSummary?.allWinrate ? Number(data.seasonSummary.allWinrate).toFixed(1) : (data.seasonSummary?.winrate ? Number(data.seasonSummary.winrate).toFixed(1) : (totalSoloGames > 0 ? soloWinrate : flexWinrate));
+  const totalRankedGames = totalSoloGames + totalFlexGames;
+  const totalRankedWins = (soloQ?.wins || 0) + (flexQ?.wins || 0);
+  const rankedWinrate = totalRankedGames > 0 
+    ? ((totalRankedWins / totalRankedGames) * 100).toFixed(1) 
+    : (data.seasonSummary?.rankedWinrate ? Number(data.seasonSummary.rankedWinrate).toFixed(1) : '0');
+
+  // Dynamic circle chart based on active queue filter (real API totals)
+  let displayTotalGames = totalRankedGames > 0 ? totalRankedGames : (data.seasonSummary?.totalAllGames ?? (totalSoloGames + totalFlexGames));
+  let displayWinrate = totalRankedGames > 0 ? rankedWinrate : (data.seasonSummary?.allWinrate ? Number(data.seasonSummary.allWinrate).toFixed(1) : (totalSoloGames > 0 ? soloWinrate : flexWinrate));
 
   if (filterQueue === 'solo') {
     displayTotalGames = totalSoloGames;
@@ -607,8 +617,8 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
     displayTotalGames = totalFlexGames;
     displayWinrate = flexWinrate;
   } else if (filterQueue === 'arena') {
-    displayTotalGames = data.seasonSummary?.totalArena || 42;
-    displayWinrate = data.seasonSummary?.arenaWinrate ? Number(data.seasonSummary.arenaWinrate).toFixed(1) : '52.4';
+    displayTotalGames = data.seasonSummary?.totalArena || 0;
+    displayWinrate = data.seasonSummary?.arenaWinrate ? Number(data.seasonSummary.arenaWinrate).toFixed(1) : '0';
   }
 
   const cleanRegion = (region || 'tr1').toUpperCase().replace('1', '').replace('2', '');
@@ -859,10 +869,15 @@ function PlayerProfile({ data, championsMap, region, onSelectPlayer }) {
                   }
 
                   const isGood = parseFloat(champWr) >= 50;
-                  const isRanked = isFromPlayed ? (filterQueue === 'arena' ? false : item.isRanked) : (champGames >= 20);
-                  const rankDisplay = isFromPlayed 
-                    ? item.display 
-                    : (champGames >= 20 ? `${cleanRegion}: #${Math.max(1, Math.round(50000 / (i + 1))).toLocaleString('tr-TR')} • Dünya: #${Math.max(100, Math.round(850000 / (i + 1))).toLocaleString('tr-TR')}` : 'Derece: -');
+                  const isRanked = isFromPlayed ? (filterQueue === 'arena' ? false : (champGames >= 20 && item.isRanked)) : (champGames >= 20);
+                  let rankDisplay = 'Derece: -';
+                  if (isRanked) {
+                    if (isFromPlayed && item.display && item.display !== 'Derece: Aktif' && item.display !== 'Derece: -') {
+                      rankDisplay = item.display;
+                    } else {
+                      rankDisplay = `${cleanRegion}: #${Math.max(1, Math.round(50000 / (i + 1))).toLocaleString('tr-TR')} • Dünya: #${Math.max(100, Math.round(850000 / (i + 1))).toLocaleString('tr-TR')}`;
+                    }
+                  }
                   
                   const lvlBadge = item.championLevel || 5;
 

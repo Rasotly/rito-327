@@ -557,7 +557,7 @@ class RiotApi {
      */
     public function detectSummonerRegion(string $puuid, ?string $hintTag = null): ?array {
         $cacheDir = $this->getCacheDir();
-        $servers = ['tr1', 'euw1', 'kr', 'na1', 'eun1', 'vn2'];
+        $servers = ['tr1', 'euw1', 'kr', 'na1', 'eun1', 'vn2', 'br1', 'la1', 'la2', 'oc1', 'jp1'];
 
         // 1. Tag hint check
         if (!empty($hintTag)) {
@@ -570,7 +570,10 @@ class RiotApi {
                 'NA' => 'na1', 'NA1' => 'na1',
                 'VN' => 'vn2', 'VN2' => 'vn2',
                 'BR' => 'br1', 'BR1' => 'br1',
-                'LAN' => 'la1', 'LAS' => 'la2'
+                'LAN' => 'la1', 'LA1' => 'la1',
+                'LAS' => 'la2', 'LA2' => 'la2',
+                'OC' => 'oc1', 'OCE' => 'oc1', 'OC1' => 'oc1',
+                'JP' => 'jp1', 'JP1' => 'jp1'
             ];
             if (isset($tagMap[$upperTag])) {
                 $priority = $tagMap[$upperTag];
@@ -878,69 +881,26 @@ class RiotApi {
         $totRankedWins = $totSoloWins + $totFlexWins;
         $rankedWr = $totRankedGames > 0 ? round(($totRankedWins / $totRankedGames) * 100, 1) : 50.0;
 
-        // Season Summary
-        $cleanId = mb_strtolower(trim($riotId ?? ''), 'UTF-8');
-        if (strpos($cleanId, 'cait') !== false) {
-            $seasonSummary = [
-                'totalAllGames'  => 561,
-                'allWinrate'     => 57.2,
-                'totalRanked'    => 201,
-                'rankedWinrate'  => 56.7,
-                'totalSolo'      => 97,
-                'soloWinrate'    => 54.6,
-                'totalFlex'      => 104,
-                'flexWinrate'    => 58.7,
-                'totalArena'     => 42,
-                'arenaWinrate'   => 52.4,
-                'totalGames'     => 561,
-                'winrate'        => 57.2,
-                'enemyMmr'       => 'Platin III'
-            ];
-        } elseif (strpos($cleanId, 'kapgan') !== false) {
-            $seasonSummary = [
-                'totalAllGames'  => 380,
-                'allWinrate'     => 49.2,
-                'totalRanked'    => 116,
-                'rankedWinrate'  => 47.4,
-                'totalSolo'      => 80,
-                'soloWinrate'    => 47.5,
-                'totalFlex'      => 36,
-                'flexWinrate'    => 47.2,
-                'totalArena'     => 25,
-                'arenaWinrate'   => 48.0,
-                'totalGames'     => 380,
-                'winrate'        => 49.2,
-                'enemyMmr'       => 'Platin III'
-            ];
-        } else {
-            // Lifetime all games estimated from summoner level (Riot API formula)
-            $totAll = (int)round(150 + max(0, $summonerLevel - 30) * 3.45);
-            if ($totRankedGames > $totAll) {
-                $totAll = (int)round($totRankedGames * 1.5);
-            }
-            $allWr = min(75.0, max(42.0, round($rankedWr * 0.98 + 1.2, 1)));
-            $enemyTier = $solo['tier'] ?? $flex['tier'] ?? 'SILVER';
-            $enemyRank = $solo['rank'] ?? $flex['rank'] ?? 'III';
-            $enemyMmr = ucfirst(strtolower($enemyTier)) . ' ' . $enemyRank;
-            $arenaGames = max(5, (int)round($totAll * 0.08));
-            $arenaWr = round(48.0 + min(12.0, ($summonerLevel / 15.0)), 1);
+        // Season Summary calculated directly from real Riot API League entries
+        $enemyTier = $solo['tier'] ?? $flex['tier'] ?? 'SILVER';
+        $enemyRank = $solo['rank'] ?? $flex['rank'] ?? 'III';
+        $enemyMmr = ucfirst(strtolower($enemyTier)) . ' ' . $enemyRank;
 
-            $seasonSummary = [
-                'totalAllGames'  => max(10, $totAll),
-                'allWinrate'     => $allWr,
-                'totalRanked'    => max($totRankedGames, count($leagueData) > 0 ? 10 : 0),
-                'rankedWinrate'  => $rankedWr,
-                'totalSolo'      => $totSolo,
-                'soloWinrate'    => $soloWr,
-                'totalFlex'      => $totFlex,
-                'flexWinrate'    => $flexWr,
-                'totalArena'     => $arenaGames,
-                'arenaWinrate'   => $arenaWr,
-                'totalGames'     => max(10, $totAll),
-                'winrate'        => $allWr,
-                'enemyMmr'       => $enemyMmr
-            ];
-        }
+        $seasonSummary = [
+            'totalAllGames'  => $totRankedGames,
+            'allWinrate'     => $rankedWr,
+            'totalRanked'    => $totRankedGames,
+            'rankedWinrate'  => $rankedWr,
+            'totalSolo'      => $totSolo,
+            'soloWinrate'    => $soloWr,
+            'totalFlex'      => $totFlex,
+            'flexWinrate'    => $flexWr,
+            'totalArena'     => 0,
+            'arenaWinrate'   => 0.0,
+            'totalGames'     => $totRankedGames,
+            'winrate'        => $rankedWr,
+            'enemyMmr'       => $enemyMmr
+        ];
 
         return [
             'ladder'        => $primaryLadder,
@@ -1105,19 +1065,11 @@ class RiotApi {
 
         $totRanked = $totSolo + $totFlex;
         $totRankedWins = $totSoloWins + $totFlexWins;
-        $rankedWr = $totRanked > 0 ? round(($totRankedWins / $totRanked) * 100, 1) : 50.0;
+        $rankedWr = $totRanked > 0 ? round(($totRankedWins / $totRanked) * 100, 1) : 0.0;
 
-        // Estimated all-time lifetime games
-        $totAll = (int)round(150 + max(0, $summonerLevel - 30) * 3.45);
-        if ($totRanked > $totAll) $totAll = (int)round($totRanked * 1.5);
-        $allWr = min(75.0, max(42.0, round($rankedWr * 0.98 + 1.2, 1)));
-
-        $cleanId = mb_strtolower(trim($riotId ?? ''), 'UTF-8');
-        $isCait = strpos($cleanId, 'cait') !== false;
-        if ($isCait) {
-            $totAll = 561;
-            $allWr = 57.2;
-        }
+        // Real match totals based strictly on API league and matches
+        $totAll = $totRanked > 0 ? $totRanked : count($matchIds);
+        $allWr = $totRanked > 0 ? $rankedWr : 0.0;
 
         // Batch fetch match details
         $matches = $this->getBatchMatchDetails($matchIds, $region);
@@ -1167,106 +1119,6 @@ class RiotApi {
             }
         }
 
-        // Calibrated benchmark distribution matching League of Graphs for CaitlyneAşığım#CAIT
-        $caitMap = [
-            51 => [
-                'allGames' => 310, 'allWins' => 186, 'allLosses' => 124, 'allWinrate' => 60.0,
-                'soloGames' => 62, 'soloWins' => 35, 'soloLosses' => 27, 'soloWinrate' => 56.5,
-                'flexGames' => 58, 'flexWins' => 36, 'flexLosses' => 22, 'flexWinrate' => 62.1,
-                'arenaGames' => 20, 'arenaWins' => 12, 'arenaLosses' => 8, 'arenaWinrate' => 60.0,
-                'kills' => 8.0, 'deaths' => 5.2, 'assists' => 6.7, 'kdaRatio' => '2.83',
-                'csPerMin' => 5.8, 'goldPerMin' => 428, 'dmgPerMin' => 830, 'avgVision' => 20.3,
-                'avgCs' => 160.1, 'avgGold' => 11800, 'avgDamage' => 22900,
-                'isRanked' => true, 'display' => 'Derece: 148,688 (TR: 9,070)'
-            ],
-            99 => [
-                'allGames' => 56, 'allWins' => 38, 'allLosses' => 18, 'allWinrate' => 67.9,
-                'soloGames' => 7, 'soloWins' => 4, 'soloLosses' => 3, 'soloWinrate' => 57.1,
-                'flexGames' => 16, 'flexWins' => 11, 'flexLosses' => 5, 'flexWinrate' => 68.8,
-                'arenaGames' => 6, 'arenaWins' => 4, 'arenaLosses' => 2, 'arenaWinrate' => 66.7,
-                'kills' => 6.7, 'deaths' => 6.6, 'assists' => 11.3, 'kdaRatio' => '2.73',
-                'csPerMin' => 7.3, 'goldPerMin' => 437, 'dmgPerMin' => 748, 'avgVision' => 20.3,
-                'avgCs' => 204.3, 'avgGold' => 12200, 'avgDamage' => 20900,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            777 => [
-                'allGames' => 44, 'allWins' => 21, 'allLosses' => 23, 'allWinrate' => 47.7,
-                'soloGames' => 18, 'soloWins' => 9, 'soloLosses' => 9, 'soloWinrate' => 50.0,
-                'flexGames' => 12, 'flexWins' => 6, 'flexLosses' => 6, 'flexWinrate' => 50.0,
-                'arenaGames' => 4, 'arenaWins' => 2, 'arenaLosses' => 2, 'arenaWinrate' => 50.0,
-                'kills' => 5.5, 'deaths' => 7.0, 'assists' => 6.7, 'kdaRatio' => '1.74',
-                'csPerMin' => 8.1, 'goldPerMin' => 484, 'dmgPerMin' => 828, 'avgVision' => 21.5,
-                'avgCs' => 226.8, 'avgGold' => 13600, 'avgDamage' => 23200,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            222 => [
-                'allGames' => 25, 'allWins' => 11, 'allLosses' => 14, 'allWinrate' => 44.0,
-                'soloGames' => 4, 'soloWins' => 2, 'soloLosses' => 2, 'soloWinrate' => 50.0,
-                'flexGames' => 4, 'flexWins' => 2, 'flexLosses' => 2, 'flexWinrate' => 50.0,
-                'arenaGames' => 3, 'arenaWins' => 1, 'arenaLosses' => 2, 'arenaWinrate' => 33.3,
-                'kills' => 6.6, 'deaths' => 7.4, 'assists' => 7.4, 'kdaRatio' => '1.89',
-                'csPerMin' => 5.0, 'goldPerMin' => 344, 'dmgPerMin' => 427, 'avgVision' => 17.7,
-                'avgCs' => 128.7, 'avgGold' => 8900, 'avgDamage' => 11000,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            82 => [
-                'allGames' => 21, 'allWins' => 12, 'allLosses' => 9, 'allWinrate' => 57.1,
-                'soloGames' => 2, 'soloWins' => 1, 'soloLosses' => 1, 'soloWinrate' => 50.0,
-                'flexGames' => 8, 'flexWins' => 5, 'flexLosses' => 3, 'flexWinrate' => 62.5,
-                'arenaGames' => 2, 'arenaWins' => 1, 'arenaLosses' => 1, 'arenaWinrate' => 50.0,
-                'kills' => 5.1, 'deaths' => 6.7, 'assists' => 7.1, 'kdaRatio' => '1.82',
-                'csPerMin' => 6.8, 'goldPerMin' => 440, 'dmgPerMin' => 710, 'avgVision' => 18.2,
-                'avgCs' => 185.0, 'avgGold' => 11900, 'avgDamage' => 19200,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            111 => [
-                'allGames' => 20, 'allWins' => 11, 'allLosses' => 9, 'allWinrate' => 55.0,
-                'soloGames' => 1, 'soloWins' => 0, 'soloLosses' => 1, 'soloWinrate' => 0.0,
-                'flexGames' => 6, 'flexWins' => 3, 'flexLosses' => 3, 'flexWinrate' => 50.0,
-                'arenaGames' => 3, 'arenaWins' => 2, 'arenaLosses' => 1, 'arenaWinrate' => 66.7,
-                'kills' => 3.2, 'deaths' => 7.3, 'assists' => 12.3, 'kdaRatio' => '2.12',
-                'csPerMin' => 1.5, 'goldPerMin' => 270, 'dmgPerMin' => 320, 'avgVision' => 48.5,
-                'avgCs' => 42.0, 'avgGold' => 7500, 'avgDamage' => 9200,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            360 => [
-                'allGames' => 16, 'allWins' => 8, 'allLosses' => 8, 'allWinrate' => 50.0,
-                'soloGames' => 1, 'soloWins' => 1, 'soloLosses' => 0, 'soloWinrate' => 100.0,
-                'flexGames' => 3, 'flexWins' => 2, 'flexLosses' => 1, 'flexWinrate' => 66.7,
-                'arenaGames' => 2, 'arenaWins' => 1, 'arenaLosses' => 1, 'arenaWinrate' => 50.0,
-                'kills' => 7.1, 'deaths' => 6.8, 'assists' => 5.4, 'kdaRatio' => '1.84',
-                'csPerMin' => 6.2, 'goldPerMin' => 415, 'dmgPerMin' => 690, 'avgVision' => 16.0,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            21 => [
-                'allGames' => 15, 'allWins' => 9, 'allLosses' => 6, 'allWinrate' => 60.0,
-                'soloGames' => 3, 'soloWins' => 2, 'soloLosses' => 1, 'soloWinrate' => 66.7,
-                'flexGames' => 3, 'flexWins' => 2, 'flexLosses' => 1, 'flexWinrate' => 66.7,
-                'arenaGames' => 2, 'arenaWins' => 1, 'arenaLosses' => 1, 'arenaWinrate' => 50.0,
-                'kills' => 7.7, 'deaths' => 4.6, 'assists' => 7.2, 'kdaRatio' => '3.24',
-                'csPerMin' => 7.7, 'goldPerMin' => 447, 'dmgPerMin' => 678, 'avgVision' => 17.4,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            119 => [
-                'allGames' => 14, 'allWins' => 7, 'allLosses' => 7, 'allWinrate' => 50.0,
-                'soloGames' => 3, 'soloWins' => 1, 'soloLosses' => 2, 'soloWinrate' => 33.3,
-                'flexGames' => 2, 'flexWins' => 1, 'flexLosses' => 1, 'flexWinrate' => 50.0,
-                'arenaGames' => 1, 'arenaWins' => 1, 'arenaLosses' => 0, 'arenaWinrate' => 100.0,
-                'kills' => 6.6, 'deaths' => 5.7, 'assists' => 5.2, 'kdaRatio' => '2.07',
-                'csPerMin' => 6.6, 'goldPerMin' => 375, 'dmgPerMin' => 268, 'avgVision' => 10.3,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ],
-            81 => [
-                'allGames' => 12, 'allWins' => 7, 'allLosses' => 5, 'allWinrate' => 58.3,
-                'soloGames' => 1, 'soloWins' => 1, 'soloLosses' => 0, 'soloWinrate' => 100.0,
-                'flexGames' => 2, 'flexWins' => 1, 'flexLosses' => 1, 'flexWinrate' => 50.0,
-                'arenaGames' => 1, 'arenaWins' => 0, 'arenaLosses' => 1, 'arenaWinrate' => 0.0,
-                'kills' => 6.2, 'deaths' => 5.1, 'assists' => 7.8, 'kdaRatio' => '2.75',
-                'csPerMin' => 6.4, 'goldPerMin' => 410, 'dmgPerMin' => 650, 'avgVision' => 18.5,
-                'isRanked' => false, 'display' => 'Derece: -'
-            ]
-        ];
-
         $totalMasteryPoints = 0;
         foreach ($masteryData as $m) $totalMasteryPoints += (int)($m['championPoints'] ?? 0);
         $totalMasteryPoints = max(1, $totalMasteryPoints);
@@ -1279,95 +1131,79 @@ class RiotApi {
             $pts = (int)($m['championPoints'] ?? 0);
             $lvl = (int)($m['championLevel'] ?? 5);
 
-            if ($isCait && isset($caitMap[$cId])) {
-                $info = $caitMap[$cId];
-                $allGames = $info['allGames'];
-                $allWins = $info['allWins'];
-                $allLosses = $info['allLosses'];
-                $allWr = $info['allWinrate'];
-                $soloGames = $info['soloGames'];
-                $soloWins = $info['soloWins'];
-                $soloLosses = $info['soloLosses'];
-                $soloWr = $info['soloWinrate'];
-                $flexGames = $info['flexGames'];
-                $flexWins = $info['flexWins'];
-                $flexLosses = $info['flexLosses'];
-                $flexWr = $info['flexWinrate'];
-                $arenaGames = $info['arenaGames'];
-                $arenaWins = $info['arenaWins'];
-                $arenaLosses = $info['arenaLosses'];
-                $arenaWr = $info['arenaWinrate'];
-                $avgK = $info['kills'];
-                $avgD = $info['deaths'];
-                $avgA = $info['assists'];
-                $kdaString = sprintf('%.1f / %.1f / %.1f', $avgK, $avgD, $avgA);
-                $kdaRatio = $info['kdaRatio'];
-                $actualCsPerMin = $info['csPerMin'];
-                $actualGoldPerMin = $info['goldPerMin'];
-                $actualDmgPerMin = $info['dmgPerMin'];
-                $actualAvgVision = $info['avgVision'];
-                $actualAvgCs = $info['avgCs'] ?? round($actualCsPerMin * 28, 1);
-                $actualAvgGold = $info['avgGold'] ?? round($actualGoldPerMin * 28);
-                $actualAvgDamage = $info['avgDamage'] ?? round($actualDmgPerMin * 28);
-                $isRanked = $info['isRanked'];
-                $display = $info['display'];
+            $cShare = $pts / $totalMasteryPoints;
+            $allGames = $totAll > 0 ? max(1, (int)round($cShare * $totAll)) : 0;
+            $allWins = $allGames > 0 ? (int)round($allGames * ($allWr / 100.0)) : 0;
+            $allLosses = max(0, $allGames - $allWins);
+            $champAllWr = $allGames > 0 ? round(($allWins / $allGames) * 100, 1) : 0.0;
+
+            $soloShare = $totAll > 0 ? ($totSolo / $totAll) : 0.5;
+            $soloGames = (int)round($allGames * $soloShare);
+            $soloWins = (int)round($soloGames * ($soloWr / 100.0));
+            $soloLosses = max(0, $soloGames - $soloWins);
+            $champSoloWr = $soloGames > 0 ? round(($soloWins / $soloGames) * 100, 1) : 0.0;
+
+            $flexShare = $totAll > 0 ? ($totFlex / $totAll) : 0.5;
+            $flexGames = (int)round($allGames * $flexShare);
+            $flexWins = (int)round($flexGames * ($flexWr / 100.0));
+            $flexLosses = max(0, $flexGames - $flexWins);
+            $champFlexWr = $flexGames > 0 ? round(($flexWins / $flexGames) * 100, 1) : 0.0;
+
+            $arenaGames = 0;
+            $arenaWins = 0;
+            $arenaLosses = 0;
+            $arenaWr = 0.0;
+
+            // Real matches blend if available
+            if (isset($realMatchAgg[$cId]) && $realMatchAgg[$cId]['matchesAnalyzed'] > 0) {
+                $rm = $realMatchAgg[$cId];
+                $rmCount = $rm['matchesAnalyzed'];
+                $avgK = round($rm['kills'] / $rmCount, 1);
+                $avgD = round($rm['deaths'] / $rmCount, 1);
+                $avgA = round($rm['assists'] / $rmCount, 1);
+                $durMin = max(1, $rm['durationSecTotal'] / 60);
+                $actualCsPerMin = round($rm['csTotal'] / $durMin, 1);
+                $actualGoldPerMin = (int)round($rm['goldTotal'] / $durMin);
+                $actualDmgPerMin = (int)round($rm['damageTotal'] / $durMin);
+                $actualAvgVision = round($rm['visionTotal'] / $rmCount, 1);
+                $actualAvgCs = round($rm['csTotal'] / $rmCount, 1);
+                $actualAvgGold = (int)round($rm['goldTotal'] / $rmCount);
+                $actualAvgDamage = (int)round($rm['damageTotal'] / $rmCount);
             } else {
-                // Generic player dynamic calculation from Riot mastery & summoner level
-                $cShare = $pts / $totalMasteryPoints;
-                $allGames = max(1, (int)round($cShare * $totAll));
-                $allWins = (int)round($allGames * ($allWr / 100.0));
-                $allLosses = max(0, $allGames - $allWins);
-                $allWr = round(($allWins / $allGames) * 100, 1);
-
-                $soloShare = $totAll > 0 ? ($totSolo / $totAll) : 0.45;
-                $soloGames = (int)round($allGames * $soloShare);
-                $soloWins = (int)round($soloGames * ($soloWr / 100.0));
-                $soloLosses = max(0, $soloGames - $soloWins);
-                $soloWr = $soloGames > 0 ? round(($soloWins / $soloGames) * 100, 1) : 0.0;
-
-                $flexShare = $totAll > 0 ? ($totFlex / $totAll) : 0.40;
-                $flexGames = (int)round($allGames * $flexShare);
-                $flexWins = (int)round($flexGames * ($flexWr / 100.0));
-                $flexLosses = max(0, $flexGames - $flexWins);
-                $flexWr = $flexGames > 0 ? round(($flexWins / $flexGames) * 100, 1) : 0.0;
-
-                $arenaGames = max(0, (int)round($allGames * 0.08));
-                $arenaWins = (int)round($arenaGames * 0.52);
-                $arenaLosses = max(0, $arenaGames - $arenaWins);
-                $arenaWr = $arenaGames > 0 ? round(($arenaWins / $arenaGames) * 100, 1) : 0.0;
-
-                // Real matches blend if available
-                if (isset($realMatchAgg[$cId]) && $realMatchAgg[$cId]['matchesAnalyzed'] > 0) {
-                    $rm = $realMatchAgg[$cId];
-                    $rmCount = $rm['matchesAnalyzed'];
-                    $avgK = round($rm['kills'] / $rmCount, 1);
-                    $avgD = round($rm['deaths'] / $rmCount, 1);
-                    $avgA = round($rm['assists'] / $rmCount, 1);
-                    $durMin = max(1, $rm['durationSecTotal'] / 60);
-                    $actualCsPerMin = round($rm['csTotal'] / $durMin, 1);
-                    $actualGoldPerMin = (int)round($rm['goldTotal'] / $durMin);
-                    $actualDmgPerMin = (int)round($rm['damageTotal'] / $durMin);
-                    $actualAvgVision = round($rm['visionTotal'] / $rmCount, 1);
-                    $actualAvgCs = round($rm['csTotal'] / $rmCount, 1);
-                    $actualAvgGold = (int)round($rm['goldTotal'] / $rmCount);
-                    $actualAvgDamage = (int)round($rm['damageTotal'] / $rmCount);
-                } else {
-                    $wBench = self::getChampionWorldBenchmark($cName, $playerTier);
-                    $skillFactor = 1.0 + (min(15, max(1, $lvl)) - 5) * 0.015 + (min(200000, $pts) / 2000000);
-                    $actualCsPerMin = round($wBench['worldCsPerMin'] * $skillFactor, 1);
-                    $actualGoldPerMin = (int)round($wBench['worldGoldPerMin'] * $skillFactor);
-                    $actualDmgPerMin = (int)round($wBench['worldDmgPerMin'] * $skillFactor);
-                    $actualAvgVision = round($wBench['worldAvgVision'] * (1.0 + ($skillFactor - 1.0) * 0.5), 1);
-                    $actualAvgCs = round($actualCsPerMin * 28, 1);
-                    $actualAvgGold = round($actualGoldPerMin * 28);
-                    $actualAvgDamage = round($actualDmgPerMin * 28);
-                    $avgK = 5.2; $avgD = 4.6; $avgA = 7.2;
-                }
-                $kdaString = sprintf('%.1f / %.1f / %.1f', $avgK, $avgD, $avgA);
-                $kdaRatio = round(($avgK + $avgA) / max(0.8, $avgD), 2);
-                $isRanked = ($allGames >= 20);
-                $display = $isRanked ? "Derece: Aktif" : "Derece: -";
+                $wBench = self::getChampionWorldBenchmark($cName, $playerTier);
+                $skillFactor = 1.0 + (min(15, max(1, $lvl)) - 5) * 0.015 + (min(200000, $pts) / 2000000);
+                $actualCsPerMin = round($wBench['worldCsPerMin'] * $skillFactor, 1);
+                $actualGoldPerMin = (int)round($wBench['worldGoldPerMin'] * $skillFactor);
+                $actualDmgPerMin = (int)round($wBench['worldDmgPerMin'] * $skillFactor);
+                $actualAvgVision = round($wBench['worldAvgVision'] * (1.0 + ($skillFactor - 1.0) * 0.5), 1);
+                $actualAvgCs = round($actualCsPerMin * 28, 1);
+                $actualAvgGold = round($actualGoldPerMin * 28);
+                $actualAvgDamage = round($actualDmgPerMin * 28);
+                $avgK = 5.2; $avgD = 4.6; $avgA = 7.2;
             }
+            $kdaString = sprintf('%.1f / %.1f / %.1f', $avgK, $avgD, $avgA);
+            $kdaRatio = round(($avgK + $avgA) / max(0.8, $avgD), 2);
+
+            // Calculate precise champion ranking using League of Graphs / Porofessor scoring formula
+            // Enforces the 20-games minimum requirement (games < 20 => Derece: -)
+            $champRank = ChampionRankingCalculator::calculateChampionRank([
+                'championId'   => $cId,
+                'championName' => $cName,
+                'games'        => $allGames,
+                'wins'         => $allWins,
+                'losses'       => $allLosses,
+                'kills'        => $avgK,
+                'deaths'       => $avgD,
+                'assists'      => $avgA,
+                'soloGames'    => $soloGames,
+                'flexGames'    => $flexGames,
+                'playerTier'   => $playerTier,
+                'playerRank'   => $playerRank,
+                'playerLp'     => $playerLp,
+                'region'       => $region
+            ]);
+            $isRanked = $champRank['isRanked'];
+            $display = $champRank['display'];
 
             $worldBench = self::getChampionWorldBenchmark($cName, $playerTier);
             $csDiff = round((($actualCsPerMin - $worldBench['worldCsPerMin']) / max(0.1, $worldBench['worldCsPerMin'])) * 100, 1);
@@ -1376,48 +1212,55 @@ class RiotApi {
             $visionDiff = round((($actualAvgVision - $worldBench['worldAvgVision']) / max(0.1, $worldBench['worldAvgVision'])) * 100, 1);
 
             $result[] = [
-                'championId'       => $cId,
-                'championName'     => $cName,
-                'championKey'      => $cKey,
-                'championLevel'    => $lvl,
-                'championPoints'   => $pts,
-                'games'            => $allGames,
-                'wins'             => $allWins,
-                'losses'           => $allLosses,
-                'winrate'          => $allWr,
-                'allGames'         => $allGames,
-                'allWins'          => $allWins,
-                'allLosses'        => $allLosses,
-                'allWinrate'       => $allWr,
-                'soloGames'        => $soloGames,
-                'soloWins'         => $soloWins,
-                'soloLosses'       => $soloLosses,
-                'soloWinrate'      => $soloWr,
-                'flexGames'        => $flexGames,
-                'flexWins'         => $flexWins,
-                'flexLosses'       => $flexLosses,
-                'flexWinrate'      => $flexWr,
-                'arenaGames'       => $arenaGames,
-                'arenaWins'        => $arenaWins,
-                'arenaLosses'      => $arenaLosses,
-                'arenaWinrate'     => $arenaWr,
-                'kills'            => $avgK,
-                'deaths'           => $avgD,
-                'assists'          => $avgA,
-                'kdaString'        => $kdaString,
-                'kdaRatio'         => (string)$kdaRatio,
-                'isRanked'         => $isRanked,
-                'display'          => $display,
-                'csPerMin'         => $actualCsPerMin,
-                'avgCs'            => $actualAvgCs,
-                'goldPerMin'       => $actualGoldPerMin,
-                'avgGold'          => $actualAvgGold,
-                'dmgPerMin'        => $actualDmgPerMin,
-                'avgDamage'        => $actualAvgDamage,
-                'avgVision'        => $actualAvgVision,
-                'hasRealMatches'   => isset($realMatchAgg[$cId]),
-                'matchesAnalyzed'  => $realMatchAgg[$cId]['matchesAnalyzed'] ?? 0,
-                'worldBenchmark'   => [
+                'championId'          => $cId,
+                'championName'        => $cName,
+                'championKey'         => $cKey,
+                'championLevel'       => $lvl,
+                'championPoints'      => $pts,
+                'games'               => $allGames,
+                'wins'                => $allWins,
+                'losses'              => $allLosses,
+                'winrate'             => $champAllWr,
+                'allGames'            => $allGames,
+                'allWins'             => $allWins,
+                'allLosses'           => $allLosses,
+                'allWinrate'          => $champAllWr,
+                'soloGames'           => $soloGames,
+                'soloWins'            => $soloWins,
+                'soloLosses'          => $soloLosses,
+                'soloWinrate'         => $champSoloWr,
+                'flexGames'           => $flexGames,
+                'flexWins'            => $flexWins,
+                'flexLosses'          => $flexLosses,
+                'flexWinrate'         => $champFlexWr,
+                'arenaGames'          => $arenaGames,
+                'arenaWins'           => $arenaWins,
+                'arenaLosses'         => $arenaLosses,
+                'arenaWinrate'        => $arenaWr,
+                'kills'               => $avgK,
+                'deaths'              => $avgD,
+                'assists'             => $avgA,
+                'kdaString'           => $kdaString,
+                'kdaRatio'            => (string)$kdaRatio,
+                'isRanked'            => $isRanked,
+                'serverRank'          => $champRank['serverRank'],
+                'worldRank'           => $champRank['worldRank'],
+                'serverRankFormatted' => $champRank['serverRankFormatted'],
+                'worldRankFormatted'  => $champRank['worldRankFormatted'],
+                'score'               => $champRank['score'],
+                'scoreFormatted'      => $champRank['scoreFormatted'],
+                'display'             => $display,
+                'unrankedReason'      => $champRank['unrankedReason'] ?? null,
+                'csPerMin'            => $actualCsPerMin,
+                'avgCs'               => $actualAvgCs,
+                'goldPerMin'          => $actualGoldPerMin,
+                'avgGold'             => $actualAvgGold,
+                'dmgPerMin'           => $actualDmgPerMin,
+                'avgDamage'           => $actualAvgDamage,
+                'avgVision'           => $actualAvgVision,
+                'hasRealMatches'      => isset($realMatchAgg[$cId]),
+                'matchesAnalyzed'     => $realMatchAgg[$cId]['matchesAnalyzed'] ?? 0,
+                'worldBenchmark'      => [
                     'worldCsPerMin'   => $worldBench['worldCsPerMin'],
                     'worldGoldPerMin' => $worldBench['worldGoldPerMin'],
                     'worldDmgPerMin'  => $worldBench['worldDmgPerMin'],
@@ -2328,20 +2171,46 @@ class RiotApi {
             $totalLosses += $l;
             list($k, $d, $a) = explode(' / ', $kdaPool[$cIdx] ?? '7.0 / 3.0 / 6.0');
 
-            $playedChampions[] = [
+            $cRank = ChampionRankingCalculator::calculateChampionRank([
                 'championId'   => $champ[0],
                 'championName' => $champ[1],
                 'games'        => $g,
                 'wins'         => $w,
                 'losses'       => $l,
-                'winRate'      => $wRate,
                 'kills'        => (float)$k,
                 'deaths'       => (float)$d,
                 'assists'      => (float)$a,
-                'kda'          => round(((float)$k + (float)$a) / max(1, (float)$d), 2),
-                'cs'           => 265,
-                'csPerMin'     => 9.2,
-                'gold'         => 14850
+                'soloGames'    => (int)round($g * 0.8),
+                'flexGames'    => (int)round($g * 0.2),
+                'playerTier'   => 'CHALLENGER',
+                'playerRank'   => 'I',
+                'playerLp'     => 850,
+                'region'       => $cleanRegion ?: 'euw1'
+            ]);
+
+            $playedChampions[] = [
+                'championId'          => $champ[0],
+                'championName'        => $champ[1],
+                'games'               => $g,
+                'wins'                => $w,
+                'losses'              => $l,
+                'winRate'             => $wRate,
+                'kills'               => (float)$k,
+                'deaths'              => (float)$d,
+                'assists'             => (float)$a,
+                'kda'                 => round(((float)$k + (float)$a) / max(1, (float)$d), 2),
+                'isRanked'            => $cRank['isRanked'],
+                'serverRank'          => $cRank['serverRank'],
+                'worldRank'           => $cRank['worldRank'],
+                'serverRankFormatted' => $cRank['serverRankFormatted'],
+                'worldRankFormatted'  => $cRank['worldRankFormatted'],
+                'score'               => $cRank['score'],
+                'scoreFormatted'      => $cRank['scoreFormatted'],
+                'display'             => $cRank['display'],
+                'unrankedReason'      => $cRank['unrankedReason'] ?? null,
+                'cs'                  => 265,
+                'csPerMin'            => 9.2,
+                'gold'                => 14850
             ];
         }
 

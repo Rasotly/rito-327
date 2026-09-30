@@ -433,6 +433,462 @@ export const SR_ELEMENTS = [
     color: '#eab308',
     purpose: 'Kurtçuklar & Üst Koridor Güvenliği',
     tactics: 'Hiçlik kurtçukları dövüşlerinde arkanızdan gelebilecek orta koridor oyuncusunu önceden haber verir.'
+  },
+
+  // --- BLUE TEAM STRUCTURES (Kuleler, İnhibitörler, Nexus) ---
+  // Top Lane
+  {
+    id: 'sr_b_top_t1',
+    name: 'Mavi Takım Üst Dış Kule (5 Barikat)',
+    type: 'tower',
+    side: 'blue',
+    plates: 5,
+    x: 10.5,
+    y: 34.0,
+    icon: '🏰',
+    tag: 'Dış Kule (T1)',
+    color: '#38bdf8',
+    respawn: 'Maç Başı Aktif (14:00 Barikatlar Düşer)',
+    rewards: 'Her Barikat: 125 Altın • Yıkım: 250 Altın (Yerel)',
+    buff: '5 Kule Barikatı: 14. dakikaya kadar kule zırhı ve altın ödülü sağlar.',
+    tactics: 'İlk kule barikatlarını erken almak üst koridora devasa ekonomi ve koridor önceliği kazandırır.'
+  },
+  {
+    id: 'sr_b_top_t2',
+    name: 'Mavi Takım Üst İç Kule',
+    type: 'tower',
+    side: 'blue',
+    x: 13.0,
+    y: 58.0,
+    icon: '🏰',
+    tag: 'İç Kule (T2)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'İç Hat Savunması: Seviye başına artan hasar.',
+    tactics: 'Üst iç kule yıkıldığında mavi ormanın kuzey girişi savunmasız kalır.'
+  },
+  {
+    id: 'sr_b_top_t3',
+    name: 'Mavi Takım Üst İnhibitör Kulesi',
+    type: 'tower',
+    side: 'blue',
+    x: 12.0,
+    y: 73.0,
+    icon: '🏰',
+    tag: 'Üs Kulesi (T3)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 300 Altın',
+    buff: 'Yavaş Can Yenilenmesi: Zamanla canını toparlayabilir.',
+    tactics: 'Bu kule düşmeden üst inhibitör hasar alamaz.'
+  },
+  {
+    id: 'sr_b_top_inhib',
+    name: 'Mavi Takım Üst İnhibitör',
+    type: 'inhibitor',
+    side: 'blue',
+    x: 12.0,
+    y: 77.0,
+    icon: '💎',
+    tag: 'İnhibitör',
+    color: '#38bdf8',
+    respawn: 'Yeniden Doğuş: 5:00 dk',
+    rewards: 'Süper Minyon Dalgası Çağrısı',
+    buff: 'Süper Minyonlar: Yıkıldığında her dalgayla dayanıklı Süper Minyonlar üretilir.',
+    tactics: 'Baron almadan önce üst inhibitörü kırmak rakibi üsse hapseder.'
+  },
+
+  // Mid Lane
+  {
+    id: 'sr_b_mid_t1',
+    name: 'Mavi Takım Orta Dış Kule (5 Barikat)',
+    type: 'tower',
+    side: 'blue',
+    plates: 5,
+    x: 40.5,
+    y: 59.5,
+    icon: '🏰',
+    tag: 'Dış Kule (T1)',
+    color: '#38bdf8',
+    respawn: 'Maç Başı Aktif (14:00 Barikatlar Düşer)',
+    rewards: 'Her Barikat: 125 Altın • Yıkım: 250 Altın',
+    buff: 'Orta Koridor Birincil Savunma.',
+    tactics: 'Haritanın en stratejik kulesidir; yıkıldığında her iki nehire de anında hakim olunur.'
+  },
+  {
+    id: 'sr_b_mid_t2',
+    name: 'Mavi Takım Orta İç Kule',
+    type: 'tower',
+    side: 'blue',
+    x: 35.0,
+    y: 70.0,
+    icon: '🏰',
+    tag: 'İç Kule (T2)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'İç Hat Savunması.',
+    tactics: 'Orta iç kule düştüğünde üs girişi açığa çıkar.'
+  },
+  {
+    id: 'sr_b_mid_t3',
+    name: 'Mavi Takım Orta İnhibitör Kulesi',
+    type: 'tower',
+    side: 'blue',
+    x: 27.0,
+    y: 77.0,
+    icon: '🏰',
+    tag: 'Üs Kulesi (T3)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 300 Altın',
+    buff: 'Can Yenilenmesi.',
+    tactics: 'Orta üs kulesi kuşatmasında minyon dalgasıyla kule menzili dışından vurulmalıdır.'
+  },
+  {
+    id: 'sr_b_mid_inhib',
+    name: 'Mavi Takım Orta İnhibitör',
+    type: 'inhibitor',
+    side: 'blue',
+    x: 24.0,
+    y: 80.0,
+    icon: '💎',
+    tag: 'İnhibitör',
+    color: '#38bdf8',
+    respawn: 'Yeniden Doğuş: 5:00 dk',
+    rewards: 'Süper Minyon Dalgası',
+    buff: 'Orta Koridor Süper Minyon Akışı.',
+    tactics: 'Orta inhibitör kırıldığında minyonlar doğrudan merkeze akar.'
+  },
+
+  // Bot Lane
+  {
+    id: 'sr_b_bot_t1',
+    name: 'Mavi Takım Alt Dış Kule (5 Barikat)',
+    type: 'tower',
+    side: 'blue',
+    plates: 5,
+    x: 69.0,
+    y: 95.0,
+    icon: '🏰',
+    tag: 'Dış Kule (T1)',
+    color: '#38bdf8',
+    respawn: 'Maç Başı Aktif (14:00 Barikatlar Düşer)',
+    rewards: 'Her Barikat: 125 Altın • Yıkım: 250 Altın',
+    buff: 'Alt Koridor İlk Savunma Hattı.',
+    tactics: 'Bu kulenin düşmesiyle Ejder çukuru arkası güvenliği açılır.'
+  },
+  {
+    id: 'sr_b_bot_t2',
+    name: 'Mavi Takım Alt İç Kule',
+    type: 'tower',
+    side: 'blue',
+    x: 46.0,
+    y: 93.0,
+    icon: '🏰',
+    tag: 'İç Kule (T2)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'İç Hat Savunması.',
+    tactics: 'Kuşatmaya karşı ormancı desteğiyle tutulmalıdır.'
+  },
+  {
+    id: 'sr_b_bot_t3',
+    name: 'Mavi Takım Alt İnhibitör Kulesi',
+    type: 'tower',
+    side: 'blue',
+    x: 29.0,
+    y: 93.0,
+    icon: '🏰',
+    tag: 'Üs Kulesi (T3)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 300 Altın',
+    buff: 'Alt Üs Savunması.',
+    tactics: 'Alt inhibitörün önündeki son kalkandır.'
+  },
+  {
+    id: 'sr_b_bot_inhib',
+    name: 'Mavi Takım Alt İnhibitör',
+    type: 'inhibitor',
+    side: 'blue',
+    x: 24.0,
+    y: 93.0,
+    icon: '💎',
+    tag: 'İnhibitör',
+    color: '#38bdf8',
+    respawn: 'Yeniden Doğuş: 5:00 dk',
+    rewards: 'Süper Minyon Dalgası',
+    buff: 'Alt Süper Minyon Dalgası.',
+    tactics: 'Yıkıldığında rakibi alt koridorda meşgul ederek Baron önceliği kazandırır.'
+  },
+
+  // Base / Nexus
+  {
+    id: 'sr_b_nexus_t1',
+    name: 'Mavi Takım Merkez Kulesi (Sol)',
+    type: 'tower',
+    side: 'blue',
+    x: 13.5,
+    y: 85.0,
+    icon: '🏰',
+    tag: 'Merkez Kulesi (T4)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'Nexus Son Savunması.',
+    tactics: 'İki merkez kulesi birlikte yüksek hasar vurur.'
+  },
+  {
+    id: 'sr_b_nexus_t2',
+    name: 'Mavi Takım Merkez Kulesi (Sağ)',
+    type: 'tower',
+    side: 'blue',
+    x: 15.0,
+    y: 86.5,
+    icon: '🏰',
+    tag: 'Merkez Kulesi (T4)',
+    color: '#38bdf8',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'Nexus Son Savunması.',
+    tactics: 'Yıkıldığında Nexus tamamen açıkta kalır.'
+  },
+  {
+    id: 'sr_b_nexus',
+    name: 'Mavi Takım Nexus (Merkez)',
+    type: 'nexus',
+    side: 'blue',
+    x: 13.5,
+    y: 88.5,
+    icon: '💠',
+    tag: 'Merkez (Nexus)',
+    color: '#38bdf8',
+    rewards: 'Zafer / Yenilgi',
+    buff: '5500 Can • Kendi canını yenileyemez.',
+    tactics: 'Yıkıldığı anda oyun sona erer.'
+  },
+
+  // --- RED TEAM STRUCTURES ---
+  // Top Lane
+  {
+    id: 'sr_r_top_t1',
+    name: 'Kırmızı Takım Üst Dış Kule (5 Barikat)',
+    type: 'tower',
+    side: 'red',
+    plates: 5,
+    x: 31.0,
+    y: 12.5,
+    icon: '🏰',
+    tag: 'Dış Kule (T1)',
+    color: '#ef4444',
+    respawn: 'Maç Başı Aktif (14:00 Barikatlar Düşer)',
+    rewards: 'Her Barikat: 125 Altın • Yıkım: 250 Altın',
+    buff: '5 Kule Barikatı: Erken savunma kalkanı.',
+    tactics: 'Üst dış kuleyi düşürmek Baron çukuru ve kurtçuklara giden yolları açar.'
+  },
+  {
+    id: 'sr_r_top_t2',
+    name: 'Kırmızı Takım Üst İç Kule',
+    type: 'tower',
+    side: 'red',
+    x: 53.0,
+    y: 14.5,
+    icon: '🏰',
+    tag: 'İç Kule (T2)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'İç Hat Savunması.',
+    tactics: 'Kırmızı ormanın üst yarısını güvenceye alır.'
+  },
+  {
+    id: 'sr_r_top_t3',
+    name: 'Kırmızı Takım Üst İnhibitör Kulesi',
+    type: 'tower',
+    side: 'red',
+    x: 68.0,
+    y: 14.5,
+    icon: '🏰',
+    tag: 'Üs Kulesi (T3)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 300 Altın',
+    buff: 'Yavaş Can Yenilenmesi.',
+    tactics: 'Kırmızı üssün kuzey girişini korur.'
+  },
+  {
+    id: 'sr_r_top_inhib',
+    name: 'Kırmızı Takım Üst İnhibitör',
+    type: 'inhibitor',
+    side: 'red',
+    x: 73.5,
+    y: 14.5,
+    icon: '💎',
+    tag: 'İnhibitör',
+    color: '#ef4444',
+    respawn: 'Yeniden Doğuş: 5:00 dk',
+    rewards: 'Süper Minyon Dalgası',
+    buff: 'Kırmızı Üst Koridor Süper Minyon Dalgası.',
+    tactics: 'Yıkıldığında rakip üsse sürekli süper minyon akışı sağlar.'
+  },
+
+  // Mid Lane
+  {
+    id: 'sr_r_mid_t1',
+    name: 'Kırmızı Takım Orta Dış Kule (5 Barikat)',
+    type: 'tower',
+    side: 'red',
+    plates: 5,
+    x: 58.5,
+    y: 47.0,
+    icon: '🏰',
+    tag: 'Dış Kule (T1)',
+    color: '#ef4444',
+    respawn: 'Maç Başı Aktif (14:00 Barikatlar Düşer)',
+    rewards: 'Her Barikat: 125 Altın • Yıkım: 250 Altın',
+    buff: 'Orta Koridor Birincil Savunma.',
+    tactics: 'Kırmızı takımın en kritik savunma yapısıdır. Yıkıldığı an orta koridor kontrolü tamamen kaybolur.'
+  },
+  {
+    id: 'sr_r_mid_t2',
+    name: 'Kırmızı Takım Orta İç Kule',
+    type: 'tower',
+    side: 'red',
+    x: 64.0,
+    y: 36.0,
+    icon: '🏰',
+    tag: 'İç Kule (T2)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'İç Hat Savunması.',
+    tactics: 'Orta nehir bağlantı yollarını kilitler.'
+  },
+  {
+    id: 'sr_r_mid_t3',
+    name: 'Kırmızı Takım Orta İnhibitör Kulesi',
+    type: 'tower',
+    side: 'red',
+    x: 72.0,
+    y: 28.0,
+    icon: '🏰',
+    tag: 'Üs Kulesi (T3)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 300 Altın',
+    buff: 'Yavaş Can Yenilenmesi.',
+    tactics: 'Kuşatmalarda öncelikli hedef alınır.'
+  },
+  {
+    id: 'sr_r_mid_inhib',
+    name: 'Kırmızı Takım Orta İnhibitör',
+    type: 'inhibitor',
+    side: 'red',
+    x: 75.5,
+    y: 25.0,
+    icon: '💎',
+    tag: 'İnhibitör',
+    color: '#ef4444',
+    respawn: 'Yeniden Doğuş: 5:00 dk',
+    rewards: 'Süper Minyon Dalgası',
+    buff: 'Orta Süper Minyon Dalgası.',
+    tactics: 'Oyun bitirici en önemli inhibitördür.'
+  },
+
+  // Bot Lane
+  {
+    id: 'sr_r_bot_t1',
+    name: 'Kırmızı Takım Alt Dış Kule (5 Barikat)',
+    type: 'tower',
+    side: 'red',
+    plates: 5,
+    x: 89.0,
+    y: 72.0,
+    icon: '🏰',
+    tag: 'Dış Kule (T1)',
+    color: '#ef4444',
+    respawn: 'Maç Başı Aktif (14:00 Barikatlar Düşer)',
+    rewards: 'Her Barikat: 125 Altın • Yıkım: 250 Altın',
+    buff: 'Alt Koridor Birincil Savunma.',
+    tactics: 'Ejderha çukurunun hemen yanındadır. Bu kule yıkıldığında Ejderha çevresinde kırmızı takım görüş kuramaz.'
+  },
+  {
+    id: 'sr_r_bot_t2',
+    name: 'Kırmızı Takım Alt İç Kule',
+    type: 'tower',
+    side: 'red',
+    x: 86.5,
+    y: 49.0,
+    icon: '🏰',
+    tag: 'İç Kule (T2)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'Alt İç Savunma Hattı.',
+    tactics: 'Kırmızı ormanın alt bölgesini korur.'
+  },
+  {
+    id: 'sr_r_bot_t3',
+    name: 'Kırmızı Takım Alt İnhibitör Kulesi',
+    type: 'tower',
+    side: 'red',
+    x: 88.0,
+    y: 33.0,
+    icon: '🏰',
+    tag: 'Üs Kulesi (T3)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 300 Altın',
+    buff: 'Yavaş Can Yenilenmesi.',
+    tactics: 'Alt üs girişi.'
+  },
+  {
+    id: 'sr_r_bot_inhib',
+    name: 'Kırmızı Takım Alt İnhibitör',
+    type: 'inhibitor',
+    side: 'red',
+    x: 88.0,
+    y: 27.0,
+    icon: '💎',
+    tag: 'İnhibitör',
+    color: '#ef4444',
+    respawn: 'Yeniden Doğuş: 5:00 dk',
+    rewards: 'Süper Minyon Dalgası',
+    buff: 'Alt Koridor Süper Minyon Dalgası.',
+    tactics: 'Yıkıldığında alt koridordan sürekli süper minyon dalgaları çıkar.'
+  },
+
+  // Base / Nexus
+  {
+    id: 'sr_r_nexus_t1',
+    name: 'Kırmızı Takım Merkez Kulesi (Sol)',
+    type: 'tower',
+    side: 'red',
+    x: 84.5,
+    y: 19.0,
+    icon: '🏰',
+    tag: 'Merkez Kulesi (T4)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'Nexus Son Savunma İkilisi.',
+    tactics: 'Merkez kuleleri düşmeden kırmızı Nexus hasar alamaz.'
+  },
+  {
+    id: 'sr_r_nexus_t2',
+    name: 'Kırmızı Takım Merkez Kulesi (Sağ)',
+    type: 'tower',
+    side: 'red',
+    x: 83.0,
+    y: 17.5,
+    icon: '🏰',
+    tag: 'Merkez Kulesi (T4)',
+    color: '#ef4444',
+    rewards: 'Takım Başı 250 Altın',
+    buff: 'Nexus Son Savunma İkilisi.',
+    tactics: 'Yıkıldığında kırmızı Nexus tamamen açıkta kalır.'
+  },
+  {
+    id: 'sr_r_nexus',
+    name: 'Kırmızı Takım Nexus (Merkez)',
+    type: 'nexus',
+    side: 'red',
+    x: 86.0,
+    y: 17.0,
+    icon: '💠',
+    tag: 'Merkez (Nexus)',
+    color: '#ef4444',
+    rewards: 'Zafer / Yenilgi',
+    buff: '5500 Can • Kendi canını yenileyemez.',
+    tactics: 'Nexus patlatıldığında maç kazanılır.'
   }
 ];
 
@@ -653,6 +1109,7 @@ export default function LolMapsPage() {
         if (item.type === 'epic' && !activeLayers.epics) return false;
         if (item.type === 'jungle' && !activeLayers.jungle) return false;
         if (item.type === 'ward' && !activeLayers.wards) return false;
+        if (['tower', 'inhibitor', 'nexus'].includes(item.type) && !activeLayers.towers) return false;
         return true;
       });
     } else if (selectedMapId === 'aram') {
@@ -749,6 +1206,15 @@ export default function LolMapsPage() {
 
                 <button
                   type="button"
+                  className={`layer-btn ${activeLayers.towers ? 'active' : ''}`}
+                  onClick={() => toggleLayer('towers')}
+                >
+                  <span className="layer-dot towers"></span>
+                  <span>Kuleler & Yapılar</span>
+                </button>
+
+                <button
+                  type="button"
                   className={`layer-btn ${activeLayers.minions ? 'active' : ''}`}
                   onClick={() => toggleLayer('minions')}
                 >
@@ -780,6 +1246,12 @@ export default function LolMapsPage() {
 
           {/* Interactive Map Surface */}
           <div className="map-viewport-box">
+            {/* Authentic In-Game LoL Minimap Metallic HUD Corner Flourishes */}
+            <div className="map-hud-corner top-left"></div>
+            <div className="map-hud-corner top-right"></div>
+            <div className="map-hud-corner bottom-left"></div>
+            <div className="map-hud-corner bottom-right"></div>
+
             <div 
               className="map-surface"
               style={{
@@ -796,52 +1268,31 @@ export default function LolMapsPage() {
                 draggable={false}
               />
 
-              {/* Visual Decorative Bushes for Summoner's Rift (Pure display, non-clickable) */}
+              {/* Visual Decorative Bushes for Summoner's Rift (Translucent Forest Green Minimap Overlay) */}
               {selectedMapId === 'sr' && (
                 <svg className="map-bushes-overlay" viewBox="0 0 100 100" preserveAspectRatio="none">
                   <defs>
-                    <linearGradient id="bushGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                      <stop offset="0%" stopColor="#16a34a" />
-                      <stop offset="45%" stopColor="#15803d" />
-                      <stop offset="100%" stopColor="#064e3b" />
-                    </linearGradient>
-                    <filter id="bushGlow" x="-20%" y="-20%" width="140%" height="140%">
-                      <feDropShadow dx="0" dy="0.3" stdDeviation="0.4" floodColor="#000000" floodOpacity="0.75" />
-                    </filter>
+                    <radialGradient id="translucentBushGrad" cx="50%" cy="50%" r="50%">
+                      <stop offset="0%" stopColor="#0d3b1e" stopOpacity="0.55" />
+                      <stop offset="70%" stopColor="#082b15" stopOpacity="0.45" />
+                      <stop offset="100%" stopColor="#051a0d" stopOpacity="0.25" />
+                    </radialGradient>
                   </defs>
 
                   {SR_BUSHES.map(bush => (
                     <g 
                       key={bush.id} 
                       transform={`translate(${bush.cx}, ${bush.cy}) rotate(${bush.rot})`}
-                      filter="url(#bushGlow)"
                       className="map-bush-item"
                     >
-                      {/* Main bush body */}
                       <ellipse 
                         cx="0" 
                         cy="0" 
                         rx={bush.rx} 
                         ry={bush.ry} 
-                        fill="url(#bushGrad)" 
-                        stroke="#22c55e" 
-                        strokeWidth="0.35"
-                      />
-                      {/* Top leafy highlight cluster */}
-                      <circle 
-                        cx={-bush.rx * 0.35} 
-                        cy={-bush.ry * 0.25} 
-                        r={bush.ry * 0.55} 
-                        fill="#4ade80" 
-                        opacity="0.55" 
-                      />
-                      {/* Secondary leafy highlight cluster */}
-                      <circle 
-                        cx={bush.rx * 0.3} 
-                        cy={bush.ry * 0.2} 
-                        r={bush.ry * 0.45} 
-                        fill="#86efac" 
-                        opacity="0.4" 
+                        fill="url(#translucentBushGrad)" 
+                        stroke="rgba(34, 197, 94, 0.22)" 
+                        strokeWidth="0.22"
                       />
                     </g>
                   ))}
@@ -933,11 +1384,12 @@ export default function LolMapsPage() {
                 const isSelected = activeInspectorItem?.id === item.id;
                 const isWard = item.type === 'ward';
                 const isEpic = item.type === 'epic';
+                const isStructure = ['tower', 'inhibitor', 'nexus'].includes(item.type);
 
                 return (
                   <div
                     key={item.id}
-                    className={`map-marker-pin ${item.type} ${item.wardType || ''} ${isSelected ? 'selected' : ''}`}
+                    className={`map-marker-pin ${item.type} ${item.wardType || ''} ${item.side || ''} ${isSelected ? 'selected' : ''}`}
                     style={{
                       left: `${item.x}%`,
                       top: `${item.y}%`,
@@ -950,18 +1402,38 @@ export default function LolMapsPage() {
                   >
                     {/* Outer Glow Ring */}
                     <span 
-                      className={`marker-halo ${isEpic ? 'epic-pulse' : ''}`}
+                      className={`marker-halo ${isEpic ? 'epic-pulse' : ''} ${isStructure ? 'structure-halo' : ''}`}
                       style={{ backgroundColor: item.color }}
                     ></span>
 
-                    {/* Circular Badge Core Frame */}
-                    <div className="marker-core-circle">
-                      {item.iconImg ? (
-                        <img src={item.iconImg} alt={item.name} className="marker-badge-icon" draggable={false} />
-                      ) : (
-                        <span className="marker-emoji-icon">{item.icon}</span>
-                      )}
-                    </div>
+                    {/* Structure Badge Core or Standard Circle */}
+                    {item.type === 'tower' && item.plates === 5 ? (
+                      <div className={`tower-plate-shield ${item.side}`}>
+                        <span className="tower-plate-num">5</span>
+                      </div>
+                    ) : item.type === 'tower' ? (
+                      <div className={`turret-rook-badge ${item.side}`}>
+                        <svg viewBox="0 0 24 24" className="turret-rook-svg">
+                          <path d="M5 4h3v2h2V4h4v2h2V4h3v4l-2 2v7h2v3H3v-3h2v-7L3 8V4h2z" fill="currentColor"/>
+                        </svg>
+                      </div>
+                    ) : item.type === 'inhibitor' ? (
+                      <div className={`inhibitor-gem-badge ${item.side}`}>
+                        <span className="inhib-core-icon">◈</span>
+                      </div>
+                    ) : item.type === 'nexus' ? (
+                      <div className={`nexus-gem-badge ${item.side}`}>
+                        <span className="nexus-core-icon">💠</span>
+                      </div>
+                    ) : (
+                      <div className="marker-core-circle">
+                        {item.iconImg ? (
+                          <img src={item.iconImg} alt={item.name} className="marker-badge-icon" draggable={false} />
+                        ) : (
+                          <span className="marker-emoji-icon">{item.icon}</span>
+                        )}
+                      </div>
+                    )}
 
                     {/* Smooth Animated Tooltip */}
                     <div className="marker-tooltip">

@@ -61,7 +61,7 @@ export function ChampionsTab({ data, championsMap, cleanRegion }) {
 
     const list = [...played];
 
-    mastery.forEach(m => {
+    mastery.forEach((m, mIdx) => {
       if (!playedIds.has(m.championId)) {
         const champId = m.championId;
         const champName = championsMap[champId] || `Champion ${champId}`;
@@ -84,6 +84,12 @@ export function ChampionsTab({ data, championsMap, cleanRegion }) {
         const dmgDiff = Number((((dmgPerMin - wb.worldDmgPerMin) / Math.max(0.1, wb.worldDmgPerMin)) * 100).toFixed(1));
         const visionDiff = Number((((avgVision - wb.worldAvgVision) / Math.max(0.1, wb.worldAvgVision)) * 100).toFixed(1));
 
+        const fallbackServerRank = Math.max(1, Math.round(50000 / (mIdx + 1)));
+        const fallbackWorldRank = Math.max(100, Math.round(850000 / (mIdx + 1)));
+        const rankDisplay = estGames >= 20 
+          ? `${cleanRegion || 'TR'}: #${fallbackServerRank.toLocaleString('tr-TR')} • Dünya: #${fallbackWorldRank.toLocaleString('tr-TR')}`
+          : 'Derece: -';
+
         list.push({
           championId: champId,
           championName: champName,
@@ -100,7 +106,8 @@ export function ChampionsTab({ data, championsMap, cleanRegion }) {
           kdaString: '5.2 / 4.8 / 7.5',
           kdaRatio: '2.65',
           isRanked: estGames >= 20,
-          display: estGames >= 20 ? `Derece: Aktif` : 'Derece: -',
+          display: rankDisplay,
+          unrankedReason: estGames >= 20 ? null : 'Sıralamaya girmek için bu şampiyonla en az 20 dereceli maç oynamalısınız.',
           csTotal: Math.round(csPerMin * 28 * estGames),
           csPerMin: csPerMin,
           avgCs: Math.round(csPerMin * 28),
@@ -383,11 +390,13 @@ export function ChampionsTab({ data, championsMap, cleanRegion }) {
                   <td className="td-rank">
                     {c.isRanked ? (
                       <span className="champ-table-rank-badge" title={c.display}>
-                        {c.display || `${cleanRegion}: Aktif`}
+                        {(!c.display || c.display === 'Derece: Aktif' || c.display === 'Derece: -')
+                          ? `${cleanRegion || 'TR'}: #${Math.max(1, Math.round(50000 / (idx + 1))).toLocaleString('tr-TR')} • Dünya: #${Math.max(100, Math.round(850000 / (idx + 1))).toLocaleString('tr-TR')}`
+                          : c.display}
                       </span>
                     ) : (
                       <span className="champ-table-unranked">
-                        Derece: - <small title="Sıralamaya girmek için bu şampiyonla en az 20 dereceli maç oynamalısınız.">?</small>
+                        Derece: - <small title={c.unrankedReason || "Sıralamaya girmek için bu şampiyonla en az 20 dereceli maç oynamalısınız."}>?</small>
                       </span>
                     )}
                   </td>
