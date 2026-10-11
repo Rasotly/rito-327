@@ -27,12 +27,15 @@ $game = isset($_GET['game']) ? $_GET['game'] : '';
 
 if ($game === 'valorant') {
     include 'valorant/valorant.php';
+} elseif ($game === 'tracker') {
+    include 'tracker.php';
+    exit(0);
 } elseif ($game === 'lol') {
     include 'lol/lol.php';
 } else {
     $response = [
         "status" => "error",
-        "message" => "Geçersiz veya eksik oyun parametresi. Lütfen 'valorant' veya 'lol' seçin."
+        "message" => "Geçersiz veya eksik oyun parametresi. Lütfen 'valorant', 'tracker' veya 'lol' seçin."
     ];
 }
 

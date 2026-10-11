@@ -115,7 +115,7 @@ const TrendingIcon = () => (
 );
 
 const NAV_ITEMS = [
-  { id: 'home', label: 'Ana Sayfa', icon: <HomeIcon /> },
+  { id: 'home', label: 'Tracker (Ana Sayfa)', icon: <HomeIcon /> },
   { id: 'agents', label: 'Ajanlar', icon: <AgentIcon /> },
   { id: 'weapons', label: 'Silahlar', icon: <WeaponIcon /> },
   { id: 'maps', label: 'Haritalar', icon: <MapIcon /> },

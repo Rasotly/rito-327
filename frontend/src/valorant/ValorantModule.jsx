@@ -5,6 +5,7 @@ import ValorantAdmin from './ValorantAdmin';
 import ValorantHigherLower from './ValorantHigherLower';
 import ValorantPatchNotes from './ValorantPatchNotes';
 import ValorantVSenset from './ValorantVSenset';
+import ValorantTracker from './ValorantTracker';
 
 
 const PlayIcon = () => (
@@ -73,41 +74,8 @@ function ValorantModule({ onBack }) {
       </button>
 
       {activeTab === 'home' && (
-        <div className="content-panel" style={{ marginTop: '2rem', margin: '2rem auto', maxWidth: '800px' }}>
-          <h1 className="header-title">Valorant Protokolü - HOME</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Ajan veritabanına bağlanılıyor...</p>
-
-          <div className="data-card">
-            <div style={{ marginBottom: '1rem' }}>
-              <span className={`status-indicator ${error ? 'status-offline' : 'status-online'}`}></span>
-              <span>Sistem Durumu: {error ? 'Çevrimdışı' : 'Çevrimiçi'}</span>
-            </div>
-
-            {loading && <p>Veriler yükleniyor...</p>}
-            {error && <p style={{ color: 'var(--valorant-red)' }}>Bağlantı Hatası: {error}</p>}
-
-            {data && (
-              <div>
-                <h3>Sunucu Mesajı</h3>
-                <p>{data.message}</p>
-
-                <div className="stat-grid">
-                  <div className="stat-item">
-                    <div className="stat-value">{data.stats.activePlayers}</div>
-                    <div className="stat-label">Aktif Oyuncu</div>
-                  </div>
-                  <div className="stat-item">
-                    <div className="stat-value">{data.stats.serverStatus}</div>
-                    <div className="stat-label">Sunucu</div>
-                  </div>
-                  <div className="stat-item">
-                    <div className="stat-value">{data.stats.currentAct}</div>
-                    <div className="stat-label">Bölüm</div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+        <div style={{ width: '100%', boxSizing: 'border-box' }}>
+          <ValorantTracker />
         </div>
       )}
 
