@@ -125,9 +125,7 @@ const NAV_ITEMS = [
   { id: 'mapguessr', label: 'GeoValo', icon: <LocationIcon /> },
   { id: 'higherlower', label: 'Alt mı Üst mü?', icon: <TrendingIcon /> },
   { id: 'geoadmin', label: 'Riot Yönetimi', icon: <AdminIcon /> },
-  { id: 'guides', label: 'Rehberler', icon: <GuideIcon /> },
   { id: 'cosmetics', label: 'Kozmetikler', icon: <CosmeticIcon /> },
-  { id: 'patch-notes', label: 'Yama Notları', icon: <PatchIcon /> },
 ];
 
 export default function Sidebar({ activeTab, setActiveTab }) {
