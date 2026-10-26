@@ -188,7 +188,7 @@ Oluşturduğunuz `backend/.env` dosyasını bir metin düzenleyiciyle açıp ana
 ```env
 # Riot Games Developer API Key
 # Do NOT commit this file to GitHub!
-RIOT_API_KEY=RGAPI-ba5a9bb8-783f-4776-a515-4606b8de5dcb
+RIOT_API_KEY=your_riot_api_key_here
 ```
 
 Dosyayı kaydedin. Backend servisi bu anahtarı otomatik olarak okuyacaktır.
